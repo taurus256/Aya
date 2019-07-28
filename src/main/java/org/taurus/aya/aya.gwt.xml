@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN" 
+    "http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd">
+<module rename-to="aya">
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name="com.smartgwt.tools.SmartGwtTools"/>
+    <!--<inherits name="com.smartclient.theme.stratus.Stratus" />-->
+    <!--<inherits name="com.smartclient.theme.tahoe.Tahoe" />-->
+   
+<!--    <inherits name='org.lutzmann.gwt.cometd.gwtcometd'/>-->
+    <inherits name="com.smartgwt.SmartGwtNoScript"/>
+    <inherits name="com.smartclient.SmartClientDefault"/>
+    <inherits name="com.smartclient.theme.enterprise.Enterprise"/>
+
+    <inherits name='com.google.gwt.json.JSON'/>
+             
+    <entry-point class='org.taurus.aya.client.Aya'/>
+    
+    <extend-property name="locale" values="ru"/> 
+    <set-property name="locale" value="ru"/>
+    
+    <set-property name="user.agent" value="safari"></set-property> <!-- ,gecko1_8 -->
+    
+      <!-- Specify the paths for translatable code                    -->
+  	<source path='client'/>
+  	<source path='shared'/>
+  
+</module>

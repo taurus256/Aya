@@ -1,0 +1,232 @@
+<!doctype html>
+<!-- The DOCTYPE declaration above will set the     -->
+<!-- browser's rendering engine into                -->
+<!-- "Standards Mode". Replacing this declaration   -->
+<!-- with a "Quirks Mode" doctype is not supported. -->
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <!--                                                               -->
+    <!-- Consider inlining CSS to reduce the number of requested files -->
+    <!--                                                               -->
+    <link type="text/css" rel="stylesheet" href="aya.css">
+
+    <!--                                           -->
+    <!-- Any title is fine                         -->
+    <!--                                           -->
+    <title>Aya?</title>
+	<link rel="icon" href="images/S5icon.png">    
+    <!--                                           -->
+    <!-- This script loads your compiled module.   -->
+    <!-- If you add any GWT meta tags, they must   -->
+    <!-- be added before this line.                -->
+    <!--        cometd libraries                   -->
+    <script src="aya/org/cometd.js" ></script>
+	<script src="aya/jquery/jquery-1.7.1.js" ></script>
+	<script src="aya/jquery/jquery.cometd.js" ></script>
+    <!--         SmartGWT EE libraries                        -->
+    <script> var isomorphicDir = "aya/sc/"; </script>
+    <script type="text/javascript" language="javascript" src="aya/aya.nocache.js"></script>
+    <!--        ACE Editor libraries                                   -->
+    <script src="aya/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="aya/ace/theme-eclipse.js" type="text/javascript" charset="utf-8"></script>
+	<script src="aya/ace/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+	<!--         SHA1 encrypting library                                  -->
+	<script src="sha1.js" type="text/javascript"></script>
+
+	<style>
+		textarea[name="name"]{
+		border:none;
+		text-align:center;
+		cursor:default;
+		}
+		
+		.windowHeader
+		{
+			background: #fcfcfc;
+		}
+		
+		.windowBackground
+		{
+			background: #fcfcfc;
+			border: 1px solid #1E3C92;
+			-webkit-box-shadow: 10px 10px 21px -7px rgba(0,0,0,0.26);
+			-moz-box-shadow: 10px 10px 21px -7px rgba(0,0,0,0.26);
+			box-shadow: 10px 10px 21px -7px rgba(0,0,0,0.26);
+		}
+		
+		.dialogBackground
+		{
+			background: #fcfcfc;
+			border: 1px solid #1E3C92;
+			-webkit-box-shadow: 10px 10px 21px -7px rgba(0,0,0,0.26);
+			-moz-box-shadow: 10px 10px 21px -7px rgba(0,0,0,0.26);
+			box-shadow: 10px 10px 21px -7px rgba(0,0,0,0.26);
+		}
+		
+		.windowBody
+		{
+			background: #fcfcfc;
+			border:none;
+		}
+		
+		.tabSetContainer
+		{
+			background-color: #e6e6e6;	
+		}
+		
+		.toolStrip
+		{
+			background-image: none;
+		}
+		.calendarDisabled
+		{
+			background-color: #fafafa;
+		}
+		.sectionHeaderopened
+		{
+            background: #1e3c92;
+			color:white;
+			border:none;
+		}
+		.sectionHeaderclosed
+		{
+			background: #1e3c92;
+			color:e6e6e6;
+			border:none;
+		}
+		
+		.vSplitbar
+		{
+			background-image:none;
+		}
+		
+		.eventWindow 
+		{
+			background-color:#d4f1ff;
+			border:1px solid gray;
+		}
+		.eventWindowBody
+		{
+			background-color:#d4f1ff;
+		}
+		
+		.eventWindowHeader
+		{
+			background-color:#d4f1ff;
+		}
+		
+		.tabButtonTop
+		{
+			background-color:white;
+		}
+		
+		.tabButtonTopSelected
+		{
+			background-color:#e7e7e7;
+			font-weight:bold;
+		}
+		
+		.tabButtonTop img
+		{
+			vertical-align:middle;
+			padding-bottom: 3px;
+		}
+		
+		.tabButtonTopSelected img
+		{
+			vertical-align:middle;
+			padding-bottom: 3px;
+		}
+		
+		
+		.tabButtonTopSelectedOver
+		{
+			background-color:#e7e7e7;
+			font-weight:bold;
+		}
+		
+		.tabButtonTopSelectedOver img
+		{
+			vertical-align:middle;
+			padding-bottom: 3px;
+		}
+		
+		.tabButtonTopOver img
+		{
+			vertical-align:middle;
+			padding-bottom: 3px;
+		}
+		
+		.tabButtonTopDown img 
+		{
+			vertical-align:middle;
+			padding-bottom: 3px;
+		}
+		
+		.tabButtonTopSelectedDown img 
+		{
+			vertical-align:middle;
+			padding-bottom: 3px;
+		}
+		
+		.calendarDisabledOverDark
+		{
+			background-color:#f0f0f0;
+		}
+		.calendarDisabledOver
+		{
+			background-color:#eeeeee;
+		}
+		.calendarDisabled
+		{
+			background-color:#eeeeee;
+		}
+		.calendarOver
+		{
+			background-color:#f0f0f0;
+		}
+		.calendarOverDark
+		{
+			background-color:#f0f0f0;
+		}
+		.markedTab
+		{
+			color:#157efb;
+			font-weight:bold;
+		}
+		.button{
+			border: 1px solid #1E3C92;
+			background: #FDFDFD none repeat scroll 0% 0%;
+		}
+		.buttonOver{
+			border: 1px solid #1E3C92;
+			background: #FDFDFD none repeat scroll 0% 0%;
+		}
+		.buttonDown{
+			border: 1px solid #1E3C92;
+			background: #1E3C92 none repeat scroll 0% 0%;
+			color: white;
+		}
+		.buttonSelected{
+			border: 2px solid #1E3C92;
+			background: #FDFDFD none repeat scroll 0% 0%;
+		}
+		.buttonDisabled{
+			border: 1px solid #1E3C92;
+			background: #FDFDFD none repeat scroll 0% 0%;
+		}		
+	</style>    
+  </head>
+
+  <!--                                           -->
+  <!-- The body can have arbitrary html, or      -->
+  <!-- you can leave the body empty if you want  -->
+  <!-- to create a completely dynamic UI.        -->
+  <!--                                           -->
+  <body>
+	<div id="splash"><!-- <img id="infinity" src="images/ajax-loader.gif"/>--><img id="infinity" src="images/aya.png" /></div>
+  </body>
+</html>
