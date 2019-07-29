@@ -1,10 +1,7 @@
 package org.taurus.aya.client;
 
 import com.smartgwt.client.data.*;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.GroupStartOpen;
-import com.smartgwt.client.types.ListGridFieldType;
-import com.smartgwt.client.types.OperatorId;
+import com.smartgwt.client.types.*;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.events.DragStartEvent;
@@ -52,16 +49,6 @@ public class TaskPanel extends VLayout implements SidePanel {
 					EditEventDialog ee = new EditEventDialog(r);
 					ee.show();
 				}});	    
-
-//		    hrProperties.removeHandler();
-//		    menuProperties.addClickHandler(new ClickHandler(){
-//
-//				@Override
-//				public void onClick(MenuItemClickEvent event) {
-//					EditEventDialog ee = new EditEventDialog(GlobalData.getDataSource_tasks());
-//					ee.setUpdateEvent();
-//					ee.show();
-//				}});
 		}
 	}
 
@@ -78,6 +65,15 @@ public class TaskPanel extends VLayout implements SidePanel {
 					CommandExecutor.exec(new Command(Command.CommandType.CREATE_BACKLOG_TASK));
 				}
 			});
+
+			hrProperties.removeHandler();
+			menuProperties.addClickHandler(new ClickHandler(){
+
+				@Override
+				public void onClick(MenuItemClickEvent event) {
+					EditEventDialog ee = new EditEventDialog(treeGrid.getSelectedRecord());
+				}});
+
 		}
 	}
 	
@@ -110,6 +106,9 @@ public class TaskPanel extends VLayout implements SidePanel {
 		panelBacklog.getTreeGrid().setFields(imageField,new ListGridField("name",220));
 		panelBacklog.getTreeGrid().setGroupByField("priority");
 		panelBacklog.getTreeGrid().setCanGroupBy(true);
+		SortSpecifier sortSpecifier = new SortSpecifier("priority", SortDirection.ASCENDING);
+		SortSpecifier[] sortSpecifiers = { sortSpecifier };
+		panelBacklog.getTreeGrid().setSort(sortSpecifiers);
 		panelBacklog.getTreeGrid().groupBy("priority");
 
 		panelBacklog.getTreeGrid().setMinWidth(250);

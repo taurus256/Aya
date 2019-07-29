@@ -60,8 +60,7 @@ public class AddFileDialog extends GenericPropertiesDialog{
 		setAutoCenter(true);
 		setAnimateShowEffect(AnimationEffect.FADE);
 		
-		constructInterface();
-	
+
 //		 Redetermine the tagListGrid behavior
 //		 It have to save dropped data into array instead of saving it to database  
 		hrRecordDrop.removeHandler();
@@ -101,7 +100,7 @@ public class AddFileDialog extends GenericPropertiesDialog{
 		if (record.getAttributeAsInt("id") == null) this.addItem(createLoadForm()); // Load form is shown only for newly created record
 		this.addItem(createTagsLayout());
 		this.addItem(createSecurityLayout());
-		this.addItem(createButtonsBar());
+		this.addItem(createButtonsLayout());
 	}
 	
 	@Override
@@ -371,7 +370,7 @@ public class AddFileDialog extends GenericPropertiesDialog{
 	}
 
 	
-	protected VLayout createButtonsBar()
+	protected VLayout createButtonsLayout()
 	{
 		VLayout vlayout = new VLayout();
 		vlayout.setAlign(VerticalAlignment.CENTER);

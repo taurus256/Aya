@@ -273,11 +273,10 @@ public class CommandExecutor {
 		Record r = new Record();
 		r.setAttribute("parent",0);
 		r.setAttribute("author",GlobalData.getCurrentUser().getAttribute("id"));
-//		r.setAttribute("rgroup",GlobalData.ACCESS_ALL);
-//		r.setAttribute("wgroup",GlobalData.ACCESS_ALL);
+		r.setAttribute("rgroup",GlobalData.ACCESS_ALL);
+		r.setAttribute("wgroup",GlobalData.ACCESS_ALL);
 		r.setAttribute("isBacklog", true);
 		SC.logWarn("Set date for task");
-		BacklogTaskDialog btd = new BacklogTaskDialog(r,false);
-		btd.show();
+		BacklogTaskDialog btd = new BacklogTaskDialog(r);
 	}
 }

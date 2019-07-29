@@ -30,8 +30,7 @@ public class UserProfileDialog extends GenericPropertiesDialog {
 	public UserProfileDialog(Record user)
 	{
 		super(user, "document.png", ResourceType.TASK, GlobalData.getDataSource_user(), " профиля пользователя");
-		constructInterface();
-		
+
 		thisDialog = this;
 	}
 	
@@ -40,7 +39,7 @@ public class UserProfileDialog extends GenericPropertiesDialog {
 	{
 		this.addItem(createFormLayout());
 		this.addItem(createPasswordLayout());		
-		this.addItem(createButtonsBar());
+		this.addItem(createButtonsLayout());
 	}
 	
 	private HLayout createPasswordLayout()
@@ -141,74 +140,74 @@ public class UserProfileDialog extends GenericPropertiesDialog {
 		return bottomForm;
 	}
 	
-	protected VLayout createButtonsBar()
-	{
-		VLayout vlayout = new VLayout();
-		vlayout.setHeight("50px");
-		vlayout.setAlign(VerticalAlignment.CENTER);
-
-		HLayout hlayout = new HLayout();
-		hlayout.setAlign(VerticalAlignment.CENTER);
-		
-		final IButton submitButton = new IButton("Сохранить");
-		submitButton.addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-				//Установка нового пароля, если он был задан
-				if (userHasChangedThePassword)
-				{
-					if (!bottomForm.validate()) return;
-					
-					if (!getSHA1(oldPassword.getValueAsString()).equals(record.getAttributeAsString("passwordHash")))
-					{
-						SC.warn("Старый пароль введен неверно");
-						return;
-					}
-					if (!newPassword1.getValueAsString().equals(newPassword2.getValueAsString()))
-					{
-						SC.warn("Новые пароли не совпадают");
-						return;
-					}
-					//record.setAttribute("passwordHashh", getSHA1(newPassword1.getValueAsString()));
-					df.getField("passwordHash").setValue(getSHA1(newPassword1.getValueAsString()));
-				}
-				
-				//saveDialogData();
-				SC.say("save data");
-				df.saveData(new DSCallback(){
-
-					@Override
-					public void execute(DSResponse dsResponse, Object data,
-                                        DSRequest dsRequest) {
-						GlobalData.getStatusBar().indicateMessage("Данные пользователя обновлены");
-						thisDialog.hide();
-					}});
-			}
-		});
-		
-		submitButton.setWidth("150px");
-		
-		final IButton cancelButton = new IButton("Отменить");
-		cancelButton.addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-				hide();
-			}
-		});
-		
-		hlayout.addMember(submitButton);
-		hlayout.addMember(cancelButton);
-		hlayout.setWidth("400px");
-		hlayout.setMembersMargin(10);  
-		hlayout.setMargin(10);
-		hlayout.setAlign(Alignment.RIGHT);
-		
-		vlayout.addMember(hlayout);
-		
-		return vlayout;
-	}
+//	protected VLayout createButtonsLayout()
+//	{
+//		VLayout vlayout = new VLayout();
+//		vlayout.setHeight("50px");
+//		vlayout.setAlign(VerticalAlignment.CENTER);
+//
+//		HLayout hlayout = new HLayout();
+//		hlayout.setAlign(VerticalAlignment.CENTER);
+//
+//		final IButton submitButton = new IButton("Сохранить");
+//		submitButton.addClickHandler(new ClickHandler() {
+//
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				//Установка нового пароля, если он был задан
+//				if (userHasChangedThePassword)
+//				{
+//					if (!bottomForm.validate()) return;
+//
+//					if (!getSHA1(oldPassword.getValueAsString()).equals(record.getAttributeAsString("passwordHash")))
+//					{
+//						SC.warn("Старый пароль введен неверно");
+//						return;
+//					}
+//					if (!newPassword1.getValueAsString().equals(newPassword2.getValueAsString()))
+//					{
+//						SC.warn("Новые пароли не совпадают");
+//						return;
+//					}
+//					//record.setAttribute("passwordHashh", getSHA1(newPassword1.getValueAsString()));
+//					df.getField("passwordHash").setValue(getSHA1(newPassword1.getValueAsString()));
+//				}
+//
+//				//saveDialogData();
+//				SC.say("save data");
+//				df.saveData(new DSCallback(){
+//
+//					@Override
+//					public void execute(DSResponse dsResponse, Object data,
+//                                        DSRequest dsRequest) {
+//						GlobalData.getStatusBar().indicateMessage("Данные пользователя обновлены");
+//						thisDialog.hide();
+//					}});
+//			}
+//		});
+//
+//		submitButton.setWidth("150px");
+//
+//		final IButton cancelButton = new IButton("Отменить");
+//		cancelButton.addClickHandler(new ClickHandler() {
+//
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				hide();
+//			}
+//		});
+//
+//		hlayout.addMember(submitButton);
+//		hlayout.addMember(cancelButton);
+//		hlayout.setWidth("400px");
+//		hlayout.setMembersMargin(10);
+//		hlayout.setMargin(10);
+//		hlayout.setAlign(Alignment.RIGHT);
+//
+//		vlayout.addMember(hlayout);
+//
+//		return vlayout;
+//	}
 
 	/* Обращение к JavaScript-библиотеке для получения хеша sha1 */
 	private native String getSHA1(String str)

@@ -205,15 +205,17 @@ public class GlobalData {
 	public static boolean canWrite(Record r)
 	{
 		//Если записи нет или она пустая 
-
+		SC.logWarn("GlobalData: canWrite: entering...");
 		if (r == null || r.getAttribute("author") == null)
 		{
 			SC.logWarn("GlobalData: canWrite: INCORRECT DESCRIPTOR!");
 			return false;
 		}
-		
+		SC.logWarn("GlobalData: canWrite: wgroup=" + r.getAttributeAsInt("wgroup"));
+		SC.logWarn("GlobalData: canWrite: rgroup=" + r.getAttributeAsInt("rgroup"));
+
 		// Вариант "все"
-		if (r.getAttributeAsInt("wgroup") == ACCESS_ALL)	return true;
+		if (r.getAttributeAsInt("wgroup").equals(ACCESS_ALL))	return true;
 
 		// Вариант "текущий пользователь является автором"
 		if (r.getAttributeAsInt("author").equals(currentUser.getAttributeAsInt("id")))	return true;

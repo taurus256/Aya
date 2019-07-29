@@ -144,8 +144,6 @@ public class GenericPanel extends VLayout implements SidePanel{
 				newRecord.setAttribute("wgroup", GlobalData.ACCESS_ALL);
 
 				GenericPropertiesDialog gpd = new GenericPropertiesDialog(newRecord, iconFile, resourceType, dataSource, objectNameWho);
-				gpd.constructInterface();
-				gpd.show();
 			};
 		});
 
@@ -278,7 +276,6 @@ public class GenericPanel extends VLayout implements SidePanel{
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				GenericPropertiesDialog gpd = new GenericPropertiesDialog(treeGrid.getSelectedRecord(), iconFile, resourceType, dataSource, objectNameWho);
-				gpd.constructInterface();
 				gpd.show();
 			}});
 		 

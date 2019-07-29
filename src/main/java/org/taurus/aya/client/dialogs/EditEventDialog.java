@@ -21,18 +21,16 @@ import org.taurus.aya.client.TaskView;
 import org.taurus.aya.client.generic.GenericPropertiesDialog;
 import org.taurus.aya.client.widgets.ExtendedTimeline;
 
-public class EditEventDialog extends GenericPropertiesDialog {
-	
-	DataSource dataSource;
+public class EditEventDialog extends BacklogTaskDialog {
 
 //	private DialogCallback saveAction, updateAction;
 //	private CalendarEvent calendarEvent = null;
 	
-	final IButton selectButton = new IButton("");;
+	IButton selectButton;
 	Label selectLabel = null;
-	final IButton dropSelectButton = new IButton("");
+	IButton dropSelectButton;
 	
-	final IButton parentButton = new IButton("");;
+	final IButton parentButton = new IButton("");
 	Label parentLabel = null;
 	final IButton dropSelectParentButton = new IButton("");
 	
@@ -43,44 +41,19 @@ public class EditEventDialog extends GenericPropertiesDialog {
 	
 	public EditEventDialog(Record r)
 	{
-		super(r, "task.png", ResourceType.TASK, GlobalData.getDataSource_tasks(), "задачи");
-		
-		setCanDragReposition(true);  
-		setCanDragResize(false);
-		setSize("450px", "180px");
-		setTitle("Свойства задачи");
-		setBodyColor("rgb(253, 253, 253)");
-//		setBodyStyle("s3_windowBody");
-		setHoverMoveWithMouse(true);
-		setAutoSize(true);		
-		setAutoCenter(true);
-		setAnimateShowEffect(AnimationEffect.FADE);
-		
-		constructInterface();
-		
-		this.dataSource = GlobalData.getDataSource_tasks();
-		
-		//setting date attributes
-
-		if (r.getAttribute("duration_h") == null) r.setAttribute("duration_h", 0);
-		
-		df.setDataSource(dataSource);
-		df.editRecord(r);
-		if (!GlobalData.canWrite(r))
-			df.disable();
+		super(r);
+		SC.logWarn("EditEventDialog:start");
 	}
-	
-	
-	public void constructInterface()
+
+	@Override
+	protected void constructInterface()
 	{
 		this.addItem(createFormLayout());
-		
-		
-		//this.addItem(createSelectTasksPanel());
+		this.addItem(createSelectTasksPanel());
 		//this.addItem(createSelectParentPanel());
 		this.addItem(createTagsLayout());
 		this.addItem(createSecurityLayout());
-		
+
 		this.addItem(createButtonsLayout());
 
 		if (record.getAttributeAsInt("id") != null) tagListGrid.fetchData(new Criteria(getColumnName(), record.getAttributeAsString("id")));
@@ -206,75 +179,75 @@ public class EditEventDialog extends GenericPropertiesDialog {
 		}		
 	}
 
-	private VLayout createButtonsLayout()
-	{
-		VLayout vlayout = new VLayout();
-		vlayout.setMembersMargin(10);
-		vlayout.setMargin(10);
-		vlayout.setWidth100();
-		vlayout.setHeight("32px");
-		
-		/*vlayout.addMember(df);
-		df.setWidth100();
-		df.setWrapItemTitles(false);
-		
-		vlayout.addMember(createSelectParentPanel());
-		vlayout.addMember(createSelectTasksPanel());
-		*/
-		HLayout hlayout = new HLayout();
-		final IButton submitButton = new IButton("Сохранить");
-		submitButton.addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-				// Setting 'endDate', if user didn't set it. This value is necessary for timeline drawing
-				//TODO: delete this
-				//!if (df.getField("endDate").getValue() == null) df.getField("endDate").setValue(df.getField("limitDate").getValue());
-				
-				//if (df.getField("sublane").getValue() == null) df.getField("sublane").setValue(df.getField("lane").getValue());
-				
-				if (df.getField("executor").getSelectedRecord() !=null)
-				{
-					SC.logWarn("EditEventDialog. Setting executor_name to " + df.getField("executor").getSelectedRecord().getAttribute("firstname") + " " + df.getField("executor").getSelectedRecord().getAttribute("lastname"));
-					record.setAttribute("executor_name", df.getField("executor").getSelectedRecord().getAttribute("firstname") + " " + df.getField("executor").getSelectedRecord().getAttribute("surname"));
-				}
-				record.setAttribute("isGraph",true);
-				
-//				if (df.getField("ros_task").getSelectedRecord() != null)
+//	private VLayout createButtonsLayout()
+//	{
+//		VLayout vlayout = new VLayout();
+//		vlayout.setMembersMargin(10);
+//		vlayout.setMargin(10);
+//		vlayout.setWidth100();
+//		vlayout.setHeight("32px");
+//
+//		/*vlayout.addMember(df);
+//		df.setWidth100();
+//		df.setWrapItemTitles(false);
+//
+//		vlayout.addMember(createSelectParentPanel());
+//		vlayout.addMember(createSelectTasksPanel());
+//		*/
+//		HLayout hlayout = new HLayout();
+//		final IButton submitButton = new IButton("Сохранить");
+//		submitButton.addClickHandler(new ClickHandler() {
+//
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				// Setting 'endDate', if user didn't set it. This value is necessary for timeline drawing
+//				//TODO: delete this
+//				//!if (df.getField("endDate").getValue() == null) df.getField("endDate").setValue(df.getField("limitDate").getValue());
+//
+//				//if (df.getField("sublane").getValue() == null) df.getField("sublane").setValue(df.getField("lane").getValue());
+//
+//				if (df.getField("executor").getSelectedRecord() !=null)
 //				{
-//					/*String host = GWT.getHostPageBaseURL();
-//					if (host.contains("127.0.0.1"))		host = host.replace("127.0.0.1", "10.7.41.76");*/
-//					//df.getField("description").setValue("<a href=\"" + df.getField("ros_task").getSelectedRecord().getAttribute("url") + "\" target=\"_blank\">" + df.getField("ros_task").getSelectedRecord().getAttribute("name") + "</a>");
-//					df.getField("description").setValue("<a href=\"http://redmine.vingrid.ru" + df.getField("ros_task").getValue() + "\" target=\"_blank\">" + "задача " + df.getField("ros_task") + "</a>");
+//					SC.logWarn("EditEventDialog. Setting executor_name to " + df.getField("executor").getSelectedRecord().getAttribute("firstname") + " " + df.getField("executor").getSelectedRecord().getAttribute("lastname"));
+//					record.setAttribute("executor_name", df.getField("executor").getSelectedRecord().getAttribute("firstname") + " " + df.getField("executor").getSelectedRecord().getAttribute("surname"));
 //				}
-	
-				//This method called from parent class 
-				saveDialogData();
-			}
-		});
-		
-		final IButton cancelButton = new IButton("Отменить");
-		cancelButton.addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-				//Возвращаем taskView в исходное состояние
-				//!taskView.setBlockSelectMode(false);
-				hide();
-			}
-		});
-		
-		if (canWriteToThisResource) hlayout.addMember(submitButton);
-		
-		hlayout.addMember(cancelButton);
-		hlayout.setWidth("100%");
-		hlayout.setMembersMargin(10);  
-		hlayout.setAlign(Alignment.RIGHT);
-		vlayout.addMember(hlayout);
-		vlayout.setWidth("100%");
-		
-		return vlayout;
-	}
+//				record.setAttribute("isGraph",true);
+//
+////				if (df.getField("ros_task").getSelectedRecord() != null)
+////				{
+////					/*String host = GWT.getHostPageBaseURL();
+////					if (host.contains("127.0.0.1"))		host = host.replace("127.0.0.1", "10.7.41.76");*/
+////					//df.getField("description").setValue("<a href=\"" + df.getField("ros_task").getSelectedRecord().getAttribute("url") + "\" target=\"_blank\">" + df.getField("ros_task").getSelectedRecord().getAttribute("name") + "</a>");
+////					df.getField("description").setValue("<a href=\"http://redmine.vingrid.ru" + df.getField("ros_task").getValue() + "\" target=\"_blank\">" + "задача " + df.getField("ros_task") + "</a>");
+////				}
+//
+//				//This method called from parent class
+//				saveDialogData();
+//			}
+//		});
+//
+//		final IButton cancelButton = new IButton("Отменить");
+//		cancelButton.addClickHandler(new ClickHandler() {
+//
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				//Возвращаем taskView в исходное состояние
+//				//!taskView.setBlockSelectMode(false);
+//				hide();
+//			}
+//		});
+//
+//		if (canWriteToThisResource) hlayout.addMember(submitButton);
+//
+//		hlayout.addMember(cancelButton);
+//		hlayout.setWidth("100%");
+//		hlayout.setMembersMargin(10);
+//		hlayout.setAlign(Alignment.RIGHT);
+//		vlayout.addMember(hlayout);
+//		vlayout.setWidth("100%");
+//
+//		return vlayout;
+//	}
 	
 	private HLayout createSelectTasksPanel()
 	{
@@ -283,7 +256,11 @@ public class EditEventDialog extends GenericPropertiesDialog {
 		hLayout.setWidth100();
 		hLayout.setHeight("32px");
 		hLayout.setMargin(10);
-		
+		SC.logWarn("createSelectTasksPanel-1");
+
+		selectButton = new IButton("");
+		selectLabel = new Label();
+		dropSelectButton = new IButton("");
 		selectButton.addClickHandler(new ClickHandler(){
 
 			@Override
@@ -300,10 +277,11 @@ public class EditEventDialog extends GenericPropertiesDialog {
 					selectButton.disable();
 				}
 			}});
+		SC.logWarn("createSelectTasksPanel-2");
 		selectButton.setVisible(true);
 		selectButton.setIcon("forms/arrow-24.png");
 		selectButton.setSize("25px","25px");
-		
+		SC.logWarn("createSelectTasksPanel-3");
 		dropSelectButton.setIcon("forms/cross-24.png");
 		dropSelectButton.setVisible(false);
 		dropSelectButton.setSize("25px","25px");
@@ -318,7 +296,7 @@ public class EditEventDialog extends GenericPropertiesDialog {
 				dropSelectButton.hide();
 			}
 		});
-		
+		SC.logWarn("createSelectTasksPanel-4");
 		selectLabel = new Label(NO_BLOCKING_TASK_MESSAGE);
 		selectLabel.setIcon("forms/link_gray-24.png");
 		selectLabel.setIconSize(32);
@@ -397,6 +375,9 @@ public class EditEventDialog extends GenericPropertiesDialog {
 		if (df.getField("executor").getValue() == null)
 			SC.warn("Исполнитель должен быть задан");
 		else
-			super.saveDialogData();
+			if (df.getField("lane").getValue() == null || df.getField("lane").getValue().equals("null"))
+				SC.warn("Необходимо задать поток для задачи");
+			else
+				super.saveDialogData();
 	}
 }

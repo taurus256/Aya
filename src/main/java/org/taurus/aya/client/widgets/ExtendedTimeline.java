@@ -182,22 +182,22 @@ public class ExtendedTimeline extends Timeline {
 				redraw();
 
 				// Setting menu title for dialog calling
-				if (selectedEvent.getAttributeAsInt("author").equals(GlobalData.getCurrentUser().getAttributeAsInt("id")))
-				{
-					dialogOpenMenu.setTitle("Диалог с исполнителем");
-
-					if (!selectedEvent.getAttributeAsInt("author").equals(selectedEvent.getAttributeAsInt("executor")))
-						dialogOpenMenu.setEnabled(true);
-					else
-						dialogOpenMenu.setEnabled(false);
-				}
-				else
-				{
-					dialogOpenMenu.setTitle("Диалог с постановщиком");
-					dialogOpenMenu.setEnabled(true);
-				}
+//				if (selectedEvent.getAttributeAsInt("author").equals(GlobalData.getCurrentUser().getAttributeAsInt("id")))
+//				{
+//					dialogOpenMenu.setTitle("Диалог с исполнителем");
+//
+//					if (!selectedEvent.getAttributeAsInt("author").equals(selectedEvent.getAttributeAsInt("executor")))
+//						dialogOpenMenu.setEnabled(true);
+//					else
+//						dialogOpenMenu.setEnabled(false);
+//				}
+//				else
+//				{
+//					dialogOpenMenu.setTitle("Диалог с постановщиком");
+//					dialogOpenMenu.setEnabled(true);
+//				}
 				
-				menu.refreshRow(0);
+//				menu.refreshRow(0);
 				menu.refreshRow(menu.getItems().length-1);
 				
 				// Setting blocking or parent task in EditEventDialog, if it taken by blockSelectVode
@@ -303,7 +303,6 @@ public class ExtendedTimeline extends Timeline {
 				}
 
 				getEditEventDialog(ev).setNewEvent(extendedTimeline, ev);
-				getEditEventDialog(ev).show();
 				event.cancel();
 			}});       
         
@@ -366,11 +365,15 @@ public class ExtendedTimeline extends Timeline {
 
                                //TODO:: вынести проверку на null в отдельный метод
                                if (r.getAttribute("lane") == null || r.getAttribute("lane").equals("null"))
-                                    new BacklogTaskDialog(r,true);
+                                    new BacklogTaskDialog(r);
                                else {
                                    r.setAttribute("isGraph", true);
-                                   GlobalData.getDataSource_tasks().updateData(r);
-                                   CommandExecutor.exec(new Command(CommandType.UPDATE_TASK_PANEL));
+                                   GlobalData.getDataSource_tasks().updateData(r, new DSCallback() {
+									   @Override
+									   public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest) {
+										   CommandExecutor.exec(new Command(CommandType.UPDATE_TASK_PANEL));
+									   }
+								   });
                                }
                            }
                        });
@@ -637,8 +640,7 @@ public class ExtendedTimeline extends Timeline {
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				getEditEventDialog(selectedEvent).setUpdateEvent(extendedTimeline, selectedEvent);
-				getEditEventDialog(selectedEvent).show();
+				getEditEventDialog(selectedEvent);
 			}});
         eventPropertiesMenu.setEnabled(false);
         menu.addItem(eventPropertiesMenu);
@@ -649,12 +651,7 @@ public class ExtendedTimeline extends Timeline {
     
 	private EditEventDialog getEditEventDialog(Record event)
 	{
-		if (event == null)
-			SC.warn("Задача не выбрана");
-		
-		if (editEventDialog == null)
-			editEventDialog = new EditEventDialog(event);
-		return editEventDialog;
+		return new EditEventDialog(event);
 	}
 	
     public MenuItem getMenuItem(String title, final TimeUnit headerUnit, final TimeUnit rangeUnit, final Integer columnCount, final Integer minutesPerColumn) {

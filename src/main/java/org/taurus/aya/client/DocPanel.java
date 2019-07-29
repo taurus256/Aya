@@ -72,13 +72,10 @@ public class DocPanel extends GenericPanel {
 				if (treeGrid.getSelectedRecord().getAttributeAsInt("type")==1)
 				{
 					GenericPropertiesDialog gpd = new GenericPropertiesDialog(treeGrid.getSelectedRecord(), iconFile, resourceType, dataSource, objectNameWho);
-					gpd.constructInterface();
-					gpd.show();
 				}
 				else
 				{
 					AddFileDialog adf = new AddFileDialog(treeGrid.getSelectedRecord());
-					adf.show();
 				}
 			}
 			

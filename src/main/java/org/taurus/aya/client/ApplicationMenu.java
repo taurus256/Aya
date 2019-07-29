@@ -84,9 +84,6 @@ public class ApplicationMenu extends HLayout {
 				r.setAttribute("author",GlobalData.getCurrentUser().getAttribute("id"));
 				r.setAttribute("rgroup",GlobalData.ACCESS_ALL);
 				r.setAttribute("wgroup",GlobalData.ACCESS_ALL);
-				GenericPropertiesDialog gpd = new GenericPropertiesDialog(r, "document.png", ResourceType.DOCUMENT, GlobalData.getDataSource_docs(), "документа");
-				gpd.constructInterface();
-				gpd.show();
 			}
 		});
 	    
@@ -100,9 +97,6 @@ public class ApplicationMenu extends HLayout {
 				r.setAttribute("author",GlobalData.getCurrentUser().getAttribute("id"));
 				r.setAttribute("rgroup",GlobalData.ACCESS_ALL);
 				r.setAttribute("wgroup",GlobalData.ACCESS_ALL);
-				GenericPropertiesDialog gpd = new GenericPropertiesDialog(r, "script.png", ResourceType.SCRIPT, GlobalData.getDataSource_scripts(), "скрипта");
-				gpd.constructInterface();
-				gpd.show();
 			}
 		});
 	    
@@ -117,8 +111,6 @@ public class ApplicationMenu extends HLayout {
 				r.setAttribute("rgroup",GlobalData.ACCESS_ALL);
 				r.setAttribute("wgroup",GlobalData.ACCESS_ALL);
 				GenericPropertiesDialog gpd = new GenericPropertiesDialog(r, "tag.png", ResourceType.TAG, GlobalData.getDataSource_tags(), "тега");
-				gpd.constructInterface();
-				gpd.show();
 			}
 		});
 	    
