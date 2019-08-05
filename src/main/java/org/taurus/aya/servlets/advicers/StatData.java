@@ -38,8 +38,10 @@ public class StatData {
 
     void setV(Double V)
     {
-        this.V = V;
-        valueIsEmpty = false;
+        if (!V.equals(Double.NaN)) {
+            this.V = V;
+            valueIsEmpty = false;
+        }
     }
 
     /** Считает дисперсию средних скоростей.  При первом обращении - считает её

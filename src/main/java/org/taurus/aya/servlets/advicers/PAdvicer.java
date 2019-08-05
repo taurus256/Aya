@@ -117,9 +117,9 @@ public class PAdvicer {
         for (Lane l: laneList) laneIds.put(l.getName(),i++);
 
         // Инициализация массива
-        matrix = new StatData[laneList.size()][userList.size()];
-        for (i=0; i < laneList.size(); i++)
-            for (int j=0; j < userList.size(); j++)
+        matrix = new StatData[userList.size()][laneList.size()];
+        for (i=0; i < userList.size(); i++)
+            for (int j=0; j < laneList.size(); j++)
                 matrix[i][j] = new StatData();
 
         for (Event e: eventList) {
@@ -137,7 +137,7 @@ public class PAdvicer {
 
         System.out.println("PAdvicer: initialize: userIds");
         printList(userIds.keySet());
-        System.out.println("PAdvicer: initialize: userIds");
+        System.out.println("PAdvicer: initialize: laneIds");
         printList(laneIds.keySet());
         System.out.println("PAdvicer: initialize: matrix");
         printMatrix(matrix);
@@ -148,17 +148,19 @@ public class PAdvicer {
     {
         List<Double> velocityList = new LinkedList<>(); // средняя скорость для каждого из пользователей, для которых её можно посчитать
         List<Double> dispersionList = new ArrayList<>(); // максимальная дисперсия для каждого из пользователей, для которых её можно посчитать
-        for (int i=0; i< laneIds.size(); i++)
+        for (int i=0; i< userIds.size(); i++)
         {
             Double average = Arrays.asList(matrix[i]).stream().filter(x-> !x.getValueIsEmpty()).mapToDouble(StatData::getV).average().orElse(Double.NaN);
             Double dispersion = Arrays.asList(matrix[i]).stream().filter(x-> !x.getValueIsEmpty()).mapToDouble(StatData::getD).max().orElse(Double.NaN);
-            Arrays.asList(matrix[i]).stream().filter(x-> x.getValueIsEmpty()).forEach(p -> p.setV(average));
+            Arrays.asList(matrix[i]).stream().filter(x-> x.getValueIsEmpty()).forEach(p -> {if (!average.equals(Double.NaN)) p.setV(average);});
             velocityList.add(average);
             dispersionList.add(dispersion);
         }
-        Double avgAll = velocityList.stream().mapToDouble(x -> x).average().orElse(Double.NaN);
+        Double avgAll = velocityList.stream().filter(x -> !x.equals(Double.NaN)).mapToDouble(x -> x).average().orElse(Double.NaN);
 
-        for (int i=0; i< laneIds.size(); i++) {
+        if (avgAll.equals(Double.NaN)) throw new RuntimeException("ALL velocity values is NaN: input data is incorrect!");
+
+        for (int i=0; i< userIds.size(); i++) {
             final Double dispersion =  dispersionList.get(i);
             Arrays.asList(matrix[i]).parallelStream().filter(x -> x.getValueIsEmpty()).forEach(x -> x.setV(avgAll));
             Arrays.asList(matrix[i]).parallelStream().filter(x -> x.getValueIsEmpty()).forEach(x -> x.setD(dispersion));
@@ -180,9 +182,9 @@ public class PAdvicer {
     private void printMatrix(StatData[][] m)
     {
         System.out.println("MATRIX[");
-        for (int i=0; i< laneIds.keySet().size(); i++) {
+        for (int i=0; i< userIds.keySet().size(); i++) {
         System.out.print("[");
-            for (int j = 0; j < userIds.keySet().size(); j++)
+            for (int j = 0; j < laneIds.keySet().size(); j++)
                 System.out.print(m[i][j].getV() + " ");
         System.out.println("]");
         }

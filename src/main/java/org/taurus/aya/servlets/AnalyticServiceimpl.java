@@ -47,6 +47,10 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         user2.setId(2L);
         user2.setNickname("user2");
 
+        User user3 = new User();
+        user3.setId(3L);
+        user3.setNickname("user3");
+
         Event e1 = new Event();
         e1.setId(1L);
         e1.setName("Name1");
@@ -98,6 +102,16 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         e6.setLane(lane2.getName());
         e6.setExecutor(user2.getId().intValue());
 
+        Event e7 = new Event();
+        e7.setId(7L);
+        e7.setName("name7");
+        e7.setStartDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
+        e7.setEndDate(Date.from(Instant.now().plus(2, ChronoUnit.DAYS)));
+        e7.setDurationH(8);
+        e7.setSpentTime(8);
+        e7.setLane(lane2.getName());
+        e7.setExecutor(user3.getId().intValue());
+
         PAdvicer pAdvicer = new PAdvicer();
 
         List<User> userList = new LinkedList<User>();
@@ -107,6 +121,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
 
         userList.add(user1);
         userList.add(user2);
+        userList.add(user3);
 
         laneList.add(lane1);
         laneList.add(lane2);
@@ -118,6 +133,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         futureEventsList.add(e3);
         futureEventsList.add(e4);
         futureEventsList.add(e5);
+        futureEventsList.add(e7);
 
         pAdvicer.initialize(userList,laneList,oldEventsList);
 
