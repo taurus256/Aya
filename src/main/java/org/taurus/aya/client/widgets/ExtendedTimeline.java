@@ -11,10 +11,7 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.calendar.*;
 import com.smartgwt.client.widgets.calendar.events.*;
-import com.smartgwt.client.widgets.events.DropEvent;
-import com.smartgwt.client.widgets.events.DropHandler;
-import com.smartgwt.client.widgets.events.FetchDataEvent;
-import com.smartgwt.client.widgets.events.FetchDataHandler;
+import com.smartgwt.client.widgets.events.*;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -85,10 +82,11 @@ public class ExtendedTimeline extends Timeline {
 		d.setTime(d.getTime() + 24*3600*1000);
 		indicator.setEndDate(d);
 		indicator.setName("Текущая дата");
-		indicator.setStyleName("s3_zone_style");
-		addZone(indicator);
-		setShowZones(true);
-		setShowZoneHovers(true);
+//indicator.setStyleName("s3_zone_style");
+		addIndicator(indicator);
+		setShowIndicators(true);
+//		setShowZones(true);
+//		setShowZoneHovers(true);
 
 		//Configure lane field
 		lgf = new ListGridField("title","Поток");
@@ -384,13 +382,15 @@ public class ExtendedTimeline extends Timeline {
 		addFetchDataHandler(new FetchDataHandler() {
 								@Override
 								public void onFilterData(FetchDataEvent event) {
-									int delta = d.getDate() *60; //+ currentRecord.getAttributeAsDate("endDate").getMinutes()/5*150 - getTimelineView().getWidth()/2;
+								if(thisIsFirstCall) {
+									int delta = new Date().getDate() * 60; //+ currentRecord.getAttributeAsDate("endDate").getMinutes()/5*150 - getTimelineView().getWidth()/2;
 
-									SC.logWarn("ExtendedTimeline: need to scroll window to " + delta + " pixels (granuality: " + getTimelineGranularity().toString() + ")");
+									SC.logWarn("ExtendedTimeline: need to scroll window to " + delta + " pixels (current day: " + new Date().getDate() + ")");
 									getTimelineView().scrollBodyTo(delta, 0);
+									thisIsFirstCall=false;
+									}
 								}
 							});
-
 		updateTimeline();
 	}
 	

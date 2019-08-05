@@ -2,11 +2,15 @@ package org.taurus.aya.client;
 
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.*;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.events.DragStartEvent;
 import com.smartgwt.client.widgets.events.DragStartHandler;
+import com.smartgwt.client.widgets.grid.GroupSortNormalizer;
+import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.events.ClickHandler;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
@@ -106,9 +110,14 @@ public class TaskPanel extends VLayout implements SidePanel {
 		panelBacklog.getTreeGrid().setFields(imageField,new ListGridField("name",220));
 		panelBacklog.getTreeGrid().setGroupByField("priority");
 		panelBacklog.getTreeGrid().setCanGroupBy(true);
-		SortSpecifier sortSpecifier = new SortSpecifier("priority", SortDirection.ASCENDING);
-		SortSpecifier[] sortSpecifiers = { sortSpecifier };
-		panelBacklog.getTreeGrid().setSort(sortSpecifiers);
+		panelBacklog.getTreeGrid().setSortByGroupFirst(true);
+		panelBacklog.getTreeGrid().setGroupSortNormalizer(new GroupSortNormalizer(){
+															  @Override
+															  public Object normalize(ListGridRecord record, String fieldName, ListGrid context) {
+																  SC.logWarn("BacklogPanel: normalizer: " + record.getAttribute("priority"));
+																  return (record.getAttributeAsInt("priority")==null)? -1 : record.getAttributeAsInt("priority");
+															  }
+														  });
 		panelBacklog.getTreeGrid().groupBy("priority");
 
 		panelBacklog.getTreeGrid().setMinWidth(250);

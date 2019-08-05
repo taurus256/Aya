@@ -4,7 +4,7 @@ package org.taurus.aya.server.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.taurus.aya.server.UserRepository;
-import org.taurus.aya.server.entity.Users;
+import org.taurus.aya.server.entity.User;
 import org.taurus.aya.servlets.UserServiceImpl;
 import org.taurus.aya.shared.GwtResponse;
 
@@ -33,20 +33,20 @@ public class UserController {
 
         System.out.println("Operation_type=" + _operationType);
         System.out.println("request body is:" + _operationType);
-        List<Users> users = new ArrayList<Users>();
+        List<User> users = new ArrayList<User>();
         if (_operationType.equals("custom"))
             switch( _operationId) {
                 case "fetchByNickname": {
                     if (request.getParameterMap().get("nickname").length==0)
                         throw new RuntimeException("Сервер получил пустое имя пользователя");
                     System.out.println("Fetch by nickname:: " + request.getParameterMap().get("nickname")[0]);
-                    users = userRepository.findUsersByNickname(request.getParameterMap().get("nickname")[0]);
+                    users = userRepository.findUserByNickname(request.getParameterMap().get("nickname")[0]);
                 }; break;
                 case "fetchByUSID":{
                     if (request.getParameterMap().get("usid").length==0)
                         throw new RuntimeException("Сервер получил пустой USID");
                     System.out.println("Fetch by USID:: " + request.getParameterMap().get("usid")[0]);
-                    users = userRepository.findUsersByUsid(request.getParameterMap().get("usid")[0]);
+                    users = userRepository.findUserByUsid(request.getParameterMap().get("usid")[0]);
                 };break;
             }
         return new GwtResponse(0,0,0,users);
@@ -68,7 +68,7 @@ public class UserController {
         @RequestParam String showed_name
     )
     {
-        Users user = userService.getUser(id);
+        User user = userService.getUser(id);
         if (_operationType.equals("update"))
         {
             user.setFirstname(firstname);
@@ -83,7 +83,7 @@ public class UserController {
             userRepository.save(user);
             System.out.println("User saved");
         }
-        Users[] users = {user};
+        User[] users = {user};
         return new GwtResponse(0,1,1,users);
     }
 }

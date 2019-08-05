@@ -42,5 +42,5 @@ public class Group {
 
     @JsonIgnore
     @ManyToMany(mappedBy="groups")
-    private List<Users> users;
+    private List<User> users;
 }

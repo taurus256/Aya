@@ -2,11 +2,18 @@ package org.taurus.aya.servlets;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import org.taurus.aya.client.AnalyticService;
+import org.taurus.aya.server.entity.Event;
+import org.taurus.aya.server.entity.Lane;
+import org.taurus.aya.server.entity.User;
+import org.taurus.aya.servlets.advicers.PAdvicer;
 import org.taurus.aya.shared.TaskAnalyseData;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.annotation.WebServlet;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.*;
 
 @WebServlet(urlPatterns = "/app/aya/analytic", loadOnStartup = 1)
@@ -26,71 +33,98 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
     @Override
     public TaskAnalyseData getPrognosis() throws Exception {
 
-        Date current = new Date();
+        Lane lane1 = new Lane();
+        lane1.setName("Lane_1");
 
-        // future tasks
-//        List<HashMap<String,String>>  futureList =  dataSource_tasks.fetch(new com.isomorphic.criteria.AdvancedCriteria(DefaultOperators.And, new com.isomorphic.criteria.Criterion[]{new SimpleCriterion("startDate", "greaterThan",current)}));
-//        System.out.println("::::2" +futureList);
-//
-//        int sumFutureTime = 0;
-//        for (HashMap r: futureList) {
-//            if (r.get("duration_h") != null && (Double) (r.get("duration_h")) != 0) {
-//                sumFutureTime += (Double) (r.get("duration_h"));
-//                System.out.println("FUTURE:" + r.get("duration_h"));
-//
-//            }
-//
-//        }
-//
-//        //Retrieving data from datasource
-//        @SuppressWarnings("rawtypes")
-//
-//        //TODO: simplify this code
-//        DSRequest dsr_fetch = new DSRequest(dataSource_tasks,"fetch");
-//        dsr_fetch.setOperationId("getTasks");
-//        com.isomorphic.datasource.DSResponse resp = dataSource_tasks.executeCustom(dsr_fetch);
-//        List<HashMap> list = resp.getRecords();
-//        System.out.println(list);
-//        System.out.println(list.size());
-//
-//        DSRequest dsr = new DSRequest(dataSource_tasks,"fetch");
-//        dsr.addToCriteria("start",new Timestamp((new Date().getTime()-3600*10000*72L)));
-//        dsr.addToCriteria("end",new Timestamp(new Date().getTime()));
-//        dsr.setOperationId("getTime");
-//        com.isomorphic.datasource.DSResponse k=null;
-//        try{
-//        k = dataSource_tasks.executeCustom(dsr);
-//        }
-//        catch(Exception e)
-//        {
-//            System.out.println(e.getLocalizedMessage());
-//        }
-//        System.out.println(dsr.getCriteria());
-//        System.out.println(new Timestamp((new Date().getTime()-3600*10000*72L)));
-//        System.out.println(new Timestamp(new Date().getTime()));
-//        System.out.println(k.getRecords());
-//        System.out.println(k.getRecords().size());
-//
-//        List<Double> tasksVelocityList = new LinkedList<Double>();
-//
-//        double sumTime = 0;
-//        for (HashMap r: list) {
-//            if (r.get("active_time") != null && (Double) (r.get("active_time")) != 0 && r.get("duration_h") != null && (Double) (r.get("duration_h")) != 0) {
-//                tasksVelocityList.add(1.0 * (Double) (r.get("duration_h")) / (Double) (r.get("active_time")));
-//                sumTime += (Double) (r.get("duration_h"));
-//            }
-//        }
-//
-//        Double velocity = tasksVelocityList.stream().mapToDouble(a -> a).average().getAsDouble();
-//        System.out.println("Velocity= " + velocity);
+        Lane lane2 = new Lane();
+        lane2.setName("Lane_2");
 
-//        String s="<h3>Статистика по задачам</h3><br>";
-//        s+="<b>Средняя скорость</b>: " + velocity + "<br>";
-//        s+="<b>Трудоемкость за месяц</b>: " + sumTime/8.0 + " условных дней <br><hr>";
-//        s+="<b>Трудоемкость будущих задач</b>: " + sumFutureTime/8.0 + " условных дней <br>";
-//        s+="<b>Прогнозируемое время выполнения</b>: " + sumFutureTime/velocity/8.0 + " дней <br><hr>";
-//
-//        for (Double t: tasksVelocityList) s += t + " ";
+        User user1 = new User();
+        user1.setId(1L);
+        user1.setNickname("user1");
+
+        User user2 = new User();
+        user2.setId(2L);
+        user2.setNickname("user2");
+
+        Event e1 = new Event();
+        e1.setId(1L);
+        e1.setName("Name1");
+        e1.setDurationH(8);
+        e1.setSpentTime(8);
+        e1.setLane(lane1.getName());
+        e1.setExecutor(user1.getId().intValue());
+
+        Event e2 = new Event();
+        e2.setId(2L);
+        e2.setName("Name2");
+        e2.setDurationH(4);
+        e2.setSpentTime(16);
+        e2.setLane(lane1.getName());
+        e2.setExecutor(user1.getId().intValue());
+
+        Event e3 = new Event();
+        e3.setId(3L);
+        e3.setName("name3");
+        e3.setDurationH(8);
+        e3.setStartDate(Date.from(Instant.now()));
+        e3.setEndDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
+        e3.setLane(lane1.getName());
+        e3.setExecutor(user1.getId().intValue());
+
+        Event e4 = new Event();
+        e4.setId(4L);
+        e4.setName("name4");
+        e4.setDurationH(8);
+        e4.setStartDate(Date.from(Instant.now().plus(1, ChronoUnit.HALF_DAYS)));
+        e4.setEndDate(Date.from(Instant.now().plus(3, ChronoUnit.HALF_DAYS)));
+        e4.setLane(lane1.getName());
+        e4.setExecutor(user2.getId().intValue());
+
+        Event e5 = new Event();
+        e5.setId(5L);
+        e5.setName("name5");
+        e5.setDurationH(8);
+        e5.setStartDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
+        e5.setEndDate(Date.from(Instant.now().plus(2, ChronoUnit.DAYS)));
+        e5.setLane(lane1.getName());
+        e5.setExecutor(user2.getId().intValue());
+
+        Event e6 = new Event();
+        e6.setId(6L);
+        e6.setName("name6");
+        e6.setDurationH(8);
+        e6.setSpentTime(6);
+        e6.setLane(lane2.getName());
+        e6.setExecutor(user2.getId().intValue());
+
+        PAdvicer pAdvicer = new PAdvicer();
+
+        List<User> userList = new LinkedList<User>();
+        List<Lane> laneList = new LinkedList<>();
+        LinkedList<Event> oldEventsList = new LinkedList<>();
+        LinkedList<Event> futureEventsList = new LinkedList<>();
+
+        userList.add(user1);
+        userList.add(user2);
+
+        laneList.add(lane1);
+        laneList.add(lane2);
+
+        oldEventsList.add(e1);
+        oldEventsList.add(e2);
+        oldEventsList.add(e6);
+
+        futureEventsList.add(e3);
+        futureEventsList.add(e4);
+        futureEventsList.add(e5);
+
+        pAdvicer.initialize(userList,laneList,oldEventsList);
+
+        Map<String,Double> prognosisMap = pAdvicer.computeFuturePrognosis(futureEventsList);
+        for (String k: prognosisMap.keySet())
+            System.out.println("prognosis: " + k + " " + prognosisMap.get(k));
+
         return new TaskAnalyseData("Задач за предыдущий месяц: " + 5,"ЗАГОЛОВОК");
     }
 

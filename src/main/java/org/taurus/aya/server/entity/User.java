@@ -7,11 +7,12 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Users {
+@Table(name="users") // Name 'user' used as keyword in PostgreSQL
+public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
   private String firstname;
   private String surname;
   private String patronymic;
@@ -32,11 +33,11 @@ public class Users {
   @JsonIgnore
   private List<Group> groups;
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

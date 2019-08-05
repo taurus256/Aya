@@ -3,7 +3,7 @@ package org.taurus.aya.servlets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.taurus.aya.server.UserRepository;
-import org.taurus.aya.server.entity.Users;
+import org.taurus.aya.server.entity.User;
 import org.taurus.aya.shared.UserDTO;
 
 import java.util.List;
@@ -19,12 +19,12 @@ public class UserServiceImpl /*extends RemoteServiceServlet implements UserServi
 
     public List<UserDTO> findUsersByNickname(String nickname)
     {
-        return userRepository.findUsersByNickname(nickname).stream().map(this::convertUsersToUserDTO).collect(Collectors.toList());
+        return userRepository.findUserByNickname(nickname).stream().map(this::convertUsersToUserDTO).collect(Collectors.toList());
     }
 
     public void updateUSID(Long id, String USID)
     {
-        Optional<Users> u = userRepository.findById(id);
+        Optional<User> u = userRepository.findById(id);
         if (!u.isPresent())
             throw new RuntimeException("Cannot find user with ID=" + id);
         else
@@ -34,21 +34,21 @@ public class UserServiceImpl /*extends RemoteServiceServlet implements UserServi
 
     public List<UserDTO> getUserBuUSID(String USID) throws RuntimeException
     {
-        List<Users> users = userRepository.findUsersByUsid(USID);
+        List<User> users = userRepository.findUserByUsid(USID);
         if (users.size() > 1)
             throw new RuntimeException("Пользователей с данным USID больше оддного");
         else
             return users.stream().map(this::convertUsersToUserDTO).collect(Collectors.toList());
     }
 
-    public Users getUser(Long id)
+    public User getUser(Long id)
     {
-        Optional<Users> optUser = userRepository.findById(id);
+        Optional<User> optUser = userRepository.findById(id);
         if (!optUser.isPresent()) throw new RuntimeException("Cannot find user with id=" + id);
         return optUser.get();
     }
 
-    private UserDTO convertUsersToUserDTO(Users u)
+    private UserDTO convertUsersToUserDTO(User u)
     {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(u.getId());

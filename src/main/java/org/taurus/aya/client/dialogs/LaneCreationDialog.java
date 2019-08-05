@@ -340,7 +340,7 @@ public class LaneCreationDialog extends Dialog {
         });
 
 		vlayout.addMember(df);
-		//vlayout.addMember(createSecurityLayout());
+		vlayout.addMember(createSecurityLayout());
 		vlayout.addMember(buttonSave);
 		
 		vlayout.setAlign(Alignment.RIGHT);

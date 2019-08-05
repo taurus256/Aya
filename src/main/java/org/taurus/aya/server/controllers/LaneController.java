@@ -39,13 +39,13 @@ public class LaneController {
 //                    if (request.getParameterMap().get("nickname").length==0)
 //                        throw new RuntimeException("Сервер получил пустое имя пользователя");
 //                    System.out.println("Fetch by nickname:: " + request.getParameterMap().get("nickname")[0]);
-//                    users = userRepository.findUsersByNickname(request.getParameterMap().get("nickname")[0]);
+//                    users = userRepository.findUserByNickname(request.getParameterMap().get("nickname")[0]);
 //                }; break;
 //                case "fetchByUSID":{
 //                    if (request.getParameterMap().get("usid").length==0)
 //                        throw new RuntimeException("Сервер получил пустой USID");
 //                    System.out.println("Fetch by USID:: " + request.getParameterMap().get("usid")[0]);
-//                    users = userRepository.findUsersByUsid(request.getParameterMap().get("usid")[0]);
+//                    users = userRepository.findUserByUsid(request.getParameterMap().get("usid")[0]);
 //                };break;
 //            }
         return new GwtResponse(0,lanes.size(),lanes.size(),lanes);
