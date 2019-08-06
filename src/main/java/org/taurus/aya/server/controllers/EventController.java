@@ -31,7 +31,7 @@ public class EventController {
     }
 
     //2019-07-19T03:12:27.000
-    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
+    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
 
     @ResponseBody
     @PostMapping("/fetch")

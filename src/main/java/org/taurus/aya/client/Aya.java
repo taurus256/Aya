@@ -8,6 +8,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.smartgwt.client.core.KeyIdentifier;
 import com.smartgwt.client.data.*;
+import com.smartgwt.client.util.DateUtil;
 import com.smartgwt.client.util.Page;
 import com.smartgwt.client.util.PageKeyHandler;
 import com.smartgwt.client.util.SC;
@@ -38,8 +39,8 @@ public class Aya implements EntryPoint {
 //    	DateUtil.setDefaultDisplayTimezone("+04:00");
 //    	SC.logWarn(date.toString());
 
-//    	DateUtil.setDefaultDisplayTimezone("+00:00");
-// 		DateUtil.setAdjustForDST(false);
+    	DateUtil.setDefaultDisplayTimezone("+00:00");
+ 		DateUtil.setAdjustForDST(false);
  		
 		KeyIdentifier debugKey = new KeyIdentifier();
 		debugKey.setCtrlKey(true);

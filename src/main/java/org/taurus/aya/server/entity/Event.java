@@ -17,10 +17,10 @@ public class Event {
   private String lane;
   private String name;
   private String description;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'12:00:01+0000")
   @Column(name = "startdate")
   private Date startDate;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'12:00:01+0000")
   @Column(name = "enddate")
   private Date endDate;
   private Integer wuser;
