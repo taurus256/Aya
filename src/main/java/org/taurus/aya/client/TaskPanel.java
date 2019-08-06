@@ -116,9 +116,9 @@ public class TaskPanel extends VLayout implements SidePanel {
 															  public Object normalize(ListGridRecord record, String fieldName, ListGrid context) {
 																  switch (record.getAttribute("priority"))
 																  {
-																	  case GlobalData.LOW_PRIORITY: return 0;
+																	  case GlobalData.LOW_PRIORITY: return 2;
 																	  case GlobalData.NORMAL_PRIORITY: return 1;
-																	  case GlobalData.HIGH_PRIORITY: return 2;
+																	  case GlobalData.HIGH_PRIORITY: return 0;
 																  }
 																  return -1;
 															  }

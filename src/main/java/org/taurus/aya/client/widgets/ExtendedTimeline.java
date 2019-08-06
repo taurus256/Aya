@@ -254,15 +254,15 @@ public class ExtendedTimeline extends Timeline {
 				event.cancel();
 			}});
 
-//        addEventChangedHandler(new EventChangedHandler(){
-//
-//			@Override
-//			public void onEventChanged(CalendarEventChangedEvent event) {
-//				updateTasks();
-//				SC.logWarn("EventChangedHandler task id = " + event.getEvent().getAttribute("id"));
-////				Connector.sendSystemMessageToAll(CommandType.UPDATE_TASK_ARRANGEMENT, TabManager.ResourceType.TASK, "Пользователь <b>" + GlobalData.getCurrentUser().getAttributeAsString("nickname") + "</b> обновил задачу <b>" + event.getEvent().getAttribute("name") + "</b>", (int)event.getEvent().getAttributeAsInt("id"));
-//				//updateTimeline();
-//		}});
+        addEventChangedHandler(new EventChangedHandler(){
+
+			@Override
+			public void onEventChanged(CalendarEventChangedEvent event) {
+				updateTasks();
+				SC.logWarn("EventChangedHandler task id = " + event.getEvent().getAttribute("id"));
+//				Connector.sendSystemMessageToAll(CommandType.UPDATE_TASK_ARRANGEMENT, TabManager.ResourceType.TASK, "Пользователь <b>" + GlobalData.getCurrentUser().getAttributeAsString("nickname") + "</b> обновил задачу <b>" + event.getEvent().getAttribute("name") + "</b>", (int)event.getEvent().getAttributeAsInt("id"));
+				//updateTimeline();
+		}});
 
 
         addBackgroundMouseUpHandler(new BackgroundMouseUpHandler(){
