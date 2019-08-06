@@ -48,6 +48,10 @@ public class UserController {
                     System.out.println("Fetch by USID:: " + request.getParameterMap().get("usid")[0]);
                     users = userRepository.findUserByUsid(request.getParameterMap().get("usid")[0]);
                 };break;
+                case "fetchAllDomainUsers": {
+                    System.out.println("Fetch all by current domain:: ");
+                    users = userRepository.findAll();
+                }; break;
             }
         return new GwtResponse(0,0,0,users);
     }

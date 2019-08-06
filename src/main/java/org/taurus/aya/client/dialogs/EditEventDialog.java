@@ -42,7 +42,7 @@ public class EditEventDialog extends BacklogTaskDialog {
 	public EditEventDialog(Record r)
 	{
 		super(r);
-		SC.logWarn("EditEventDialog:start");
+		r.setAttribute("isGraph",true);
 	}
 
 	@Override

@@ -187,7 +187,14 @@ public class Aya implements EntryPoint {
 								// Инициализация служебных объектов
 								//TODO ViewManager.init();
 								TabManager.init();
-								//GlobalData.setConnector(new Connector());
+
+								GlobalData.getDataSource_user().performCustomOperation("fetchAllDomainUsers", new Record(), new DSCallback(){
+									@Override
+									public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest) {
+										GlobalData.setUsers(dsResponse.getData());
+										SC.logInfo("Initialization: user list has " + dsResponse.getData().length + " records");
+									}
+								});
 
 							}});
 

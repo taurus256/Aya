@@ -48,6 +48,10 @@ public class GlobalData {
 	
 	public static final Integer ACCESS_ALL = null;	// This records can be accessed by all users
 	public static final int ACCESS_ONLY_AUTHOR = -1; 	// This records can be shown to author
+
+	public static final String LOW_PRIORITY = "Низкий приоритет";
+	public static final String NORMAL_PRIORITY = "Нормальный приоритет";
+	public static final String HIGH_PRIORITY = "Высокий приоритет";
 	
 	public static GenericPanel getCurrentPanel() {
 		return currentPanel;
@@ -451,9 +455,9 @@ public class GlobalData {
 		DataSourceField priority = new DataSourceField("priority", FieldType.INTEGER, "Приоритет");
 		LinkedHashMap valueMapPriority = new LinkedHashMap<Integer,String>();
 
-		valueMapPriority.put(0,"Низкий приоритет");
-		valueMapPriority.put(1,"Нормальный приоритет");
-		valueMapPriority.put(2,"Высокий приоритет");
+		valueMapPriority.put(0,LOW_PRIORITY);
+		valueMapPriority.put(1,NORMAL_PRIORITY);
+		valueMapPriority.put(2,HIGH_PRIORITY);
 		priority.setValueMap(valueMapPriority);
 
 		DataSourceField[] fields = {

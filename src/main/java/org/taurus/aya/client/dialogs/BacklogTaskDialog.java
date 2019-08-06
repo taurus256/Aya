@@ -14,16 +14,22 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class BacklogTaskDialog extends AbstractPropertiesDialog {
-	SelectItem lane,si,sip;
-
 	public BacklogTaskDialog(Record r)
 	{
 		super(r, "task.png", ResourceType.TASK, GlobalData.getDataSource_tasks(), "задачи");
 		setWidth(520);
 		SC.logWarn("BacklogTaskDialog:start");
 
-		//setting selectItem values for estimation
-		LinkedHashMap valueMap = new LinkedHashMap<Integer,String>();
+		// Executor field
+		LinkedHashMap<Integer,String> usersMap = new LinkedHashMap<>();
+		for (Record u: GlobalData.getUsers())
+			usersMap.put(u.getAttributeAsInt("id"),u.getAttributeAsString("nickname"));
+		SelectItem executor = new SelectItem("executor");
+		executor.setValueMap(usersMap);
+
+		//Estimation field
+		// setting selectItem values for estimation
+		LinkedHashMap<Integer,String> valueMap = new LinkedHashMap<>();
 		valueMap.put(0,"Время не указано");
 		valueMap.put(1,"1 час");
 		valueMap.put(3,"3 часа");
@@ -33,48 +39,48 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
 		valueMap.put(24,"3 дня");
 		valueMap.put(56,"5 дней");
 
-		si = new SelectItem("duration_h");
+		SelectItem si = new SelectItem("duration_h");
 		si.setValueMap(valueMap);
 
-		LinkedHashMap valueMapPriority = new LinkedHashMap<Integer,String>();
+		//Priority field
+		LinkedHashMap<Integer,String> valueMapPriority = new LinkedHashMap<>();
 		valueMapPriority.put(0,"Низкий");
 		valueMapPriority.put(1,"Нормальный");
 		valueMapPriority.put(2,"Высокий");
-		sip = new SelectItem("priority");
+
+		SelectItem sip = new SelectItem("priority");
 		sip.setValueMap(valueMapPriority);
 		sip.setDefaultValue(1);
         SC.logWarn(">1");
 
+		//Lane field. To fill it, we have to make the server request
 		SelectItem lane = new SelectItem("lane");
         lane.setWidth(300);
-		GlobalData.getDataSource_lanes().fetchData(new Criteria(), new DSCallback() {
-					@Override
-					public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest) {
-						Map<String,String> valueMapLane = new HashMap<>();
-						for (Record r: dsResponse.getData())
-							valueMapLane.put(r.getAttributeAsString("name"),r.getAttributeAsString("name"));
+		GlobalData.getDataSource_lanes().fetchData(new Criteria(), (dsResponse, data, dsRequest) -> {
+			Map<String,String> valueMapLane = new HashMap<>();
+			for (Record r1 : dsResponse.getData())
+				valueMapLane.put(r1.getAttributeAsString("name"), r1.getAttributeAsString("name"));
 
-						lane.setValueMap(valueMapLane);
+			lane.setValueMap(valueMapLane);
 
-						TextItem name = new TextItem("name");
-						name.setWidth(300);
+			TextItem name = new TextItem("name");
+			name.setWidth(300);
 
-						TextAreaItem description = new TextAreaItem("description");
-						description.setWidth(300);
-						description.setHeight(200);
+			TextAreaItem description = new TextAreaItem("description");
+			description.setWidth(300);
+			description.setHeight(200);
 
-						SC.logWarn(">2");
-						df.setFields(lane, name, description, sip, si);
+			SC.logWarn(">2");
+			df.setFields(lane, name, description, executor, sip, si);
 
-						df.editRecord(r);
-						SC.logWarn(">3");
+			df.editRecord(r);
+			SC.logWarn(">3");
 
-						if (!GlobalData.canWrite(r))
-							df.disable();
+			if (!GlobalData.canWrite(r))
+				df.disable();
 
-						show();
-					}
-				});
+			show();
+		});
 	}
 	
 	@Override

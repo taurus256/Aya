@@ -114,8 +114,13 @@ public class TaskPanel extends VLayout implements SidePanel {
 		panelBacklog.getTreeGrid().setGroupSortNormalizer(new GroupSortNormalizer(){
 															  @Override
 															  public Object normalize(ListGridRecord record, String fieldName, ListGrid context) {
-																  SC.logWarn("BacklogPanel: normalizer: " + record.getAttribute("priority"));
-																  return (record.getAttributeAsInt("priority")==null)? -1 : record.getAttributeAsInt("priority");
+																  switch (record.getAttribute("priority"))
+																  {
+																	  case GlobalData.LOW_PRIORITY: return 0;
+																	  case GlobalData.NORMAL_PRIORITY: return 1;
+																	  case GlobalData.HIGH_PRIORITY: return 2;
+																  }
+																  return -1;
 															  }
 														  });
 		panelBacklog.getTreeGrid().groupBy("priority");
@@ -282,7 +287,7 @@ public class TaskPanel extends VLayout implements SidePanel {
 				//ee.show();
 //			}});
 
-	    
+
 	}
 
 	private void updateTaskRecord() {
