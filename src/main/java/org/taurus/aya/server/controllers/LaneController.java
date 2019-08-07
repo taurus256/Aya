@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/lanes")
-public class LaneController {
+public class LaneController extends GenericController {
 
     private LaneRepository laneRepository;
 
@@ -24,7 +24,7 @@ public class LaneController {
     }
 
     @ResponseBody
-    @GetMapping()
+    @PostMapping("fetch")
     public GwtResponse execute(HttpServletRequest request, @RequestParam String _operationType, String _operationId) throws RuntimeException
     {
 
@@ -34,72 +34,65 @@ public class LaneController {
         if (_operationType.equals("fetch")) {
             lanes = laneRepository.findAll();
         }
-//            switch( _operationId) {
-//                case "fetchByNickname": {
-//                    if (request.getParameterMap().get("nickname").length==0)
-//                        throw new RuntimeException("Сервер получил пустое имя пользователя");
-//                    System.out.println("Fetch by nickname:: " + request.getParameterMap().get("nickname")[0]);
-//                    users = userRepository.findUserByNickname(request.getParameterMap().get("nickname")[0]);
-//                }; break;
-//                case "fetchByUSID":{
-//                    if (request.getParameterMap().get("usid").length==0)
-//                        throw new RuntimeException("Сервер получил пустой USID");
-//                    System.out.println("Fetch by USID:: " + request.getParameterMap().get("usid")[0]);
-//                    users = userRepository.findUserByUsid(request.getParameterMap().get("usid")[0]);
-//                };break;
-//            }
+
         return new GwtResponse(0,lanes.size(),lanes.size(),lanes);
     }
 
-    @PostMapping
+    @PostMapping("modify")
     @ResponseBody
     public GwtResponse executePost(
-            @RequestParam String _operationType,
-        @RequestParam Long id,
-        @RequestParam Integer parent,
-        @RequestParam String name,
-        @RequestParam String description,
-        @RequestParam Integer lane_order,
-        @RequestParam Boolean visible,
-        @RequestParam Long author,
-        @RequestParam Boolean is_folder,
-//        @RequestParam Boolean lane,
-        @RequestParam Integer wuser,
-        @RequestParam Integer wgroup,
-        @RequestParam Integer ruser,
-        @RequestParam Integer rgroup
+        @RequestParam String _operationType,
+        @RequestParam (required = false) Long id,
+        @RequestParam (required = false) String parent,
+        @RequestParam (required = false) String name,
+        @RequestParam (required = false) String description,
+        @RequestParam (required = false) String laneOrder,
+        @RequestParam (required = false) String visible,
+        @RequestParam (required = false) String author,
+        @RequestParam (required = false) String isFolder,
+//      @RequestParam (required = false) Boolean lane,
+        @RequestParam (required = false) String wuser,
+        @RequestParam (required = false) String wgroup,
+        @RequestParam (required = false) String ruser,
+        @RequestParam (required = false) String rgroup
 
     )
     {
-        Optional<Lane> optLane = laneRepository.findById(id);
+        Lane lane;
 
-        if (!optLane.isPresent()) throw new RuntimeException("Cannot find lane with id=" + id);
-        Lane lane = optLane.get();
+        if (id == null)
+            lane = new Lane();
+        else {
+            Optional<Lane> optLane = laneRepository.findById(id);
+            if (!optLane.isPresent()) throw new RuntimeException("Cannot find lane with id=" + id);
+            lane = optLane.get();
+        }
+
         switch(_operationType){
             case "add":
             case "update":
             {
-                lane.setParent(parent);
+                lane.setParent(filterIntValue(parent));
                 lane.setName(name);
                 lane.setDescription(description);
-                lane.setLaneOrder(lane_order);
-                lane.setVisible(visible);
-                lane.setAuthor(author);
-                lane.setIsfolder(is_folder);
-                lane.setWuser(wuser);
-                lane.setWgroup(wgroup);
-                lane.setRuser(ruser);
-                lane.setRgroup(rgroup);
+                lane.setLaneOrder(filterIntValue(laneOrder));
+                lane.setVisible(filterBooleanValue(visible));
+                lane.setAuthor(filterLongValue(author));
+                lane.setIsFolder(filterBooleanValue(isFolder));
+                lane.setWuser(filterIntValue(wuser));
+                lane.setWgroup(filterIntValue(wgroup));
+                lane.setRuser(filterIntValue(ruser));
+                lane.setRgroup(filterIntValue(rgroup));
 
                 laneRepository.save(lane);
                 System.out.println("Lane saved");
-            }; break;
-            case "delete":
+            } break;
+            case "remove":
             {
                 laneRepository.delete(lane);
             }
         }
         Lane[] lanes = {lane};
-        return new GwtResponse(0,0,0,lanes);
+        return new GwtResponse(0,lanes.length,lanes.length,lanes);
     }
 }

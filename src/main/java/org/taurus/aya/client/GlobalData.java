@@ -219,7 +219,7 @@ public class GlobalData {
 		SC.logWarn("GlobalData: canWrite: rgroup=" + r.getAttributeAsInt("rgroup"));
 
 		// Вариант "все"
-		if (r.getAttributeAsInt("wgroup").equals(ACCESS_ALL))	return true;
+		if (r.getAttributeAsInt("wgroup") == ACCESS_ALL)	return true;
 
 		// Вариант "текущий пользователь является автором"
 		if (r.getAttributeAsInt("author").equals(currentUser.getAttributeAsInt("id")))	return true;
@@ -328,51 +328,22 @@ public class GlobalData {
 	private static DataSource createRestGroupDS() {
 
 		/* Request url*/
-		String url = "/groups";
+		String dsName = "groups";
 
 		/* Request fields */
 		DataSourceField[] fields = {
 				new DataSourceField("id", FieldType.INTEGER),
-				new DataSourceField("name", FieldType.TEXT),
-				new DataSourceField("description", FieldType.TEXT),
+				new DataSourceField("name", FieldType.TEXT, "Название"),
+				new DataSourceField("description", FieldType.TEXT, "Описание"),
 		};
 
-		DataSource dataSource =
-				new RestDataSource() {
-
-					protected Object transformRequest(DSRequest dsRequest) {
-						//dsRequest.setParams(getRequestParams());
-						return super.transformRequest(dsRequest);
-					}
-
-					protected void transformResponse(DSResponse response, DSRequest request, Object data) {
-						super.transformResponse(response, request, data);
-					}
-				};
-
-		dataSource.setDataFormat(DSDataFormat.JSON);
-		dataSource.setDataProtocol(DSProtocol.GETPARAMS);
-		dataSource.setJsonPrefix("");
-		dataSource.setJsonSuffix("");
-
-		//set up FETCH to use POST requests
-		OperationBinding fetch = new OperationBinding();
-		fetch.setDataURL("/groups/fetch");
-		fetch.setOperationType(DSOperationType.FETCH);
-		fetch.setDataProtocol(DSProtocol.POSTPARAMS);
-		dataSource.setOperationBindings(fetch);
-
-		dataSource.setDataURL(url);
-		dataSource.setFields(fields);
-
-		/* finally set data source */
-		return dataSource;
+		return createDS(dsName,fields);
 	}
 
 	private static DataSource createRestLaneDS() {
 
 		/* Request url*/
-		String url = "/lanes";
+		String dsName = "lanes";
 
 		/* Request fields */
 		DataSourceField id = new DataSourceField("id", FieldType.INTEGER);
@@ -382,51 +353,44 @@ public class GlobalData {
 		parent.setRootValue(0);
 
 
+		DataSourceField wuser = new DataSourceField("wuser", FieldType.INTEGER);
+		wuser.setHidden(true);
+		DataSourceField wgroup = new DataSourceField("wgroup", FieldType.INTEGER);
+		wgroup.setHidden(true);
+
+		DataSourceField ruser = new DataSourceField("ruser", FieldType.INTEGER);
+		ruser.setHidden(true);
+		DataSourceField rgroup = new DataSourceField("rgroup", FieldType.INTEGER);
+		rgroup.setHidden(true);
+		DataSourceField is_folder = new DataSourceField("is_folder", FieldType.BOOLEAN);
+		is_folder.setHidden(true);
+
+		DataSourceField author = new DataSourceField("author", FieldType.TEXT);
+		author.setHidden(true);
+
 		DataSourceField[] fields = {
 				id,
 				parent,
-				new DataSourceField("name", FieldType.TEXT),
-				new DataSourceField("description", FieldType.TEXT),
+				new DataSourceField("name", FieldType.TEXT, "Название"),
+				new DataSourceField("description", FieldType.TEXT, "Описание"),
 				new DataSourceField("lane_order", FieldType.INTEGER),
-				new DataSourceField("visible", FieldType.BOOLEAN),
-				new DataSourceField("author", FieldType.TEXT),
-				new DataSourceField("is_folder", FieldType.BOOLEAN),
-				new DataSourceField("wuser", FieldType.INTEGER),
-				new DataSourceField("wgroup", FieldType.INTEGER),
-				new DataSourceField("ruser", FieldType.INTEGER),
-				new DataSourceField("rgroup", FieldType.INTEGER)
+				new DataSourceField("visible", FieldType.BOOLEAN, "Видимость"),
+				author,
+				is_folder,
+				wuser,
+				wgroup,
+				ruser,
+				rgroup
 		};
 
-		DataSource dataSource =
-				new RestDataSource() {
-
-					protected Object transformRequest(DSRequest dsRequest) {
-						//dsRequest.setParams(getRequestParams());
-						return super.transformRequest(dsRequest);
-					}
-
-					protected void transformResponse(DSResponse response, DSRequest request, Object data) {
-						super.transformResponse(response, request, data);
-					}
-				};
-		dataSource.setID("lanes");
-		dataSource.setDataFormat(DSDataFormat.JSON);
-		dataSource.setDataProtocol(DSProtocol.GETPARAMS);
-		dataSource.setJsonPrefix("");
-		dataSource.setJsonSuffix("");
-
-
-		dataSource.setDataURL(url);
-		dataSource.setFields(fields);
-
-		/* finally set data source */
-		return dataSource;
+		return createDS(dsName,fields);
 	}
 
 	private static DataSource createRestEventDS() {
 
-		/* Request url*/
-		String url = "/events";
+		/* Datasource name*/
+		String dsName = "events";
+
 		DataSourceField id= new DataSourceField("id", FieldType.INTEGER);
 		id.setPrimaryKey(true);
 
@@ -453,7 +417,7 @@ public class GlobalData {
         lane.setUseLocalDisplayFieldValue(false);
 
 		DataSourceField priority = new DataSourceField("priority", FieldType.INTEGER, "Приоритет");
-		LinkedHashMap valueMapPriority = new LinkedHashMap<Integer,String>();
+		LinkedHashMap<Integer,String> valueMapPriority = new LinkedHashMap<>();
 
 		valueMapPriority.put(0,LOW_PRIORITY);
 		valueMapPriority.put(1,NORMAL_PRIORITY);
@@ -487,10 +451,14 @@ public class GlobalData {
 				new DataSourceField("rgroup", FieldType.INTEGER)
 		};
 
+		return createDS(dsName,fields);
+	}
+
+	private static DataSource createDS(String name, DataSourceField[] fields)
+	{
 		DataSource dataSource =
 				new RestDataSource() {
 					protected Object transformRequest(DSRequest dsRequest) {
-						//dsRequest.setParams(getRequestParams());
 						return super.transformRequest(dsRequest);
 					}
 
@@ -498,7 +466,8 @@ public class GlobalData {
 						super.transformResponse(response, request, data);
 					}
 				};
-		dataSource.setID("events");
+
+		dataSource.setID(name);
 		dataSource.setDataFormat(DSDataFormat.JSON);
 		dataSource.setDataProtocol(DSProtocol.GETPARAMS);
 		dataSource.setJsonPrefix("");
@@ -506,37 +475,31 @@ public class GlobalData {
 
 		//set up FETCH to use POST requests
 		OperationBinding fetch = new OperationBinding();
-		fetch.setDataURL("/events/fetch");
+		fetch.setDataURL("/" + name + "/fetch");
 		fetch.setOperationType(DSOperationType.FETCH);
 		fetch.setDataProtocol(DSProtocol.POSTPARAMS);
 
-		//set up ADD to use POST requests
+		//set up ADD to use POST requests~`
 		OperationBinding add = new OperationBinding();
-		add.setDataURL("/events/modify");
+		add.setDataURL("/" + name + "/modify");
 		add.setOperationType(DSOperationType.ADD);
 		add.setDataProtocol(DSProtocol.POSTPARAMS);
 
 		//set up UPDATE to use POST
 		OperationBinding update = new OperationBinding();
 		update.setOperationType(DSOperationType.UPDATE);
-		update.setDataURL("/events/modify");
+		update.setDataURL("/" + name + "/modify");
 		update.setDataProtocol(DSProtocol.POSTPARAMS);
-//		DSRequest updateProps = new DSRequest();
-//		updateProps.setHttpMethod("PUT");
-//		update.setRequestProperties(updateProps);
 
 		//set up REMOVE to use DELETE
 		OperationBinding remove = new OperationBinding();
 		remove.setOperationType(DSOperationType.REMOVE);
-		remove.setDataURL("/events/modify");
+		remove.setDataURL("/" + name + "/	modify");
 		remove.setDataProtocol(DSProtocol.POSTPARAMS);
-//		DSRequest removeProps = new DSRequest();
-//		removeProps.setHttpMethod("DELETE");
-//		remove.setRequestProperties(removeProps);
 
 		dataSource.setOperationBindings(fetch, add, update, remove);
 
-		dataSource.setDataURL(url);
+		dataSource.setDataURL(name);
 		dataSource.setFields(fields);
 
 		/* finally set data source */

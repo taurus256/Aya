@@ -64,7 +64,7 @@ public class CommandExecutor {
 	
 	private static void updateLanes()
 	{
-		TabManager.updateAllOpen(ResourceType.TASK, true);
+		TabManager.updateAllOpen(ResourceType.GRAPH, true);
 	}
 	
 	private static void updateTaskViews()

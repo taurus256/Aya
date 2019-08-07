@@ -217,6 +217,8 @@ public class LaneCreationDialog extends Dialog {
 				r.setAttribute("parent", 0);
 				r.setAttribute("isLane", true);
 				r.setAttribute("author", GlobalData.getCurrentUser().getAttributeAsInt("id"));
+				r.setAttribute("lane_order", lanes_list.getTree().getLength());
+				r.setAttribute("visible", true);
 				lanes_list.addData(r);
 				dataWasUpdated = true;
 				orderWasUpdated = true;
@@ -288,7 +290,6 @@ public class LaneCreationDialog extends Dialog {
 				Record r = new Record();
 				r.setAttribute("id",-1);
 				ResourceLifeCycleManager.resourceChanged(ResourceType.LANE, r);
-
 			}
 		});
 	}

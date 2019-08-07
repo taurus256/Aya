@@ -11,14 +11,13 @@ import org.taurus.aya.shared.GwtResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 @RestController
 @RequestMapping("/events")
-public class EventController {
+public class EventController extends GenericController {
 
     private EventRepository eventRepository;
 
@@ -29,9 +28,6 @@ public class EventController {
         this.eventRepository = repository;
         this.eventService = service;
     }
-
-    //2019-07-19T03:12:27.000
-    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
 
     @ResponseBody
     @PostMapping("/fetch")
@@ -75,7 +71,7 @@ public class EventController {
         @RequestParam (required = false) String isGraph        //Boolean is_graph
     ) throws ParseException
     {
-        Event event = null;
+        Event event;
         if (id == null)
             event = new Event();
         else
@@ -84,7 +80,7 @@ public class EventController {
         assert event != null : "Cannot find event to update!";
 
         switch(_operationType){
-            case "add":{}
+            case "add":
             case "update":
             {
                 event.setParent(filterIntValue(parent));
@@ -114,7 +110,7 @@ public class EventController {
 
                 event = eventRepository.save(event);
                 System.out.println("Event saved");
-            }; break;
+            } break;
             case "remove":
             {
                 eventRepository.delete(event);
@@ -122,22 +118,5 @@ public class EventController {
             }
         }
         return new GwtResponse(0,1,1,new Event[] {event});
-    }
-
-    private Integer filterIntValue(String value) {
-
-        return value == null || value.equals("null") ? null : Integer.valueOf(value);
-    }
-
-    private Boolean filterBooleanValue(String value) {
-        return value == null || value.equals("null") ? null : Boolean.valueOf(value);
-    }
-
-    private Long filterLongValue(String value) {
-        return value == null || value.equals("null") ? null : Long.valueOf(value);
-    }
-
-    private Date filterDateValue(String value) throws ParseException {
-        return value == null || value.equals("null") ? null : formatter.parse(value);
     }
 }

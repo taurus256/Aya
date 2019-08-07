@@ -1,9 +1,6 @@
 package org.taurus.aya.server.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Lane {
@@ -18,10 +15,12 @@ public class Lane {
   private Integer wgroup;
   private Integer ruser;
   private Integer rgroup;
+  @Column(name="lane_order")
   private Integer laneOrder;
   private Boolean visible;
   private Long author;
-  private Boolean isfolder;
+  @Column(name="isfolder")
+  private Boolean isFolder;
   private Boolean lane;
 
 
@@ -124,12 +123,12 @@ public class Lane {
   }
 
 
-  public Boolean getIsfolder() {
-    return isfolder;
+  public Boolean getIsFolder() {
+    return isFolder;
   }
 
-  public void setIsfolder(Boolean isfolder) {
-    this.isfolder = isfolder;
+  public void setIsFolder(Boolean isFolder) {
+    this.isFolder = isFolder;
   }
 
 
