@@ -52,7 +52,9 @@ public class StatusBar extends HLayout {
 	{
 		
 		setWidth100();
-        setHeight("28px");
+        setHeight("0px");
+		hide();
+
         setStyleName("s3_status");
         
         networkLabel = new Label("Соединения нет");
@@ -88,8 +90,8 @@ public class StatusBar extends HLayout {
         addMember(networkLabel);
         addMember(commandListlabel);
         addMember(statusLabel);
-        
         GlobalData.setStatusBar(this);
+
 	}
 	
 	public void indicateProcess(String text)

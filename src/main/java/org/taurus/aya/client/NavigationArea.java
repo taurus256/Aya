@@ -52,32 +52,32 @@ public class NavigationArea extends com.smartgwt.client.widgets.layout.HLayout {
 	    section1.setExpanded(true);
 	    section1.addItem(taskPanel);
 	
-		SectionStackSection section2 = new SectionStackSection("Документы");
-		//section2.setIcon("tree/document_open.png");
-	    section2.setExpanded(false);
-	    section2.addItem(docPanel);
-	    
-	    SectionStackSection section3 = new SectionStackSection("Скрипты");
-	    //section3.setIcon("tree/note_open.png");
-	    section3.setExpanded(false);
-	    section3.addItem(scriptPanel);
-	    
-	    SectionStackSection section4 = new SectionStackSection("Теги");
-	    //section3.setIcon("tree/note_open.png");
-	    section4.setExpanded(false);
-	    section4.addItem(tagPanel);
-	    
-	    SectionStackSection section5 = new SectionStackSection("Сообщения");
-	    //section3.setIcon("tree/note_open.png");
-	    section5.setName("messages");
-	    section5.setExpanded(false);
-	    section5.addItem(chatPanel);
+//		SectionStackSection section2 = new SectionStackSection("Документы");
+//		//section2.setIcon("tree/document_open.png");
+//	    section2.setExpanded(false);
+//	    section2.addItem(docPanel);
+//
+//	    SectionStackSection section3 = new SectionStackSection("Скрипты");
+//	    //section3.setIcon("tree/note_open.png");
+//	    section3.setExpanded(false);
+//	    section3.addItem(scriptPanel);
+//
+//	    SectionStackSection section4 = new SectionStackSection("Теги");
+//	    //section3.setIcon("tree/note_open.png");
+//	    section4.setExpanded(false);
+//	    section4.addItem(tagPanel);
+//
+//	    SectionStackSection section5 = new SectionStackSection("Сообщения");
+//	    //section3.setIcon("tree/note_open.png");
+//	    section5.setName("messages");
+//	    section5.setExpanded(false);
+//	    section5.addItem(chatPanel);
 	    
 	    sectionStack.addSection(section1);
-	    sectionStack.addSection(section2);
-	    sectionStack.addSection(section3);
-	    sectionStack.addSection(section4);
-	    sectionStack.addSection(section5);
+//	    sectionStack.addSection(section2);
+//	    sectionStack.addSection(section3);
+//	    sectionStack.addSection(section4);
+//	    sectionStack.addSection(section5);
 	
 	    this.addMember(sectionStack);
 	    

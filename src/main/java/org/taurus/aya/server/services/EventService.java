@@ -32,7 +32,7 @@ public class EventService {
     {
         HashMap<String,String> criteriaMap = parseCriteria(criteria);
 
-        System.out.println(criteriaMap);
+        //System.out.println(criteriaMap);
         if (Boolean.valueOf(criteriaMap.getOrDefault("isGraph","false")))
             return eventRepository.findAllByParentAndStartDateLessThanAndEndDateGreaterThanAndIsGraphIsTrue(
                 Integer.valueOf(criteriaMap.getOrDefault("parent","0")),
@@ -53,7 +53,7 @@ public class EventService {
         HashMap<String,String> result = new HashMap<>();
         if (criteria != null)
             for (String c: criteria) {
-                System.out.println("input:'" + c + "'");
+                //System.out.println("input:'" + c + "'");
                 if (c.contains("fieldName")) {
                     if (c.contains("AdvancedCriteria")) {
                         result.putAll(parseCriteria(
@@ -68,7 +68,7 @@ public class EventService {
                             String rawParam = param.replace("\"", "");
                             parameterParts.put(rawParam.substring(0, rawParam.indexOf(":")), rawParam.substring(rawParam.indexOf(":") + 1, rawParam.length()));
                         }
-                        System.out.println("Name=" + parameterParts.get("fieldName") + " Value=" + parameterParts.get("value"));
+                        //System.out.println("Name=" + parameterParts.get("fieldName") + " Value=" + parameterParts.get("value"));
                         result.put(parameterParts.get("fieldName"), parameterParts.get("value"));
                     }
                 }

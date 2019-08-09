@@ -67,9 +67,8 @@ public class ExtendedTimeline extends Timeline {
 		setWidth100();
 		setMargin(0);
 		setPadding(0);
-		setChildrenSnapToGrid(true);
-		setSnapToGrid(true);
-		setSnapResizeToGrid(true);
+		setDisableWeekends(false);
+		setShowWeekends(true);
 
 		setSublaneNameField("sublane");
 		setUseSublanes(false);
@@ -78,14 +77,21 @@ public class ExtendedTimeline extends Timeline {
 		setDataSource(GlobalData.getDataSource_tasks());
 		setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS,true));
 		setAutoFetchData(true);
-        CalendarEvent indicator = new CalendarEvent();
-		indicator.setStartDate(new Date());
+
+        CalendarEvent indicator1 = new CalendarEvent();
+		indicator1.setStartDate(new Date());
 		Date d = new Date();
 		d.setTime(d.getTime() + 24*3600*1000);
-		indicator.setEndDate(d);
-		indicator.setName("Текущая дата");
-//indicator.setStyleName("s3_zone_style");
-		addIndicator(indicator);
+		indicator1.setEndDate(d);
+		indicator1.setName("Текущая дата");
+
+
+		CalendarEvent indicator2 = new CalendarEvent();
+		indicator2.setStartDate(d);
+		indicator2.setName("");
+
+		addIndicator(indicator1);
+		addIndicator(indicator2);
 		setShowIndicators(true);
 //		setShowZones(true);
 //		setShowZoneHovers(true);
@@ -254,15 +260,44 @@ public class ExtendedTimeline extends Timeline {
 				event.cancel();
 			}});
 
-        addEventChangedHandler(new EventChangedHandler(){
 
-			@Override
-			public void onEventChanged(CalendarEventChangedEvent event) {
-				updateTasks();
-				SC.logWarn("EventChangedHandler task id = " + event.getEvent().getAttribute("id"));
-//				Connector.sendSystemMessageToAll(CommandType.UPDATE_TASK_ARRANGEMENT, TabManager.ResourceType.TASK, "Пользователь <b>" + GlobalData.getCurrentUser().getAttributeAsString("nickname") + "</b> обновил задачу <b>" + event.getEvent().getAttribute("name") + "</b>", (int)event.getEvent().getAttributeAsInt("id"));
-				//updateTimeline();
-		}});
+        addEventResizeStopHandler(event -> {
+            Date start = event.getNewEvent().getStartDate();
+            SC.logWarn("ExtendedTimeline: event resize offset=" + start.getTimezoneOffset());
+            start.setHours(12);
+            start.setMinutes(1);
+            Date end = event.getNewEvent().getEndDate();
+            end.setHours(21);
+            if (end.getDate() > 1)
+                end.setDate(end.getDate()-1);
+            SC.logWarn("ExtendedTimeline: event resize: start = " + start);
+            SC.logWarn("ExtendedTimeline: event resize: end = " + end);
+            event.getNewEvent().setStartDate(start);
+            event.getNewEvent().setEndDate(end);
+        });
+
+        addEventRepositionStopHandler(event -> {
+                    SC.logWarn("ExtendedTimeline: event rep stop");
+                    Date start = event.getNewEvent().getStartDate();
+                    start.setHours(12);
+                    start.setMinutes(1);
+                    Date end = event.getNewEvent().getEndDate();
+                    end.setHours(21);
+                    SC.logWarn("ExtendedTimeline: event rep stop: start = " + start);
+                    SC.logWarn("ExtendedTimeline: event rep stop: end = " + end);
+                    event.getNewEvent().setStartDate(start);
+                    event.getNewEvent().setEndDate(end);
+                });
+
+//        addEventChangedHandler(new EventChangedHandler(){
+//
+//			@Override
+//			public void onEventChanged(CalendarEventChangedEvent event) {
+//				updateTasks();
+//				SC.logWarn("EventChangedHandler task id = " + event.getEvent().getAttribute("id"));
+////				Connector.sendSystemMessageToAll(CommandType.UPDATE_TASK_ARRANGEMENT, TabManager.ResourceType.TASK, "Пользователь <b>" + GlobalData.getCurrentUser().getAttributeAsString("nickname") + "</b> обновил задачу <b>" + event.getEvent().getAttribute("name") + "</b>", (int)event.getEvent().getAttributeAsInt("id"));
+//				//updateTimeline();
+//		}});
 
 
         addBackgroundMouseUpHandler(new BackgroundMouseUpHandler(){
@@ -631,9 +666,30 @@ public class ExtendedTimeline extends Timeline {
         menu.addItem(moveToBacklogMenu);
         menu.addItem(new com.smartgwt.client.widgets.menu.MenuItemSeparator());
         
-        menu.addItem(
-        		getMenuItem("Временной шаг: 1 день ",  TimeUnit.DAY, TimeUnit.DAY, 31, null)
-            );
+        MenuItem setStateProcess = new MenuItem(EventState.PROCESS.getName());
+        setStateProcess.addClickHandler(event -> { setEventState(EventState.PROCESS);});
+        setStateProcess.setIcon("buttons/task_play.png");
+        menu.addItem(setStateProcess);
+
+        MenuItem setStatePause = new MenuItem(EventState.PAUSE.getName());
+        setStatePause.addClickHandler(event -> { setEventState(EventState.PAUSE);});
+        setStatePause.setIcon("buttons/task_pause.png");
+        menu.addItem(setStatePause);
+
+        MenuItem setStateReady = new MenuItem(EventState.READY.getName());
+        setStateReady.addClickHandler(event -> { setEventState(EventState.READY);});
+        setStateReady.setIcon("buttons/task_ready.png");
+        menu.addItem(setStateReady);
+
+        MenuItem setStateFail = new MenuItem(EventState.FAIL.getName());
+        setStateFail.addClickHandler(event -> { setEventState(EventState.FAIL);});
+        setStateFail.setIcon("buttons/task_fail.png");
+        menu.addItem(setStateFail);
+
+        MenuItem setStateNew = new MenuItem(EventState.NEW.getName());
+        setStateNew.addClickHandler(event -> { setEventState(EventState.NEW);});
+        setStateNew.setIcon("buttons/task_new.png");
+        menu.addItem(setStateNew);
 
         menu.addItem(new com.smartgwt.client.widgets.menu.MenuItemSeparator());
 
@@ -681,4 +737,29 @@ public class ExtendedTimeline extends Timeline {
 		if (selectedEvent == null) SC.logWarn("ExtendedTimeline: NO SELECTED EVENT!");
 		return selectedEvent;
 	}
+
+    public void setEventState(EventState state) {
+        switch(state) {
+            case NEW: setEventState("s3_event_new", String.valueOf(state.ordinal()), "tree/task0.png"); break;
+            case PROCESS: setEventState("s3_event_process", String.valueOf(state.ordinal()), "tree/task1.png"); break;
+            case PAUSE: setEventState("s3_event_pause", String.valueOf(state.ordinal()), "tree/task2.png"); break;
+            case READY: setEventState("s3_event_ready", String.valueOf(state.ordinal()), "tree/task3.png"); break;
+            case FAIL: setEventState("s3_event_fail", String.valueOf(state.ordinal()), "tree/task4.png"); break;
+        }
+    }
+
+    private void setEventState(String s3_event_pause, String s, String s2) {
+        final CalendarEvent selectedEvent = getSelectedEvent();
+        if (selectedEvent == null) return;
+        selectedEvent.setAttribute("eventWindowStyle", s3_event_pause);
+        selectedEvent.setAttribute("state", s);
+        selectedEvent.setAttribute("icon", s2);
+        GlobalData.getDataSource_tasks().updateData(selectedEvent, new DSCallback() {
+            @Override
+            public void execute(DSResponse dsResponse, Object data,
+                                DSRequest dsRequest) {
+                ResourceLifeCycleManager.resourceChanged(ResourceType.TASK, getSelectedEvent());
+            }
+        });
+    }
 }

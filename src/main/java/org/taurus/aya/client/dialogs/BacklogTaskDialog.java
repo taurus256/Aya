@@ -39,18 +39,12 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
 		valueMap.put(24,"3 дня");
 		valueMap.put(56,"5 дней");
 
-		SelectItem si = new SelectItem("duration_h");
-		si.setValueMap(valueMap);
+		SelectItem durationH = new SelectItem("duration_h");
+		durationH.setValueMap(valueMap);
 
 		//Priority field
-		LinkedHashMap<Integer,String> valueMapPriority = new LinkedHashMap<>();
-		valueMapPriority.put(0,"Низкий");
-		valueMapPriority.put(1,"Нормальный");
-		valueMapPriority.put(2,"Высокий");
-
-		SelectItem sip = new SelectItem("priority");
-		sip.setValueMap(valueMapPriority);
-		sip.setDefaultValue(1);
+		SelectItem priority = new SelectItem("priority");
+		priority.setDefaultValue(1);
         SC.logWarn(">1");
 
 		//Lane field. To fill it, we have to make the server request
@@ -71,7 +65,7 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
 			description.setHeight(200);
 
 			SC.logWarn(">2");
-			df.setFields(lane, name, description, executor, sip, si);
+			df.setFields(lane, name, description, executor, priority, durationH);
 
 			df.editRecord(r);
 			SC.logWarn(">3");

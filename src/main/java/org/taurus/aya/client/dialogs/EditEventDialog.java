@@ -49,7 +49,7 @@ public class EditEventDialog extends BacklogTaskDialog {
 	protected void constructInterface()
 	{
 		this.addItem(createFormLayout());
-		this.addItem(createSelectTasksPanel());
+//		this.addItem(createSelectTasksPanel());
 		//this.addItem(createSelectParentPanel());
 		this.addItem(createTagsLayout());
 		this.addItem(createSecurityLayout());

@@ -107,7 +107,9 @@ public class TaskPanel extends VLayout implements SidePanel {
 		imageField.setAlign(Alignment.CENTER);
 		imageField.setImageWidth(24);
 		imageField.setImageHeight(24);
-		panelBacklog.getTreeGrid().setFields(imageField,new ListGridField("name",220));
+		ListGridField nameField = new ListGridField("name", 220);
+		nameField.setShowTitle(true);
+		panelBacklog.getTreeGrid().setFields(imageField, nameField);
 		panelBacklog.getTreeGrid().setGroupByField("priority");
 		panelBacklog.getTreeGrid().setCanGroupBy(true);
 		panelBacklog.getTreeGrid().setSortByGroupFirst(true);

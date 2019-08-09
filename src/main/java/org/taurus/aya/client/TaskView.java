@@ -7,8 +7,6 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.calendar.CalendarEvent;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -89,105 +87,44 @@ public TaskView(Record currentRecord, int tabUID)
 		toolStrip = new ToolStrip();
 		toolStrip.setHeight(30);
 		toolStrip.setWidth100();
-		
 
-		ToolStripButton btnTaskProcess = new ToolStripButton("Начать выполнение");
+		ToolStripButton btnTaskProcess = new ToolStripButton(EventState.PROCESS.getName());
 		btnTaskProcess.setIcon("buttons/task_play.png");
 		btnTaskProcess.setWidth(16);
 		btnTaskProcess.setHeight(16);
-		btnTaskProcess.addClickHandler(new ClickHandler(){
-
-			@Override
-			public void onClick(ClickEvent event) {
-				final CalendarEvent selectedEvent = getSelectedEvent() ;
-				if (selectedEvent == null) return;
-				selectedEvent.setAttribute("eventWindowStyle", "s3_event_process");
-				selectedEvent.setAttribute("state", "1");
-				selectedEvent.setAttribute("icon", "tree/task1.png");
-				GlobalData.getDataSource_tasks().updateData(selectedEvent,new DSCallback(){
-					@Override
-					public void execute(DSResponse dsResponse, Object data,
-                                        DSRequest dsRequest) {
-						//ResourceLifeCycleManager.resourceChanged(ResourceType.TASK, getSelectedEvent());
-					}});
-			}
-		});
+		btnTaskProcess.addClickHandler(event -> getCurrentTimeline().setEventState(EventState.PROCESS));
 		toolStrip.addMember(btnTaskProcess);
 		
-		ToolStripButton btnTaskPause = new ToolStripButton("Пауза");
+		ToolStripButton btnTaskPause = new ToolStripButton(EventState.PAUSE.getName());
 		btnTaskPause.setIcon("buttons/task_pause.png");
 		btnTaskPause.setWidth(16);
 		btnTaskPause.setHeight(16);
-
-		btnTaskPause.addClickHandler(new ClickHandler(){
-
-			@Override
-			public void onClick(ClickEvent event) {
-				final CalendarEvent selectedEvent = getSelectedEvent() ;
-				if (selectedEvent == null) return;
-				selectedEvent.setAttribute("eventWindowStyle", "s3_event_pause");
-				selectedEvent.setAttribute("state", "0");
-				selectedEvent.setAttribute("icon", "tree/task2.png");
-				GlobalData.getDataSource_tasks().updateData(selectedEvent,new DSCallback(){
-					@Override
-					public void execute(DSResponse dsResponse, Object data,
-                                        DSRequest dsRequest) {
-						ResourceLifeCycleManager.resourceChanged(ResourceType.TASK, getSelectedEvent());
-					}});
-			}
-		});
+		btnTaskPause.addClickHandler(event -> getCurrentTimeline().setEventState(EventState.PAUSE));
 		toolStrip.addMember(btnTaskPause);
+		ToolStripButton btnTaskReady = new ToolStripButton(EventState.READY.getName());
 
-		ToolStripButton btnTaskReady = new ToolStripButton("Задача решена");
-		
 
 		btnTaskReady.setIcon("buttons/task_ready.png");
 		btnTaskReady.setWidth(16);
 		btnTaskReady.setHeight(16);
-
-		btnTaskReady.addClickHandler(new ClickHandler(){
-
-			@Override
-			public void onClick(ClickEvent event) {
-				final CalendarEvent selectedEvent = getSelectedEvent() ;
-				if (selectedEvent == null) return;
-				selectedEvent.setAttribute("eventWindowStyle", "s3_event_ready");
-				selectedEvent.setAttribute("state", "3");
-				selectedEvent.setAttribute("icon", "tree/task3.png");
-				GlobalData.getDataSource_tasks().updateData(selectedEvent,new DSCallback(){
-					@Override
-					public void execute(DSResponse dsResponse, Object data,
-                                        DSRequest dsRequest) {
-						ResourceLifeCycleManager.resourceChanged(ResourceType.TASK, getSelectedEvent());
-					}});
-			}
-		});
+		btnTaskReady.addClickHandler(event -> getCurrentTimeline().setEventState(EventState.READY));
 		toolStrip.addMember(btnTaskReady);
 
-		ToolStripButton btnTaskFail = new ToolStripButton("Возникла проблема");
+		ToolStripButton btnTaskFail = new ToolStripButton(EventState.FAIL.getName());
 		btnTaskFail.setIcon("buttons/task_fail.png");
 		btnTaskFail.setWidth(16);
 		btnTaskFail.setHeight(16);
-
-		btnTaskFail.addClickHandler(new ClickHandler(){
-
-			@Override
-			public void onClick(ClickEvent event) {
-				final CalendarEvent selectedEvent = getSelectedEvent() ;
-				if (selectedEvent == null) return;
-				selectedEvent.setAttribute("eventWindowStyle", "s3_event_fail");
-				selectedEvent.setAttribute("state", "4");
-				selectedEvent.setAttribute("icon", "tree/task4.png");
-				GlobalData.getDataSource_tasks().updateData(getSelectedEvent(),new DSCallback(){
-					@Override
-					public void execute(DSResponse dsResponse, Object data,
-                                        DSRequest dsRequest) {
-						ResourceLifeCycleManager.resourceChanged(ResourceType.TASK, getSelectedEvent());
-					}});
-			}
-		});
+		btnTaskFail.addClickHandler(event -> getCurrentTimeline().setEventState(EventState.FAIL));
 		toolStrip.addMember(btnTaskFail);
-		
+
+		ToolStripButton btnNew = new ToolStripButton(EventState.NEW.getName());
+		btnNew.setIcon("buttons/task_new.png");
+		btnNew.setWidth(16);
+		btnNew.setHeight(16);
+		btnNew.addClickHandler(event -> getCurrentTimeline().setEventState(EventState.NEW));
+		toolStrip.addMember(btnNew);
+
+
 		toolStrip.addSeparator();
 
 		final ToolStripButton showTimelineByLane = new ToolStripButton("Потоки");
@@ -195,29 +132,23 @@ public TaskView(Record currentRecord, int tabUID)
 		
 		final ToolStripButton showTimelineByPeople = new ToolStripButton("Исполнители");
 		
-		showTimelineByLane.addClickHandler(new ClickHandler(){
+		showTimelineByLane.addClickHandler(event -> {
+			showTimelineByLane.setSelected(true);
+			showTimelineByPeople.setSelected(false);
+			timeline.show();
+			timeline2.hide();
 
-			@Override
-			public void onClick(ClickEvent event) {
-				showTimelineByLane.setSelected(true);
-				showTimelineByPeople.setSelected(false);
-				timeline.show();
-				timeline2.hide();
-
-			}});
+		});
 		
 		toolStrip.addButton(showTimelineByLane); 
   
-		showTimelineByPeople.addClickHandler(new ClickHandler(){
+		showTimelineByPeople.addClickHandler(event -> {
+			showTimelineByLane.setSelected(false);
+			showTimelineByPeople.setSelected(true);
+			timeline.hide();
+			timeline2.show();
 
-			@Override
-			public void onClick(ClickEvent event) {
-				showTimelineByLane.setSelected(false);
-				showTimelineByPeople.setSelected(true);
-				timeline.hide();
-				timeline2.show();
-
-			}});
+		});
 		
 		toolStrip.addButton(showTimelineByPeople);
 
@@ -231,30 +162,27 @@ public TaskView(Record currentRecord, int tabUID)
         analyseResultLabel.setHeight100();
         analyseResultLabel.setAlign(Alignment.CENTER);
         analyseResultLabel.setContextMenu(createPopupMenu());
-        analyseResultLabel.addClickHandler(new ClickHandler() {
-                                               @Override
-                                               public void onClick(ClickEvent event) {
-												   analyseResultLabel.setContents("Обновление...");
-                                                   try {
-                                                       GlobalData.getAnalyticService().getPrognosis(new AsyncCallback<TaskAnalyseData>() {
-                                                           @Override
-                                                           public void onFailure(Throwable caught) {
-                                                               analyseResultLabel.setContents("Что-то пошло не так и не туда");
-															   SC.warn("Ошибка выполнения запроса на сервере",caught.getLocalizedMessage());
-                                                           }
+        analyseResultLabel.addClickHandler(event -> {
+			analyseResultLabel.setContents("Обновление...");
+			try {
+				GlobalData.getAnalyticService().getPrognosis(new AsyncCallback<TaskAnalyseData>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						analyseResultLabel.setContents("Что-то пошло не так и не туда");
+						SC.warn("Ошибка выполнения запроса на сервере",caught.getLocalizedMessage());
+					}
 
-                                                           @Override
-                                                           public void onSuccess(TaskAnalyseData result) {
-                                                               showMenu(result.getAdvancedText());
-															   SC.logWarn("AnalyticResult:" + result.getAdvancedText());
-                                                           }
-                                                       });
-                                                   } catch (Exception e) {
-                                                       analyseResultLabel.setContents("Ой");
-													   SC.warn("Ошибка отправки запроса",e.getLocalizedMessage());
-                                                   }
-                                               }
-                                           });
+					@Override
+					public void onSuccess(TaskAnalyseData result) {
+						showMenu(result.getAdvancedText());
+						SC.logWarn("AnalyticResult:" + result.getAdvancedText());
+					}
+				});
+			} catch (Exception e) {
+				analyseResultLabel.setContents("Ой");
+				SC.warn("Ошибка отправки запроса",e.getLocalizedMessage());
+			}
+		});
 
                 toolStrip2.addMember(analyseResultLabel);
 
@@ -262,16 +190,9 @@ public TaskView(Record currentRecord, int tabUID)
 		
 		return layout;
 	}
-	
-	DetailViewer createPropsPanel()
-	{
-		props = new DetailViewer();
-		props.setDataSource(GlobalData.getDataSource_tasks());
-		props.setHeight("180");
-	    return props;
-	}
-	
-      
+
+
+
 	public Record getResource() {
 		return currentRecord;
 	}

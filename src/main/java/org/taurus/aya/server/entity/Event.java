@@ -17,10 +17,10 @@ public class Event {
   private String lane;
   private String name;
   private String description;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'12:00:01+0000")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss+0000")
   @Column(name = "startdate")
   private Date startDate;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'12:00:01+0000")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss+0000")
   @Column(name = "enddate")
   private Date endDate;
   private Integer wuser;
@@ -34,7 +34,7 @@ public class Event {
   private Integer executor;
   private Integer priority;
   @Column(name="duration_d")
-  private Integer durationD;
+  private Integer duration;
   @Column(name="duration_h")
   private Integer durationH;
   private String icon;
@@ -196,12 +196,12 @@ public class Event {
   }
 
 
-  public Integer getDurationD() {
-    return durationD;
+  public Integer getDuration() {
+    return duration;
   }
 
-  public void setDurationD(Integer durationD) {
-    this.durationD = durationD;
+  public void setDuration(Integer duration) {
+    this.duration = duration;
   }
 
 

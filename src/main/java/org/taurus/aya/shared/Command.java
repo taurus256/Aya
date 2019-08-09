@@ -28,7 +28,8 @@ public class Command implements IsSerializable {
 		OPEN_GROUP_CHAT,
 		OPEN_RESOURCE,
 		CREATE_LINK,
-		CREATE_BACKLOG_TASK
+		CREATE_BACKLOG_TASK,
+		CHANGE_TASK_STATE
 	}
 	
 	private String type;

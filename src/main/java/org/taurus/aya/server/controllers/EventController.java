@@ -10,10 +10,14 @@ import org.taurus.aya.shared.GwtResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalField;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 @RestController
 @RequestMapping("/events")
@@ -61,7 +65,7 @@ public class EventController extends GenericController {
         @RequestParam (required = false) String eventWindowStyle,//String eventwindowstyle,
         @RequestParam (required = false) String executor,       //Integer executor,
         @RequestParam (required = false) String priority,                          //  Integer priority
-        @RequestParam (required = false) String duration_d,     //Integer duration_d,
+        @RequestParam (required = false) String duration,     //Integer duration_d,
         @RequestParam (required = false) String duration_h,     //Integer duration_h,
         @RequestParam (required = false) String icon,            //String icon,
         @RequestParam (required = false) String state,          //Integer state,
@@ -88,8 +92,28 @@ public class EventController extends GenericController {
                 event.setLane(lane);
                 event.setName(name);
                 event.setDescription(description);
-                event.setStartDate(filterDateValue(startDate));
-                event.setEndDate(filterDateValue(endDate));
+
+                Date d = filterDateValue(startDate);
+//                if (d != null) {
+//                    ZonedDateTime t = d.toInstant().atZone(ZoneId.of("Europe/Moscow"));
+//                    int hours = t.get(ChronoField.CLOCK_HOUR_OF_DAY);
+//                    if (hours > 12) t = t.plus(1, ChronoUnit.DAYS);
+//                    t = t.withHour(0);
+//                    d = Date.from(t.toInstant());
+//                }
+                event.setStartDate(d);
+
+                d = filterDateValue(endDate);
+//                if (d != null) {
+//                    ZonedDateTime t = d.toInstant().atZone(ZoneId.of("Europe/Moscow"));
+//                    int hours = t.get(ChronoField.CLOCK_HOUR_OF_DAY);
+//                    if (hours < 12)
+//                    t = t.minus(1, ChronoUnit.DAYS);
+//                    t = t.withHour(23);
+//                    d = Date.from(t.toInstant());
+//                }
+                event.setEndDate(d);
+
                 event.setAuthor(filterLongValue(author));
                 event.setWuser(filterIntValue(wuser));
                 event.setWgroup(filterIntValue(wgroup));
@@ -99,7 +123,7 @@ public class EventController extends GenericController {
                 event.setEventWindowStyle(eventWindowStyle);
                 event.setExecutor(filterIntValue(executor));
                 event.setPriority(filterIntValue(priority));
-                event.setDurationD(filterIntValue(duration_d));
+                event.setDuration(filterIntValue(duration));
                 event.setDurationH(filterIntValue(duration_h));
                 event.setIcon(icon);
                 event.setState(filterIntValue(state));
