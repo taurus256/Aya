@@ -19,8 +19,8 @@ public class StatData {
     void addEvent(Event e)
     {
         System.out.println("StatData.addEvent");
-        if (e.getDurationH()!=null && e.getSpentTime()!=null && e.getSpentTime()!=0) {
-            velocityList.add(e.getDurationH().doubleValue() / e.getSpentTime().doubleValue());
+        if (e.getDuration_h()!=null && e.getSpentTime()!=null && e.getSpentTime()!=0) {
+            velocityList.add(e.getDuration_h().doubleValue() / e.getSpentTime().doubleValue());
             n++;
         }
     }

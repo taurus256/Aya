@@ -443,7 +443,7 @@ public class GlobalData {
 				new DataSourceField("executor_name", FieldType.TEXT, "Имя исполнителя"),
 				new DataSourceField("author", FieldType.TEXT, "Задача создана"),
 				is_backlog,
-				new DataSourceField("spent_time", FieldType.INTEGER, "Время выполнения"),
+				new DataSourceField("spentTime", FieldType.INTEGER, "Затрачено времени"),
     			is_graph,
 				new DataSourceField("wuser", FieldType.INTEGER),
 				new DataSourceField("wgroup", FieldType.INTEGER),

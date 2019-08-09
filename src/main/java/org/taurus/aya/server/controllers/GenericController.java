@@ -7,8 +7,9 @@ import java.util.Locale;
 
 public class GenericController {
 
-    //Format date based on template: 2019-07-19T03:12:27.000
-    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+    //Format date based on template: 2019-07-19T03:12:27.000 - "yyyy-MM-dd'T'HH:mm:ss"
+    //Now use short format for date-only
+    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     protected Integer filterIntValue(String value) {
 

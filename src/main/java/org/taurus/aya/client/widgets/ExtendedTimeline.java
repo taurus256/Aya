@@ -173,55 +173,19 @@ public class ExtendedTimeline extends Timeline {
 					//!selectedEvent.setHeaderTextColor("black");
 					refreshEvent(selectedEvent);
 					}
-				else
-					eventPropertiesMenu.setEnabled(true);
+
+				//Enable 'properties' menu foe the event
+				eventPropertiesMenu.setEnabled(true);
+				menu.refreshRow(menu.getItems().length-1);
 
 				// Setting the selected event and its style
 				selectedEvent = event.getEvent();
-				SC.logWarn("TaskView. Selected event name is:" +  event.getEvent().getAttribute("name"));
-				//selectedEvent.setStyleName("s3_selected");
 				selectedEvent.setHeaderBackgroundColor("#DCDCDC");
 				selectedEvent.setBorderColor("#297ACC");
-				//!selectedEvent.setHeaderTextColor("white");
-				
+
 				refreshEvent(selectedEvent);
 				redraw();
 
-				// Setting menu title for dialog calling
-//				if (selectedEvent.getAttributeAsInt("author").equals(GlobalData.getCurrentUser().getAttributeAsInt("id")))
-//				{
-//					dialogOpenMenu.setTitle("Диалог с исполнителем");
-//
-//					if (!selectedEvent.getAttributeAsInt("author").equals(selectedEvent.getAttributeAsInt("executor")))
-//						dialogOpenMenu.setEnabled(true);
-//					else
-//						dialogOpenMenu.setEnabled(false);
-//				}
-//				else
-//				{
-//					dialogOpenMenu.setTitle("Диалог с постановщиком");
-//					dialogOpenMenu.setEnabled(true);
-//				}
-				
-//				menu.refreshRow(0);
-				menu.refreshRow(menu.getItems().length-1);
-				
-				// Setting blocking or parent task in EditEventDialog, if it taken by blockSelectVode
-				switch (blockSelectMode)
-				{
-				case 1: 
-					{
-						editEventDialog.setBlockingTask(selectedEvent);
-						blockSelectMode = 0;
-						setCursor(com.smartgwt.client.types.Cursor.AUTO);
-					}; break;
-				case 2: 
-					{
-						editEventDialog.setParentTask(selectedEvent);
-						blockSelectMode = 0;
-						setCursor(com.smartgwt.client.types.Cursor.AUTO);
-					}; break;
-				};
 				event.cancel();
 			}});
 
@@ -234,12 +198,13 @@ public class ExtendedTimeline extends Timeline {
 				refreshEvent(event.getEvent());
 			}
 	    });*/
-        
+
         addEventRemoveClickHandler(new EventRemoveClickHandler(){
 
 			@Override
 			public void onEventRemoveClick(CalendarEventRemoveClick event) {
 				selectedEvent = event.getEvent();
+				eventPropertiesMenu.setEnabled(true);
 				if (GlobalData.canWrite(selectedEvent))
 				{
 					SC.confirm("Запрос", "Удалить задачу?", new BooleanCallback(){
@@ -262,42 +227,26 @@ public class ExtendedTimeline extends Timeline {
 
 
         addEventResizeStopHandler(event -> {
-            Date start = event.getNewEvent().getStartDate();
-            SC.logWarn("ExtendedTimeline: event resize offset=" + start.getTimezoneOffset());
-            start.setHours(12);
-            start.setMinutes(1);
-            Date end = event.getNewEvent().getEndDate();
-            end.setHours(21);
-            if (end.getDate() > 1)
-                end.setDate(end.getDate()-1);
-            SC.logWarn("ExtendedTimeline: event resize: start = " + start);
-            SC.logWarn("ExtendedTimeline: event resize: end = " + end);
-            event.getNewEvent().setStartDate(start);
-            event.getNewEvent().setEndDate(end);
+            SC.logWarn("ExtendedTimeline: event resize");
+            Date start = modifyCalendarEventStartDate(event.getNewEvent());
+            SC.logWarn("ExtendedTimeline: startDate=" + start);
         });
 
         addEventRepositionStopHandler(event -> {
                     SC.logWarn("ExtendedTimeline: event rep stop");
-                    Date start = event.getNewEvent().getStartDate();
-                    start.setHours(12);
-                    start.setMinutes(1);
-                    Date end = event.getNewEvent().getEndDate();
-                    end.setHours(21);
-                    SC.logWarn("ExtendedTimeline: event rep stop: start = " + start);
-                    SC.logWarn("ExtendedTimeline: event rep stop: end = " + end);
-                    event.getNewEvent().setStartDate(start);
-                    event.getNewEvent().setEndDate(end);
+                    modifyCalendarEventStartDate(event.getNewEvent());
+					modifyCalendarEventEndDate(event.getNewEvent());
                 });
 
-//        addEventChangedHandler(new EventChangedHandler(){
-//
-//			@Override
-//			public void onEventChanged(CalendarEventChangedEvent event) {
-//				updateTasks();
-//				SC.logWarn("EventChangedHandler task id = " + event.getEvent().getAttribute("id"));
-////				Connector.sendSystemMessageToAll(CommandType.UPDATE_TASK_ARRANGEMENT, TabManager.ResourceType.TASK, "Пользователь <b>" + GlobalData.getCurrentUser().getAttributeAsString("nickname") + "</b> обновил задачу <b>" + event.getEvent().getAttribute("name") + "</b>", (int)event.getEvent().getAttributeAsInt("id"));
-//				//updateTimeline();
-//		}});
+        addEventChangedHandler(new EventChangedHandler(){
+
+			@Override
+			public void onEventChanged(CalendarEventChangedEvent event) {
+				updateTasks();
+				SC.logWarn("EventChangedHandler task id = " + event.getEvent().getAttribute("id"));
+//				Connector.sendSystemMessageToAll(CommandType.UPDATE_TASK_ARRANGEMENT, TabManager.ResourceType.TASK, "Пользователь <b>" + GlobalData.getCurrentUser().getAttributeAsString("nickname") + "</b> обновил задачу <b>" + event.getEvent().getAttribute("name") + "</b>", (int)event.getEvent().getAttributeAsInt("id"));
+				//updateTimeline();
+		}});
 
 
         addBackgroundMouseUpHandler(new BackgroundMouseUpHandler(){
@@ -312,8 +261,6 @@ public class ExtendedTimeline extends Timeline {
 
 				ev.setAttribute("limitDate", event.getEndDate());
 				ev.setName("Новая задача");
-				ev.setAttribute("startdate",event.getStartDate());
-				ev.setAttribute("enddate",event.getEndDate());
 				ev.setAttribute("rgroup", GlobalData.ACCESS_ALL);
 				ev.setAttribute("wgroup", GlobalData.ACCESS_ALL);
 				ev.setAttribute("author", GlobalData.getCurrentUser().getAttributeAsInt("id"));
@@ -430,8 +377,22 @@ public class ExtendedTimeline extends Timeline {
 							});
 		updateTimeline();
 	}
-	
-	private void setTimeResolution(TimeUnit headerUnit, TimeUnit rangeUnit, int columnCount, Integer minutesPerColumn)
+
+    public Date modifyCalendarEventStartDate(CalendarEvent newEvent) {
+        Date start = newEvent.getStartDate();
+        start = new Date(start.getTime() + 24*3600*1000);
+        newEvent.setStartDate(start);
+        return start;
+    }
+
+	public Date modifyCalendarEventEndDate(CalendarEvent newEvent) {
+		Date end = newEvent.getEndDate();
+		end = new Date(end.getTime() + 24*3600*1000);
+		newEvent.setEndDate(end);
+		return end;
+	}
+
+    private void setTimeResolution(TimeUnit headerUnit, TimeUnit rangeUnit, int columnCount, Integer minutesPerColumn)
     {
     	HeaderLevel[] headerLevels = {};
     	switch (headerUnit)
@@ -754,10 +715,13 @@ public class ExtendedTimeline extends Timeline {
         selectedEvent.setAttribute("eventWindowStyle", s3_event_pause);
         selectedEvent.setAttribute("state", s);
         selectedEvent.setAttribute("icon", s2);
+        modifyCalendarEventStartDate(selectedEvent);
+		modifyCalendarEventEndDate(selectedEvent);
         GlobalData.getDataSource_tasks().updateData(selectedEvent, new DSCallback() {
             @Override
             public void execute(DSResponse dsResponse, Object data,
                                 DSRequest dsRequest) {
+                updateTasks();
                 ResourceLifeCycleManager.resourceChanged(ResourceType.TASK, getSelectedEvent());
             }
         });

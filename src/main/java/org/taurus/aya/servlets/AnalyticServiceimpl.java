@@ -13,7 +13,6 @@ import javax.persistence.Persistence;
 import javax.servlet.annotation.WebServlet;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
 
 @WebServlet(urlPatterns = "/app/aya/analytic", loadOnStartup = 1)
@@ -54,7 +53,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         Event e1 = new Event();
         e1.setId(1L);
         e1.setName("Name1");
-        e1.setDurationH(8);
+        e1.setDuration_h(8);
         e1.setSpentTime(8);
         e1.setLane(lane1.getName());
         e1.setExecutor(user1.getId().intValue());
@@ -62,7 +61,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         Event e2 = new Event();
         e2.setId(2L);
         e2.setName("Name2");
-        e2.setDurationH(4);
+        e2.setDuration_h(4);
         e2.setSpentTime(16);
         e2.setLane(lane1.getName());
         e2.setExecutor(user1.getId().intValue());
@@ -70,7 +69,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         Event e3 = new Event();
         e3.setId(3L);
         e3.setName("name3");
-        e3.setDurationH(8);
+        e3.setDuration_h(8);
         e3.setStartDate(Date.from(Instant.now()));
         e3.setEndDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
         e3.setLane(lane1.getName());
@@ -79,7 +78,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         Event e4 = new Event();
         e4.setId(4L);
         e4.setName("name4");
-        e4.setDurationH(8);
+        e4.setDuration_h(8);
         e4.setStartDate(Date.from(Instant.now().plus(1, ChronoUnit.HALF_DAYS)));
         e4.setEndDate(Date.from(Instant.now().plus(3, ChronoUnit.HALF_DAYS)));
         e4.setLane(lane1.getName());
@@ -88,7 +87,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         Event e5 = new Event();
         e5.setId(5L);
         e5.setName("name5");
-        e5.setDurationH(8);
+        e5.setDuration_h(8);
         e5.setStartDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
         e5.setEndDate(Date.from(Instant.now().plus(2, ChronoUnit.DAYS)));
         e5.setLane(lane1.getName());
@@ -97,7 +96,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         Event e6 = new Event();
         e6.setId(6L);
         e6.setName("name6");
-        e6.setDurationH(8);
+        e6.setDuration_h(8);
         e6.setSpentTime(6);
         e6.setLane(lane2.getName());
         e6.setExecutor(user2.getId().intValue());
@@ -107,7 +106,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         e7.setName("name7");
         e7.setStartDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
         e7.setEndDate(Date.from(Instant.now().plus(2, ChronoUnit.DAYS)));
-        e7.setDurationH(8);
+        e7.setDuration_h(8);
         e7.setSpentTime(8);
         e7.setLane(lane2.getName());
         e7.setExecutor(user3.getId().intValue());

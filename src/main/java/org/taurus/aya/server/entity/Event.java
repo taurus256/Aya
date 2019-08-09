@@ -4,6 +4,8 @@ package org.taurus.aya.server.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Entity
@@ -17,34 +19,30 @@ public class Event {
   private String lane;
   private String name;
   private String description;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss+0000")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   @Column(name = "startdate")
   private Date startDate;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss+0000")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   @Column(name = "enddate")
   private Date endDate;
   private Integer wuser;
   private Integer wgroup;
   private Integer ruser;
   private Integer rgroup;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss")
-  private Date limitdate;
   @Column(name = "eventwindowstyle")
   private String eventWindowStyle;
   private Integer executor;
   private Integer priority;
   @Column(name="duration_d")
-  private Integer duration;
+  private Integer duration_d;
   @Column(name="duration_h")
-  private Integer durationH;
+  private Integer duration_h;
   private String icon;
   private Integer state;
   private String executorName;
   private Integer rosTask;
   private Long author;
-  private String sublane;
-  private Boolean isBacklog;
-  private Integer spent_time;
+  private Integer spentTime;
   private Date start;
   private Boolean isGraph;
 
@@ -108,7 +106,7 @@ public class Event {
   }
 
   public void setStartDate(Date startDate) {
-    this.startDate = startDate;
+    this.startDate = startDate== null?Date.from(Instant.now()):startDate;
   }
 
 
@@ -117,7 +115,8 @@ public class Event {
   }
 
   public void setEndDate(Date endDate) {
-    this.endDate = endDate;
+
+    this.endDate = endDate== null?Date.from(Instant.now().plus(1, ChronoUnit.DAYS)):endDate;
   }
 
 
@@ -156,16 +155,6 @@ public class Event {
     this.rgroup = rgroup;
   }
 
-
-  public Date getLimitdate() {
-    return limitdate;
-  }
-
-  public void setLimitdate(Date limitdate) {
-    this.limitdate = limitdate;
-  }
-
-
   public String getEventWindowStyle() {
     return eventWindowStyle;
   }
@@ -196,21 +185,21 @@ public class Event {
   }
 
 
-  public Integer getDuration() {
-    return duration;
+  public Integer getDuration_d() {
+    return duration_d;
   }
 
-  public void setDuration(Integer duration) {
-    this.duration = duration;
+  public void setDuration_d(Integer duration_d) {
+    this.duration_d = duration_d;
   }
 
 
-  public Integer getDurationH() {
-    return durationH;
+  public Integer getDuration_h() {
+    return duration_h;
   }
 
-  public void setDurationH(Integer durationH) {
-    this.durationH = durationH;
+  public void setDuration_h(Integer duration_h) {
+    this.duration_h = duration_h;
   }
 
 
@@ -225,13 +214,12 @@ public class Event {
       this.icon = "tree/task0.png";
   }
 
-
   public Integer getState() {
     return state;
   }
 
   public void setState(Integer state) {
-    this.state = state;
+    this.state = state==null? 0 : state;
   }
 
 
@@ -244,15 +232,6 @@ public class Event {
   }
 
 
-  public Integer getRosTask() {
-    return rosTask;
-  }
-
-  public void setRosTask(Integer rosTask) {
-    this.rosTask = rosTask;
-  }
-
-
   public Long getAuthor() {
     return author;
   }
@@ -262,30 +241,13 @@ public class Event {
   }
 
 
-  public String getSublane() {
-    return sublane;
-  }
-
-  public void setSublane(String sublane) {
-    this.sublane = sublane;
-  }
-
-
-  public Boolean getIsBacklog() {
-    return isBacklog;
-  }
-
-  public void setIsBacklog(Boolean isBacklog) {
-    this.isBacklog = isBacklog;
-  }
-
-
   public Integer getSpentTime() {
-    return spent_time;
+    return spentTime;
   }
 
   public void setSpentTime(Integer spent_time) {
-    this.spent_time = spent_time;
+
+    this.spentTime = spent_time==null? 0 : spent_time;
   }
 
 

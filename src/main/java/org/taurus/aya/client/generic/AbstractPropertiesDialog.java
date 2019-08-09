@@ -247,6 +247,7 @@ abstract public class AbstractPropertiesDialog extends Dialog {
 		return hLayoutMain;
 	}
 
+
 	protected HLayout createTagsLayout()
 	{
 		final HLayout hLayoutMain = new HLayout();

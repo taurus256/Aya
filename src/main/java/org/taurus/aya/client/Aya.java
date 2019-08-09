@@ -39,8 +39,8 @@ public class Aya implements EntryPoint {
 //    	DateUtil.setDefaultDisplayTimezone("+04:00");
 //    	SC.logWarn(date.toString());
 
-    	DateUtil.setDefaultDisplayTimezone("+03:00");
- 		DateUtil.setAdjustForDST(false);
+//    	DateUtil.setDefaultDisplayTimezone("+03:00");
+// 		DateUtil.setAdjustForDST(false);
 
 		KeyIdentifier debugKey = new KeyIdentifier();
 		debugKey.setCtrlKey(true);

@@ -10,12 +10,6 @@ import org.taurus.aya.shared.GwtResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalField;
 import java.util.Date;
 import java.util.List;
 
@@ -71,7 +65,7 @@ public class EventController extends GenericController {
         @RequestParam (required = false) String state,          //Integer state,
         @RequestParam (required = false) String executor_name,   //String executor_name,
         @RequestParam (required = false) String isBacklog,             //Boolean is_backlog,
-        @RequestParam (required = false) String spent_time,     //Integer spent_time,
+        @RequestParam (required = false) String spentTime,     //Integer spent_time,
         @RequestParam (required = false) String isGraph        //Boolean is_graph
     ) throws ParseException
     {
@@ -123,13 +117,12 @@ public class EventController extends GenericController {
                 event.setEventWindowStyle(eventWindowStyle);
                 event.setExecutor(filterIntValue(executor));
                 event.setPriority(filterIntValue(priority));
-                event.setDuration(filterIntValue(duration));
-                event.setDurationH(filterIntValue(duration_h));
+                event.setDuration_d(filterIntValue(duration));
+                event.setDuration_h(filterIntValue(duration_h));
                 event.setIcon(icon);
                 event.setState(filterIntValue(state));
                 event.setExecutorName(executor_name);
-                event.setIsBacklog(filterBooleanValue(isBacklog));
-                event.setSpentTime(filterIntValue(spent_time));
+                event.setSpentTime(filterIntValue(spentTime));
                 event.setIsGraph(filterBooleanValue(isGraph));
 
                 event = eventRepository.save(event);

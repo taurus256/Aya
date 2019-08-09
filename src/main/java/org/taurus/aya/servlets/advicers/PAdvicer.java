@@ -104,7 +104,7 @@ public class PAdvicer {
             return 0d;
         }
         else
-            return event.getDurationH() / velocity;
+            return event.getDuration_h() / velocity;
     }
 
     public void initialize(List<User> userList, List<Lane> laneList, List<Event> eventList)
