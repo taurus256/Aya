@@ -154,45 +154,46 @@ public class Aya implements EntryPoint {
 
 								GlobalData.setCurrentUserGroups(dsResponse.getData());
 
-								// отрисовываем интерфейс
-								// Создание раскладки виджетов главного окна
-								mainLayout = new VLayout();
-								mainLayout.setWidth100();
-								mainLayout.setHeight100();
-
-								northLayout = new HLayout();
-								northLayout.setHeight(27);
-
-								VLayout vLayout = new VLayout();
-
-								vLayout.addMember(new ApplicationMenu());
-								northLayout.addMember(vLayout);
-
-								westLayout = new NavigationArea();
-								westLayout.setWidth("15%");
-
-								eastLayout = new MainArea();
-								eastLayout.setWidth("85%");
-
-								southLayout = new HLayout();
-								southLayout.setMembers(westLayout, eastLayout);
-
-								mainLayout.addMember(northLayout);
-								mainLayout.addMember(southLayout);
-
-								statusBar = new StatusBar();
-								mainLayout.addMember(statusBar);
-
-								RootLayoutPanel.get().add(mainLayout);
-
-								// Инициализация служебных объектов
-								//TODO ViewManager.init();
-								TabManager.init();
-
 								GlobalData.getDataSource_user().performCustomOperation("fetchAllDomainUsers", new Record(), new DSCallback(){
 									@Override
 									public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest) {
 										GlobalData.setUsers(dsResponse.getData());
+
+										// отрисовываем интерфейс
+										// Создание раскладки виджетов главного окна
+										mainLayout = new VLayout();
+										mainLayout.setWidth100();
+										mainLayout.setHeight100();
+
+										northLayout = new HLayout();
+										northLayout.setHeight(27);
+
+										VLayout vLayout = new VLayout();
+
+										vLayout.addMember(new ApplicationMenu());
+										northLayout.addMember(vLayout);
+
+										westLayout = new NavigationArea();
+										westLayout.setWidth("15%");
+
+										eastLayout = new MainArea();
+										eastLayout.setWidth("85%");
+
+										southLayout = new HLayout();
+										southLayout.setMembers(westLayout, eastLayout);
+
+										mainLayout.addMember(northLayout);
+										mainLayout.addMember(southLayout);
+
+										statusBar = new StatusBar();
+										mainLayout.addMember(statusBar);
+
+										RootLayoutPanel.get().add(mainLayout);
+
+										// Инициализация служебных объектов
+										//TODO ViewManager.init();
+										TabManager.init();
+
 										SC.logInfo("Initialization: user list has " + dsResponse.getData().length + " records");
 									}
 								});

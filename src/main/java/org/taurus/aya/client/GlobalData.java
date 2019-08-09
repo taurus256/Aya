@@ -296,7 +296,7 @@ public class GlobalData {
 									new DataSourceField("mobphone", FieldType.TEXT),
 									new DataSourceField("usid", FieldType.TEXT),
 									new DataSourceField("passwordHash", FieldType.TEXT),
-									new DataSourceField("showed_name", FieldType.TEXT)
+									new DataSourceField("showedName", FieldType.TEXT)
 									};
 
 		DataSource dataSource =
@@ -440,7 +440,7 @@ public class GlobalData {
 				new DataSourceField("duration_h", FieldType.INTEGER,"Время исполнения (часов)"),
 				icon,
 				state,
-				new DataSourceField("executor_name", FieldType.TEXT, "Имя исполнителя"),
+				new DataSourceField("executorName", FieldType.TEXT, "Имя исполнителя"),
 				new DataSourceField("author", FieldType.TEXT, "Задача создана"),
 				is_backlog,
 				new DataSourceField("spentTime", FieldType.INTEGER, "Затрачено времени"),

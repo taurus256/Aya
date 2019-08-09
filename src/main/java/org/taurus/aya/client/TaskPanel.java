@@ -102,6 +102,7 @@ public class TaskPanel extends VLayout implements SidePanel {
 
 //		panelBacklog.getTreeGrid().setCriteria(backlogCriteria);
 		panelBacklog.getTreeGrid().setInitialCriteria(backlogCriteria);
+		panelBacklog.getTreeGrid().setCriteria(backlogCriteria);
 		ListGridField imageField = new ListGridField("icon",32);
 		imageField.setType(ListGridFieldType.IMAGE);
 		imageField.setAlign(Alignment.CENTER);
@@ -297,7 +298,7 @@ public class TaskPanel extends VLayout implements SidePanel {
 		r.setAttribute("isBacklog", false);
 		r.setAttribute("isGraph", true);
 		r.setAttribute("executor", GlobalData.getCurrentUser().getAttributeAsInt("id"));
-		r.setAttribute("executor_name", GlobalData.getCurrentUser().getAttribute("firstname") + " " + GlobalData.getCurrentUser().getAttribute("surname"));
+		r.setAttribute("executorName", GlobalData.getCurrentUser().getAttribute("firstname") + " " + GlobalData.getCurrentUser().getAttribute("surname"));
 		r.setAttribute("startDate", new Date());
 		Long millis = r.getAttributeAsDate("startDate").getTime();
 

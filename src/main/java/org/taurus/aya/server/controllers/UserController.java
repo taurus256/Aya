@@ -69,7 +69,7 @@ public class UserController {
         @RequestParam String mobphone,
         @RequestParam String usid,
         @RequestParam String passwordHash,
-        @RequestParam String showed_name
+        @RequestParam String showedName
     )
     {
         User user = userService.getUser(id);
@@ -83,7 +83,7 @@ public class UserController {
             user.setMobphone(mobphone);
             user.setUsid(usid);
             user.setPasswordHash(passwordHash);
-            user.setShowedName(showed_name);
+            user.setShowedName(showedName);
             userRepository.save(user);
             System.out.println("User saved");
         }

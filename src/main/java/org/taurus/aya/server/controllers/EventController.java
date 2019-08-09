@@ -63,8 +63,6 @@ public class EventController extends GenericController {
         @RequestParam (required = false) String duration_h,     //Integer duration_h,
         @RequestParam (required = false) String icon,            //String icon,
         @RequestParam (required = false) String state,          //Integer state,
-        @RequestParam (required = false) String executor_name,   //String executor_name,
-        @RequestParam (required = false) String isBacklog,             //Boolean is_backlog,
         @RequestParam (required = false) String spentTime,     //Integer spent_time,
         @RequestParam (required = false) String isGraph        //Boolean is_graph
     ) throws ParseException
@@ -121,7 +119,6 @@ public class EventController extends GenericController {
                 event.setDuration_h(filterIntValue(duration_h));
                 event.setIcon(icon);
                 event.setState(filterIntValue(state));
-                event.setExecutorName(executor_name);
                 event.setSpentTime(filterIntValue(spentTime));
                 event.setIsGraph(filterBooleanValue(isGraph));
 

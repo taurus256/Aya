@@ -45,14 +45,15 @@ public class ChatPanel extends VLayout {
 		usersGrid.setPadding(0);
 		usersGrid.setMargin(0);
 		usersGrid.setShowHeader(false);
-		usersGrid.addDataArrivedHandler(new DataArrivedHandler() {
-			@Override
-			public void onDataArrived(DataArrivedEvent event) {
-				GlobalData.setUsers(usersGrid.getDataAsRecordList().toArray());
-				usersLoaded = true;
-				if (groupsLoaded) setMessagesInitialCount();
-			}
-		});
+// Now it come from main Aya module
+//		usersGrid.addDataArrivedHandler(new DataArrivedHandler() {
+//			@Override
+//			public void onDataArrived(DataArrivedEvent event) {
+//				GlobalData.setUsers(usersGrid.getDataAsRecordList().toArray());
+//				usersLoaded = true;
+//				if (groupsLoaded) setMessagesInitialCount();
+//			}
+//		});
 		
 		ListGridField stateUserIndicatorField = new ListGridField("state","Онлайн");
 		stateUserIndicatorField.setWidth(20);
@@ -60,7 +61,7 @@ public class ChatPanel extends VLayout {
 		stateUserIndicatorField.setImageURLPrefix("forms/");
 		stateUserIndicatorField.setImageURLSuffix(".png");
 		stateUserIndicatorField.setDefaultValue("offline");
-		ListGridField userNameField = new ListGridField("showed_name","Имя");
+		ListGridField userNameField = new ListGridField("showedName","Имя");
 		ListGridField counterUserMessagesField = new ListGridField("counter","Пользователь");
 		counterUserMessagesField.setWidth(20);
 		usersGrid.setFields(stateUserIndicatorField,userNameField,counterUserMessagesField);
@@ -428,7 +429,7 @@ public class ChatPanel extends VLayout {
 		for (Record k: GlobalData.getUsers())
 			if (k.getAttributeAsInt("id").equals(remoteUserId))
 			{
-				r.setAttribute("nickname",k.getAttributeAsString("showed_name")); break;
+				r.setAttribute("nickname",k.getAttributeAsString("showedName")); break;
 			}
 		TabManager.openTab(ResourceType.CHAT, r);
 	}

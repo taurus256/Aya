@@ -227,7 +227,7 @@ public class CommandExecutor {
 		for (Record k: GlobalData.getUsers())
 			if (k.getAttributeAsInt("id").equals(remoteUserId))
 			{
-				r.setAttribute("showed_name",k.getAttributeAsString("showed_name")); break;
+				r.setAttribute("showedName",k.getAttributeAsString("showedName")); break;
 			}
 		TabManager.openTab(ResourceType.CHAT, r);
 	}
@@ -237,7 +237,7 @@ public class CommandExecutor {
 		for (Record k: GlobalData.getCurrentUserGroups())
 			if (k.getAttributeAsInt("id").equals(groupId))
 			{
-				r.setAttribute("showed_name",k.getAttributeAsString("description")); break;
+				r.setAttribute("showedName",k.getAttributeAsString("description")); break;
 			}
 		TabManager.openTab(ResourceType.CHAT, r);	
 	}

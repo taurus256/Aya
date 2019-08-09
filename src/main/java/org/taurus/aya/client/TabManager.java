@@ -286,7 +286,7 @@ public class TabManager {
 
 			if (type== ResourceType.CHAT)
 			{
-				tab = createTab("[ " + r.getAttributeAsString("showed_name") + " ]", "chat.svg",  new ChatView(r), true);
+				tab = createTab("[ " + r.getAttributeAsString("showedName") + " ]", "chat.svg",  new ChatView(r), true);
 				SC.logWarn("TabManager.\t Adding tab for dialog " + r.getAttribute("id"));
 			}
 			

@@ -197,7 +197,7 @@ public class ChatView extends ContentPane{
 		final Record message = new Record();
 		message.setAttribute("dialog_id",dialog.getAttributeAsInt("id"));
 		message.setAttribute("sender_id",GlobalData.getCurrentUser().getAttributeAsInt("id"));
-		message.setAttribute("sender", GlobalData.getCurrentUser().getAttributeAsString("showed_name"));
+		message.setAttribute("sender", GlobalData.getCurrentUser().getAttributeAsString("showedName"));
 		message.setAttribute("content",textArea.getValueAsString());
 		message.setAttribute("stamp",new Date());
 		textArea.clearValue();

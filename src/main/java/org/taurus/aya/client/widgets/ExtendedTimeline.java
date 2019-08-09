@@ -67,7 +67,7 @@ public class ExtendedTimeline extends Timeline {
 		setWidth100();
 		setMargin(0);
 		setPadding(0);
-		setDisableWeekends(false);
+		setDisableWeekends(true);
 		setShowWeekends(true);
 
 		setSublaneNameField("sublane");
@@ -272,10 +272,10 @@ public class ExtendedTimeline extends Timeline {
 				if (distinctByUsers)
 				{
 					for (Record r: GlobalData.getUsers())
-					if (r.getAttributeAsString("showed_name").equals(lane.getTitle()))
+					if (r.getAttributeAsString("showedName").equals(lane.getTitle()))
 					{
 						ev.setAttribute("executor",r.getAttributeAsInt("id"));
-						ev.setAttribute("executor_name",r.getAttributeAsString("showed_name"));
+						ev.setAttribute("executorName",r.getAttributeAsString("showedName"));
 					}
 				}
 				else
@@ -319,7 +319,7 @@ public class ExtendedTimeline extends Timeline {
 					return "<i>" + calendarEvent.getAttributeAsString("lane") + "</i>";
 				else
 					{
-						String executor_name = (calendarEvent.getAttributeAsString("executor_name") == null)?"":calendarEvent.getAttributeAsString("executor_name");
+						String executor_name = (calendarEvent.getAttributeAsString("executorName") == null)?"":calendarEvent.getAttributeAsString("executor_name");
 						return "<i>" + executor_name + "</i>";
 					}
 			}
@@ -517,23 +517,15 @@ public class ExtendedTimeline extends Timeline {
 		}
 		else //use 'user' DS to create lanes
 		{
-		
-			GlobalData.getDataSource_user().fetchData(GlobalData.getUserFilterCriteria(), new DSCallback(){
-	
-				@Override
-				public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest)
-				{
-					SC.logWarn("TaskView: users amount: " + dsResponse.getData().length);
-					for (int i=0; i< dsResponse.getData().length; i++)
-					{
-						Lane lane = new Lane(dsResponse.getData()[i].getAttribute("id"),dsResponse.getData()[i].getAttribute("showed_name"));
-						lane.setHeight(200);
-			        	addLane(lane);
-					}
-					
-					
-					updateTasks();
-				}},dsr);	
+			SC.logWarn("TaskView: users amount: " + GlobalData.getUsers().length);
+			for (int i=0; i< GlobalData.getUsers().length; i++)
+			{
+				Lane lane = new Lane(GlobalData.getUsers()[i].getAttribute("id"),GlobalData.getUsers()[i].getAttribute("showedName"));
+				lane.setHeight(200);
+				addLane(lane);
+			}
+
+			updateTasks();
 		}
 	}
 	

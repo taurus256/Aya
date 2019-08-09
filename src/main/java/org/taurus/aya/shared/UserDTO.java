@@ -13,7 +13,7 @@ public class UserDTO implements IsSerializable {
     private String mobphone;
     private String usid;
     private String passwordHash;
-    private String showed_name;
+    private String showedName;
 
     public Long getId() {
         return id;
@@ -88,10 +88,10 @@ public class UserDTO implements IsSerializable {
     }
 
     public String getShowed_name() {
-        return showed_name;
+        return showedName;
     }
 
-    public void setShowed_name(String showed_name) {
-        this.showed_name = showed_name;
+    public void setShowed_name(String showedName) {
+        this.showedName = showedName;
     }
 }

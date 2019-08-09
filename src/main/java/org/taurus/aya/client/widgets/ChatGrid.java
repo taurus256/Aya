@@ -21,8 +21,8 @@ public class ChatGrid extends ListGrid {
 	public ChatGrid(Record thisUser, Record remoteUser)
 	{
 		thisUserId = thisUser.getAttributeAsInt("id");
-		this.userName = thisUser.getAttributeAsString("showed_name");
-		this.remoteUserName = remoteUser.getAttributeAsString("showed_name");
+		this.userName = thisUser.getAttributeAsString("showedName");
+		this.remoteUserName = remoteUser.getAttributeAsString("showedName");
 		
 		setSaveLocally(true);
 		
@@ -63,7 +63,7 @@ public class ChatGrid extends ListGrid {
 	public ChatGrid(Record thisUser)
 	{
 		thisUserId = thisUser.getAttributeAsInt("id");
-		this.userName = thisUser.getAttributeAsString("showed_name");
+		this.userName = thisUser.getAttributeAsString("showedName");
 		
 		setSaveLocally(true);
 		
@@ -82,7 +82,7 @@ public class ChatGrid extends ListGrid {
             	else
             		for (Record r : GlobalData.getUsers())
             			if (r.getAttributeAsInt("id").equals(listGridRecord.getAttributeAsInt("sender_id")))
-            				return "<span class=\"remote\">" + r.getAttributeAsInt("showed_name") + " </span><span class=\"stamp\">" + date + "</span>:<br><div class=\"content\">" + o.toString() + "</span>";
+            				return "<span class=\"remote\">" + r.getAttributeAsInt("showedName") + " </span><span class=\"stamp\">" + date + "</span>:<br><div class=\"content\">" + o.toString() + "</span>";
             	
             	return "Cannot convert";
             }

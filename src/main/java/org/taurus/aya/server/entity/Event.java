@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Event {
@@ -46,6 +47,9 @@ public class Event {
   private Date start;
   private Boolean isGraph;
 
+  @ManyToOne
+  @JoinColumn(name="executor", insertable = false, updatable = false)
+  User user;
 
   public Long getId() {
     return id;
@@ -97,7 +101,8 @@ public class Event {
   }
 
   public void setDescription(String description) {
-    this.description = description;
+
+    this.description = description==null?"":description;
   }
 
 
@@ -224,13 +229,10 @@ public class Event {
 
 
   public String getExecutorName() {
-    return executorName;
+    if (user != null)
+      return user.getShowedName();
+    else return "";
   }
-
-  public void setExecutorName(String executorName) {
-    this.executorName = executorName;
-  }
-
 
   public Long getAuthor() {
     return author;
