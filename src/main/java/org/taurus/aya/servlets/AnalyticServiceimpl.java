@@ -6,6 +6,8 @@ import org.taurus.aya.server.entity.Event;
 import org.taurus.aya.server.entity.Lane;
 import org.taurus.aya.server.entity.User;
 import org.taurus.aya.servlets.advicers.PAdvicer;
+import org.taurus.aya.shared.Advice;
+import org.taurus.aya.shared.AdviceState;
 import org.taurus.aya.shared.TaskAnalyseData;
 
 import javax.persistence.EntityManagerFactory;
@@ -134,13 +136,25 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         futureEventsList.add(e5);
         futureEventsList.add(e7);
 
+
+        String labelText = getLabel(oldEventsList,futureEventsList);
+
         pAdvicer.initialize(userList,laneList,oldEventsList);
 
         Map<String,Double> prognosisMap = pAdvicer.computeFuturePrognosis(futureEventsList);
         for (String k: prognosisMap.keySet())
             System.out.println("prognosis: " + k + " " + prognosisMap.get(k));
 
-        return new TaskAnalyseData("Задач за предыдущий месяц: " + 5,"ЗАГОЛОВОК");
+        List advices = new LinkedList();
+        advices.add(new Advice(AdviceState.OK,"OK"));
+        advices.add(new Advice(AdviceState.CRITICAL,"FAIL"));
+
+        return new TaskAnalyseData(labelText,advices);
+    }
+
+    private String getLabel(List<Event> oldEventList, List<Event> futureEventList)
+    {
+        return oldEventList.size() + "/" + futureEventList.size();
     }
 
     private int dayCount(Date start, Date end) throws Exception

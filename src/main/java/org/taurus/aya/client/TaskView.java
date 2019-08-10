@@ -4,7 +4,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.calendar.CalendarEvent;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -14,10 +13,13 @@ import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
-import com.smartgwt.client.widgets.viewer.DetailViewer;
 import org.taurus.aya.client.TabManager.ResourceType;
 import org.taurus.aya.client.widgets.ExtendedTimeline;
+import org.taurus.aya.shared.Advice;
+import org.taurus.aya.shared.AdviceState;
 import org.taurus.aya.shared.TaskAnalyseData;
+
+import java.util.List;
 //import com.smartgwt.client.widgets.Window;
 
 
@@ -26,17 +28,13 @@ public class TaskView extends ContentPane {
 	private ExtendedTimeline timeline;
 	private ExtendedTimeline timeline2;
 	TaskView taskView;
-	DetailViewer props;
-	AdvancedCriteria laneSearchCriteria;
 	Record currentRecord;
 	int tabUID;
 	ListGridField lgf;
 	ContentPane contentPane;
 	ToolStrip toolStrip;
-	boolean isShown = false;
-	boolean distinctByUsers = true;
 	HLayout hLayout;
-	HTMLPane pane;
+	VLayout pane;
 	Menu menu;
 	Label analyseResultLabel;
 
@@ -174,8 +172,9 @@ public TaskView(Record currentRecord, int tabUID)
 
 					@Override
 					public void onSuccess(TaskAnalyseData result) {
-						showMenu(result.getAdvancedText());
-						SC.logWarn("AnalyticResult:" + result.getAdvancedText());
+						analyseResultLabel.setContents(result.getPanelText());
+						prepareAdvicePane(result.getAdvices());
+						SC.logWarn("AnalyticResult:" + result.getAdvices().size());
 					}
 				});
 			} catch (Exception e) {
@@ -233,18 +232,42 @@ public TaskView(Record currentRecord, int tabUID)
 		return getCurrentTimeline().getSelectedEvent();
 	}
 
-	private void showMenu(String s)
+	private void prepareAdvicePane(List<Advice> advices)
 	{
-		pane.setContents(s);
+	    pane.removeMembers(pane.getMembers());
+
+        AdviceState panelState = AdviceState.OK;
+
+		for (Advice a: advices) {
+			Label l = new Label(a.getDescription());
+			l.setWidth("100%");
+			AdviceState adviceState = a.getState();
+			switch(adviceState)
+			{
+				case OK: l.setStyleName(adviceState.getStyleName()); break;
+				case WARNING: {
+                    l.setStyleName(adviceState.getStyleName());
+                    if (panelState.ordinal() < AdviceState.WARNING.ordinal()) panelState = AdviceState.WARNING;
+				} break;
+				case CRITICAL: {
+                    l.setStyleName(adviceState.getStyleName());
+                    panelState = AdviceState.CRITICAL;
+                }
+			}
+			pane.addMember(l);
+		}
+
 		menu.setHeight(500);
 		menu.setWidth(300);
 		menu.showNextTo(analyseResultLabel,"top",false);
+
+        analyseResultLabel.setStyleName(panelState.getStyleName());
 	}
 
 	private Menu createPopupMenu()
 	{
 		menu = new Menu();
-		pane = new HTMLPane();
+		pane = new VLayout();
 		pane.setWidth(300);
 		pane.setHeight(500);
 

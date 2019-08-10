@@ -2,23 +2,19 @@ package org.taurus.aya.shared;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
+import java.util.List;
+
 public class TaskAnalyseData implements IsSerializable {
 
     String panelText;
 
-    String advancedText;
+    List<Advice> advices;
 
     public TaskAnalyseData(){}
 
-    public TaskAnalyseData(String text)
-    {
-        setPanelText(text);
-    }
-
-    public TaskAnalyseData(String text, String advancedText)
-    {
-        setPanelText(text);
-        setAdvancedText(advancedText);
+    public TaskAnalyseData(String panelText, List<Advice> advices){
+        this.panelText = panelText;
+        this.advices = advices;
     }
 
     public String getPanelText() {
@@ -29,11 +25,14 @@ public class TaskAnalyseData implements IsSerializable {
         this.panelText = panelText;
     }
 
-    public String getAdvancedText() {
-        return advancedText;
+    public List<Advice> getAdvices() {
+        return advices;
     }
 
-    public void setAdvancedText(String advancedText) {
-        this.advancedText = advancedText;
+    public void setAdvices(List<Advice> advices) {
+        this.advices = advices;
     }
+
+
+
 }

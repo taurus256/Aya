@@ -85,25 +85,11 @@ public class EventController extends GenericController {
                 event.setName(name);
                 event.setDescription(description);
 
-                Date d = filterDateValue(startDate);
-//                if (d != null) {
-//                    ZonedDateTime t = d.toInstant().atZone(ZoneId.of("Europe/Moscow"));
-//                    int hours = t.get(ChronoField.CLOCK_HOUR_OF_DAY);
-//                    if (hours > 12) t = t.plus(1, ChronoUnit.DAYS);
-//                    t = t.withHour(0);
-//                    d = Date.from(t.toInstant());
-//                }
+                //Block date modification where state is changed (client sends incorrect date in this case)
+                Date d = (event.getStartDate() == null || event.getState().equals(filterIntValue(state))) ? filterDateValue(startDate) : event.getStartDate();
                 event.setStartDate(d);
 
-                d = filterDateValue(endDate);
-//                if (d != null) {
-//                    ZonedDateTime t = d.toInstant().atZone(ZoneId.of("Europe/Moscow"));
-//                    int hours = t.get(ChronoField.CLOCK_HOUR_OF_DAY);
-//                    if (hours < 12)
-//                    t = t.minus(1, ChronoUnit.DAYS);
-//                    t = t.withHour(23);
-//                    d = Date.from(t.toInstant());
-//                }
+                d = (event.getEndDate() == null || event.getState().equals(filterIntValue(state))) ? filterDateValue(endDate) : event.getEndDate();
                 event.setEndDate(d);
 
                 event.setAuthor(filterLongValue(author));

@@ -57,7 +57,6 @@ public class ExtendedTimeline extends Timeline {
 		setAutoChildProperties("timelineView", calendarView);
 		
 		// Configure view
-        SC.logWarn("ETL: 2");
 		if (distinctByUsers) setLaneNameField("executor");
 		setShowLaneRollOver(false);
 		setCanAcceptDrop(true);
@@ -165,39 +164,34 @@ public class ExtendedTimeline extends Timeline {
 		addEventClickHandler(new EventClickHandler(){
 			@Override
 			public void onEventClick(CalendarEventClick event) {
-				if (selectedEvent != null) 
+				if (selectedEvent != null)
 					{
-					//selectedEvent.setStyleName("s3_normal");
 					selectedEvent.setHeaderBackgroundColor(selectedEvent.getBackgroundColor());
 					selectedEvent.setBorderColor("gray");
-					//!selectedEvent.setHeaderTextColor("black");
 					refreshEvent(selectedEvent);
 					}
 
-				//Enable 'properties' menu foe the event
+				//Enable 'properties' menu for the event
 				eventPropertiesMenu.setEnabled(true);
 				menu.refreshRow(menu.getItems().length-1);
 
-				// Setting the selected event and its style
-				selectedEvent = event.getEvent();
-				selectedEvent.setHeaderBackgroundColor("#DCDCDC");
-				selectedEvent.setBorderColor("#297ACC");
+				if (event.isAltKeyDown())
+				{
+					EditEventDialog ee = getEditEventDialog(event.getEvent());
+					ee.focusInNextTabElement();
+				}
+				else {
+					// Setting the selected event and its style
+					selectedEvent = event.getEvent();
+					selectedEvent.setHeaderBackgroundColor("#DCDCDC");
+					selectedEvent.setBorderColor("#297ACC");
 
-				refreshEvent(selectedEvent);
-				redraw();
+					refreshEvent(selectedEvent);
+					redraw();
+				}
 
 				event.cancel();
 			}});
-
-		/*addEventAddedHandler(new EventAddedHandler()
-	    {
-
-			@Override
-			public void onEventAdded(CalendarEventAdded event) {
-				event.getEvent().setStyleName("s3_normal");
-				refreshEvent(event.getEvent());
-			}
-	    });*/
 
         addEventRemoveClickHandler(new EventRemoveClickHandler(){
 
@@ -225,13 +219,14 @@ public class ExtendedTimeline extends Timeline {
 				event.cancel();
 			}});
 
-
+		//Date modification
         addEventResizeStopHandler(event -> {
             SC.logWarn("ExtendedTimeline: event resize");
             Date start = modifyCalendarEventStartDate(event.getNewEvent());
             SC.logWarn("ExtendedTimeline: startDate=" + start);
         });
 
+		//Date modification (one more)
         addEventRepositionStopHandler(event -> {
                     SC.logWarn("ExtendedTimeline: event rep stop");
                     modifyCalendarEventStartDate(event.getNewEvent());
@@ -289,14 +284,6 @@ public class ExtendedTimeline extends Timeline {
 			}});       
         
 
-        /*addDayBodyClickHandler(new DayBodyClickHandler(){
-
-			@Override
-			public void onDayBodyClick(DayBodyClickEvent event) {
-				event.cancel();
-				
-			}});*/
-        
         // set customizers
         setEventHeaderHTMLCustomizer(new EventHeaderHTMLCustomizer(){
 
@@ -319,31 +306,17 @@ public class ExtendedTimeline extends Timeline {
 					return "<i>" + calendarEvent.getAttributeAsString("lane") + "</i>";
 				else
 					{
-						String executor_name = (calendarEvent.getAttributeAsString("executorName") == null)?"":calendarEvent.getAttributeAsString("executor_name");
+						String executor_name = (calendarEvent.getAttributeAsString("executorName") == null)?"":calendarEvent.getAttributeAsString("executorName");
 						return "<i>" + executor_name + "</i>";
 					}
 			}
         });
         
-//        setDateHeaderCustomizer(new DateHeaderCustomizer(){
-//
-//			@Override
-//			public String getHeaderTitle(Date date, int dayOfWeek, String defaultValue, CalendarView calendarView)
-//			{
-//				if (defaultValue.contains(":"))
-//				{
-//				  long minutes = (date.getTime() - startDate.getTime())/60000;
-//
-//	              return "Ч + " + String.valueOf(minutes/60) + ":" + String.valueOf(minutes%60) + "<br> " + defaultValue + "";
-//				}
-//				else return defaultValue;
-//			}});
-
-
         addDropHandler(new DropHandler() {
                            @Override
                            public void onDrop(DropEvent event) {
                                Record r = GlobalData.getNavigationArea().getTaskPanel().getTreeSelectedRecord();
+
 
                                //TODO:: вынести проверку на null в отдельный метод
                                if (r.getAttribute("lane") == null || r.getAttribute("lane").equals("null"))
@@ -592,23 +565,8 @@ public class ExtendedTimeline extends Timeline {
     public Menu getContextMenu() {
         menu= new Menu();
 
-//        dialogOpenMenu = new MenuItem("Задача не выбрана");
-//        dialogOpenMenu.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler()
-//	        {
-//				@Override
-//				public void onClick(MenuItemClickEvent event) {
-//					if (selectedEvent != null)
-//						if (selectedEvent.getAttributeAsInt("author").equals(GlobalData.getCurrentUser().getAttributeAsInt("id")))
-//							CommandExecutor.exec(new org.taurus.aya.shared.Command(CommandType.OPEN_USER_CHAT, "timeline: open user chat",selectedEvent.getAttributeAsInt("executor")));
-//						else
-//							CommandExecutor.exec(new org.taurus.aya.shared.Command(CommandType.OPEN_USER_CHAT, "timeline: open user chat",selectedEvent.getAttributeAsInt("author")));
-//				}
-//	        }
-//		);
-//        dialogOpenMenu.setEnabled(false);
-//        menu.addItem(dialogOpenMenu);
-
         MenuItem moveToBacklogMenu = new MenuItem("Вернуть в список");
+        moveToBacklogMenu.setIcon("buttons/task_backlog.png");
         moveToBacklogMenu.addClickHandler(new ClickHandler() {
                                               @Override
                                               public void onClick(MenuItemClickEvent event) {
@@ -647,12 +605,7 @@ public class ExtendedTimeline extends Timeline {
         menu.addItem(new com.smartgwt.client.widgets.menu.MenuItemSeparator());
 
         eventPropertiesMenu = new MenuItem("Свойства задачи");
-        eventPropertiesMenu.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler(){
-
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				getEditEventDialog(selectedEvent);
-			}});
+        eventPropertiesMenu.addClickHandler(event -> getEditEventDialog(selectedEvent));
         eventPropertiesMenu.setEnabled(false);
         menu.addItem(eventPropertiesMenu);
         menu.setHeight(menu.getItems().length*ApplicationMenu.ITEM_MENU_HEIGHT - (menu.getItems().length-2));

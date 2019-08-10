@@ -55,23 +55,11 @@ public class EditEventDialog extends BacklogTaskDialog {
 			usersMap.put(u.getAttributeAsInt("id"),u.getAttributeAsString("nickname"));
 		SelectItem executor = new SelectItem("executor");
 		executor.setValueMap(usersMap);
-		if (record.getAttribute("executor") == null)
-			executor.setValue(GlobalData.getCurrentUser().getAttributeAsInt("id"));
 
 		//Estimation field
 		// setting selectItem values for estimation
 		LinkedHashMap<Integer,String> valueMap = new LinkedHashMap<>();
-		valueMap.put(0,"Время не указано");
-		valueMap.put(1,"1 час");
-		valueMap.put(3,"3 часа");
-		valueMap.put(5,"5 часов");
-		valueMap.put(8,"1 день");
-		valueMap.put(16,"2 дня");
-		valueMap.put(24,"3 дня");
-		valueMap.put(56,"5 дней");
-
 		IntegerItem durationH = new IntegerItem("duration_h");
-		durationH.setValueMap(valueMap);
 
 		//Priority field
 		SelectItem priority = new SelectItem("priority");
@@ -99,6 +87,9 @@ public class EditEventDialog extends BacklogTaskDialog {
 			df.setFields(lane, name, startDate, endDate, description, executor, priority, durationH, spentTime);
 
 			df.editRecord(record);
+
+			if (record.getAttribute("executor") == null)
+				df.setValue("executor", GlobalData.getCurrentUser().getAttributeAsInt("id"));
 
 			if (!GlobalData.canWrite(record))
 				df.disable();

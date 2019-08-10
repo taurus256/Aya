@@ -3,6 +3,7 @@ package org.taurus.aya.client.generic;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.DragDataAction;
+import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
@@ -54,9 +55,7 @@ public class GenericPanel extends VLayout implements SidePanel{
 		
 		treeGrid = new ListGrid();
 		treeGrid.setDataSource(ds);
-//		treeGrid.setFolderIcon("tree/folder.png");
-//		treeGrid.setNodeIcon("tree/" + iconFile);
-//		treeGrid.setIconSize(20);
+
 
 		treeGrid.setSelectionType(SelectionStyle.SINGLE);
 		treeGrid.setShowHeader(false);
@@ -67,8 +66,8 @@ public class GenericPanel extends VLayout implements SidePanel{
 		treeGrid.setDragDataAction(DragDataAction.MOVE);
 		treeGrid.setCanDragRecordsOut(true);//!
 		
-		treeGrid.setInitialCriteria(baseCriteria);
-		treeGrid.setCriteria(baseCriteria);
+		treeGrid.setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS,false));
+		treeGrid.setCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS,false));
 		treeGrid.setAutoSaveEdits(false);
 		treeGrid.setAutoFetchData(true);
 		

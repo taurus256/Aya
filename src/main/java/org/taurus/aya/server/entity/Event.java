@@ -111,7 +111,8 @@ public class Event {
   }
 
   public void setStartDate(Date startDate) {
-    this.startDate = startDate== null?Date.from(Instant.now()):startDate;
+
+    this.startDate = startDate== null ? Date.from(Instant.now().plus(1,ChronoUnit.DAYS)) : startDate;
   }
 
 
@@ -204,7 +205,8 @@ public class Event {
   }
 
   public void setDuration_h(Integer duration_h) {
-    this.duration_h = duration_h;
+
+    this.duration_h = duration_h==null ? 0 : duration_h;
   }
 
 
