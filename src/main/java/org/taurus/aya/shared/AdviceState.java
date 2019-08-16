@@ -8,6 +8,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 * */
 public enum AdviceState implements IsSerializable {
 
+        NOT_DEFINED("s3_event_new"),
         OK("s3_event_ready"),
         WARNING("s3_event_process"),
         CRITICAL("s3_event_fail");

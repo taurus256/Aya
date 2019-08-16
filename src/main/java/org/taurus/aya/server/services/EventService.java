@@ -3,7 +3,6 @@ package org.taurus.aya.server.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 import org.taurus.aya.server.EventRepository;
 import org.taurus.aya.server.entity.Event;
 
@@ -34,14 +33,12 @@ public class EventService {
 
         //System.out.println(criteriaMap);
         if (Boolean.valueOf(criteriaMap.getOrDefault("isGraph","false")))
-            return eventRepository.findAllByParentAndStartDateLessThanAndEndDateGreaterThanAndIsGraphIsTrue(
-                Integer.valueOf(criteriaMap.getOrDefault("parent","0")),
+            return eventRepository.findAllByStartDateLessThanAndEndDateGreaterThanAndIsGraphIsTrue(
                 formatter.parse(criteriaMap.getOrDefault("startDate","2000-01-01T00:00:00.000")),
                 formatter.parse(criteriaMap.getOrDefault("endDate","2050-01-01T00:00:00.000"))
             );
         else
-            return eventRepository.findAllByParentAndStartDateGreaterThanAndEndDateLessThanAndIsGraphIsFalse(
-                Integer.valueOf(criteriaMap.getOrDefault("parent","0")),
+            return eventRepository.findAllByStartDateGreaterThanAndEndDateLessThanAndIsGraphIsFalse(
                 formatter.parse(criteriaMap.getOrDefault("startDate","2000-01-01T00:00:00.000")),
                 formatter.parse(criteriaMap.getOrDefault("endDate","2050-01-01T00:00:00.000"))
             );

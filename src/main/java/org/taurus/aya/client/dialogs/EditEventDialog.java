@@ -21,6 +21,11 @@ public class EditEventDialog extends BacklogTaskDialog {
 	{
 		super(r);
 		r.setAttribute("isGraph",true);
+
+		addVisibilityChangedHandler(event -> {
+			if (event.getIsVisible())
+				focusInNextTabElement();
+		});
 	}
 
 	@Override

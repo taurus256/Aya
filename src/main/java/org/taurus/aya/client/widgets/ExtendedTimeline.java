@@ -40,6 +40,7 @@ public class ExtendedTimeline extends Timeline {
 	private CalendarEvent selectedEvent=null;
 	private EditEventDialog editEventDialog;
 	private boolean thisIsFirstCall = true;
+	private Runnable updateCallback = null;
 	
 	ExtendedTimeline extendedTimeline;
 	public Date startDate, endDate;
@@ -83,11 +84,14 @@ public class ExtendedTimeline extends Timeline {
 		d.setTime(d.getTime() + 24*3600*1000);
 		indicator1.setEndDate(d);
 		indicator1.setName("Текущая дата");
-
+        indicator1.setHeaderBackgroundColor("white");
+        indicator1.setHeaderBorderColor("white");
 
 		CalendarEvent indicator2 = new CalendarEvent();
 		indicator2.setStartDate(d);
 		indicator2.setName("");
+        indicator2.setHeaderBackgroundColor("white");
+        indicator2.setHeaderBorderColor("white");
 
 		addIndicator(indicator1);
 		addIndicator(indicator2);
@@ -543,7 +547,9 @@ public class ExtendedTimeline extends Timeline {
 							selectRecord(currentRecord);
 						}
 					});
-					
+
+				if (updateCallback != null) updateCallback.run();
+
 				GlobalData.getStatusBar().stopIndicateProcess();
 				
 				// Scroll feature availible only in DAY granuality 
@@ -555,7 +561,6 @@ public class ExtendedTimeline extends Timeline {
 					if ( delta > 0)
 						getTimelineView().scrollBodyTo(delta, 0);
 					thisIsFirstCall = false;
-					//setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 31, null);
  				}
 			
 			}
@@ -618,18 +623,11 @@ public class ExtendedTimeline extends Timeline {
 		return new EditEventDialog(event);
 	}
 	
-    public MenuItem getMenuItem(String title, final TimeUnit headerUnit, final TimeUnit rangeUnit, final Integer columnCount, final Integer minutesPerColumn) {
-        MenuItem item = new MenuItem(title);
-          
-        item.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {  
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				setTimeResolution(headerUnit, rangeUnit, columnCount, minutesPerColumn);
-			}  
-        });  
-        return item;  
-    }  
-    
+	public void addUpdateHandler(Runnable callback)
+	{
+		updateCallback = callback;
+	}
+
 	public void setBlockSelectMode(int mode)
 	{
 		/*if (mode>0)

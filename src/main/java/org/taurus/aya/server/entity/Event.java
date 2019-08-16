@@ -251,7 +251,7 @@ public class Event {
 
   public void setSpentTime(Integer spent_time) {
 
-    this.spentTime = spent_time==null? 0 : spent_time;
+    this.spentTime = (spent_time==null) ? 0 : spent_time;
   }
 
 
@@ -269,6 +269,6 @@ public class Event {
   }
 
   public void setIsGraph(Boolean isGraph) {
-    this.isGraph = isGraph;
+    this.isGraph = (isGraph == null) ? false: isGraph;
   }
 }

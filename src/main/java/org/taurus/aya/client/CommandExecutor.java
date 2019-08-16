@@ -69,13 +69,13 @@ public class CommandExecutor {
 	
 	private static void updateTaskViews()
 	{
-		TabManager.updateAllOpen(ResourceType.TASK,false);
+		TabManager.updateAllOpen(ResourceType.GRAPH,false);
 	}
 
 	private static void updateTasks()
 	{
 		GlobalData.getNavigationArea().getTaskPanel().update();
-		TabManager.updateAllOpen(ResourceType.TASK,false);
+		TabManager.updateAllOpen(ResourceType.GRAPH,false);
 	}
 
 	private static void updateTasksPanel()

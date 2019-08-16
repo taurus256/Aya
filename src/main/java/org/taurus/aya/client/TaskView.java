@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.calendar.CalendarEvent;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -35,8 +36,16 @@ public class TaskView extends ContentPane {
 	ToolStrip toolStrip;
 	HLayout hLayout;
 	VLayout pane;
-	Menu menu;
+	final Menu menu = new Menu();
 	Label analyseResultLabel;
+
+	private class UpdateHandler implements Runnable
+	{
+		@Override
+		public void run() {
+			getServerAnalyseData();
+		}
+	}
 
 public TaskView(Record currentRecord, int tabUID)
 	{
@@ -47,8 +56,9 @@ public TaskView(Record currentRecord, int tabUID)
 		
 		
 		timeline = new ExtendedTimeline(null, false);
-		//this.addMember(timeline);
+		timeline.addUpdateHandler(new UpdateHandler());
 		timeline2 = new ExtendedTimeline(null,true);
+		timeline2.addUpdateHandler(new UpdateHandler());
 		timeline2.hide();
 		VLayout vLayout = new VLayout();
 		vLayout.setWidth100();
@@ -162,25 +172,8 @@ public TaskView(Record currentRecord, int tabUID)
         analyseResultLabel.setContextMenu(createPopupMenu());
         analyseResultLabel.addClickHandler(event -> {
 			analyseResultLabel.setContents("Обновление...");
-			try {
-				GlobalData.getAnalyticService().getPrognosis(new AsyncCallback<TaskAnalyseData>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						analyseResultLabel.setContents("Что-то пошло не так и не туда");
-						SC.warn("Ошибка выполнения запроса на сервере",caught.getLocalizedMessage());
-					}
-
-					@Override
-					public void onSuccess(TaskAnalyseData result) {
-						analyseResultLabel.setContents(result.getPanelText());
-						prepareAdvicePane(result.getAdvices());
-						SC.logWarn("AnalyticResult:" + result.getAdvices().size());
-					}
-				});
-			} catch (Exception e) {
-				analyseResultLabel.setContents("Ой");
-				SC.warn("Ошибка отправки запроса",e.getLocalizedMessage());
-			}
+			getServerAnalyseData();
+			showAdvicePanel();
 		});
 
                 toolStrip2.addMember(analyseResultLabel);
@@ -190,6 +183,28 @@ public TaskView(Record currentRecord, int tabUID)
 		return layout;
 	}
 
+	private void getServerAnalyseData()
+	{
+		try {
+			GlobalData.getAnalyticService().getPrognosis(new AsyncCallback<TaskAnalyseData>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					analyseResultLabel.setContents("Что-то пошло не так и не туда");
+					SC.warn("Ошибка выполнения запроса на сервере",caught.getLocalizedMessage());
+				}
+
+				@Override
+				public void onSuccess(TaskAnalyseData result) {
+					analyseResultLabel.setContents(result.getPanelText());
+					prepareAdvicePane(result.getAdvices());
+					SC.logWarn("AnalyticResult:" + result.getAdvices().size());
+				}
+			});
+		} catch (Exception e) {
+			analyseResultLabel.setContents("Ой");
+			SC.warn("Ошибка отправки запроса",e.getLocalizedMessage());
+		}
+	}
 
 
 	public Record getResource() {
@@ -202,6 +217,7 @@ public TaskView(Record currentRecord, int tabUID)
 	
 	public void updateContent(Boolean all)
 	{
+	    SC.logWarn("TimeView:: update: UPDATE_CONTENT");
 		if (all)
 		{
 			updateTimeline();
@@ -211,6 +227,7 @@ public TaskView(Record currentRecord, int tabUID)
 			timeline.updateTasks();
 			timeline2.updateTasks();
 		}
+        getServerAnalyseData();
 	}
 	
 	public void updateTimeline()
@@ -241,41 +258,58 @@ public TaskView(Record currentRecord, int tabUID)
 		for (Advice a: advices) {
 			Label l = new Label(a.getDescription());
 			l.setWidth("100%");
+			l.setMargin(10);
+			l.setPadding(5);
+
 			AdviceState adviceState = a.getState();
+			l.setStyleName(adviceState.getStyleName());
+
 			switch(adviceState)
 			{
-				case OK: l.setStyleName(adviceState.getStyleName()); break;
-				case WARNING: {
-                    l.setStyleName(adviceState.getStyleName());
-                    if (panelState.ordinal() < AdviceState.WARNING.ordinal()) panelState = AdviceState.WARNING;
-				} break;
-				case CRITICAL: {
-                    l.setStyleName(adviceState.getStyleName());
-                    panelState = AdviceState.CRITICAL;
-                }
+				case OK: if (panelState.ordinal() < AdviceState.OK.ordinal()) panelState = AdviceState.OK;	break;
+				case WARNING: if (panelState.ordinal() < AdviceState.WARNING.ordinal()) panelState = AdviceState.WARNING; break;
+				case CRITICAL: panelState = AdviceState.CRITICAL; break;
 			}
 			pane.addMember(l);
 		}
 
 		menu.setHeight(500);
 		menu.setWidth(300);
-		menu.showNextTo(analyseResultLabel,"top",false);
 
         analyseResultLabel.setStyleName(panelState.getStyleName());
 	}
 
+	private void showAdvicePanel()
+	{
+		menu.showNextTo(analyseResultLabel,"top",false);
+	}
+
 	private Menu createPopupMenu()
 	{
-		menu = new Menu();
 		pane = new VLayout();
 		pane.setWidth(300);
 		pane.setHeight(500);
+
+		HLayout arrowDownLayout = new HLayout();
+		arrowDownLayout.setAlign(Alignment.CENTER);
+		arrowDownLayout.setWidth("100%");
+		Img arrowDown = new Img("forms/down.png");
+		arrowDown.setWidth(25);
+		arrowDown.setHeight(25);
+		arrowDown.setAlign(Alignment.CENTER);
+		arrowDownLayout.addMember(arrowDown);
+		arrowDownLayout.setHeight(25);
+		arrowDownLayout.addClickHandler(event->{menu.hide();});
+
+		final MenuItem closeItem = new MenuItem();
+		closeItem.setEmbeddedComponent(arrowDownLayout);
+		closeItem.addClickHandler(event -> {menu.hide();});
 
 		final MenuItem commandItem = new MenuItem();
 		commandItem.setEmbeddedComponent(pane);
 		commandItem.setCanSelect(false);
 		commandItem.setEnabled(false);
-		menu.setItems(commandItem);
+		menu.setItems(closeItem, commandItem);
 		return menu;
 	}
 	

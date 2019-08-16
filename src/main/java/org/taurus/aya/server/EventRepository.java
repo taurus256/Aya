@@ -7,6 +7,7 @@ import org.taurus.aya.server.entity.Event;
 import org.taurus.aya.server.entity.Lane;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Repository
@@ -16,8 +17,14 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAll();
 
     //Метод для запроса данных боковой панели
-    @Query("SELECT e FROM Event e WHERE e.parent=:parent AND (e.startDate > :startDate OR e.startDate = NULL) AND (e.endDate < :endDate OR e.endDate = NULL) AND e.isGraph = false")
-    List<Event> findAllByParentAndStartDateGreaterThanAndEndDateLessThanAndIsGraphIsFalse(Integer parent, Date startDate, Date endDate);
+    @Query("SELECT e FROM Event e WHERE (e.startDate > :startDate OR e.startDate = NULL) AND (e.endDate < :endDate OR e.endDate = NULL) AND e.isGraph = false")
+    List<Event> findAllByStartDateGreaterThanAndEndDateLessThanAndIsGraphIsFalse(Date startDate, Date endDate);
     //Метод для запроса данных графиков (используется инверсный выбор дат)
-    List<Event> findAllByParentAndStartDateLessThanAndEndDateGreaterThanAndIsGraphIsTrue(Integer parent, Date startdate, Date enddate);
+    List<Event> findAllByStartDateLessThanAndEndDateGreaterThanAndIsGraphIsTrue(Date startdate, Date enddate);
+
+    //Метод для выборки списка задач, завершенных в заданном интервале
+    LinkedList<Event> findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date intervalStart, Date intervalEnd, Integer state);
+
+    //Метод для выборки "будущих" задач
+    LinkedList<Event> findAllByStartDateGreaterThanAndIsGraphIsTrue(Date intervalStart);
 }
