@@ -43,7 +43,11 @@ public class ExtendedTimeline extends Timeline {
 	private Runnable updateCallback = null;
 	
 	ExtendedTimeline extendedTimeline;
-	public Date startDate, endDate;
+	private  Date startDate;
+	private Date endDate;
+
+    DateTimeFormat weekendFormat = DateTimeFormat.getFormat("c");
+    DateTimeFormat numberFormat = DateTimeFormat.getFormat("dd.MM");
 	
 	public ExtendedTimeline(Record currentRecord, final boolean distinctByUsers)
 	{
@@ -56,25 +60,25 @@ public class ExtendedTimeline extends Timeline {
 		calendarView.setAutoFitHeaderHeights(true);
 		//calendarView.setHeight100();
 		setAutoChildProperties("timelineView", calendarView);
-		
+
 		// Configure view
 		if (distinctByUsers) setLaneNameField("executor");
 		setShowLaneRollOver(false);
 		setCanAcceptDrop(true);
 		setCanResizeEvents(true);
-		setHeight100();
+		setCanEditLane(true);
+        setHeight100();
 		setMinHeight(0);
 		setWidth100();
 		setMargin(0);
 		setPadding(0);
-		setDisableWeekends(true);
-		setShowWeekends(true);
+		setDisableWeekends(false);
 
 		setSublaneNameField("sublane");
 		setUseSublanes(false);
         setRowHeight(200);
 
-		setDataSource(GlobalData.getDataSource_tasks());
+        setDataSource(GlobalData.getDataSource_tasks());
 		setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS,true));
 		setAutoFetchData(true);
 
@@ -99,70 +103,43 @@ public class ExtendedTimeline extends Timeline {
 //		setShowZones(true);
 //		setShowZoneHovers(true);
 
-		//Configure lane field
+//		Configure lane field
 		lgf = new ListGridField("title","Поток");
 		lgf.setAutoFitWidth(true);
 		lgf.setAutoFitWidthApproach(AutoFitWidthApproach.VALUE);
 		lgf.setWrap(true);
 		//lgf.setMinWidth(200);
 		lgf.setWidth(200);
-		
-		
+
+
 		setLaneFields(new ListGridField[]{lgf});
 
-        // Configure the time range
-        
-    	startDate = new Date();
-    	endDate = new Date();
+//         Configure the time range
 
-		Long startTime = startDate.getTime();
-		Long endTime = startDate.getTime() + 1000*60*60*24;
+		setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 31, null);
 
-		if (endTime - startTime < 1000*60*60*24)	// if task duration is less than day
-		{
-			SC.logWarn("TASk VIEW: DURATION IS LESS THAN 1 DAY");
-			if (endTime - startTime > 1000*60*60)
-			{
-				SC.logWarn("TASk VIEW: DURATION IS LESS THAN 1 DAY BUT MORE THAN 1 HOUR");
-				startDate.setHours(0);
-				endDate.setHours(24);
-				setTimelineRange(startDate, endDate);
-				setTimeResolution(TimeUnit.HOUR, TimeUnit.HOUR, 48, null);
-				}
-			else
-			{
-				SC.logWarn("TASk VIEW: DURATION IS LESS THAN 1 HOUR");
-				SC.logWarn("TASk VIEW: Start date: " + startDate);
-				//!startDate.setMinutes(0);
-				//startDate.setTime( startDate.getTime() );
-				startDate.setHours(0);
-				startDate.setMinutes(0);
-				setStartDate(startDate);
-				setTimeResolution(TimeUnit.MINUTE, TimeUnit.MINUTE, 1440, 5);
-			}
+		startDate = new Date();
+		endDate = new Date();
+
+		startDate.setDate(1);
+		endDate.setDate(1);
+		if (startDate.getMonth() < 11) {
+			endDate.setMonth(startDate.getMonth() + 1);
 		}
 		else
 		{
-			SC.logWarn("TASk VIEW: DURATION IS MORE THAN 1 DAY");
-			
-			startDate.setDate(1);
-			endDate.setDate(1);
-			if (startDate.getMonth() < 11)
-				endDate.setMonth(startDate.getMonth() +1 );
-			else
-			{
-				endDate.setMonth(0);
-				endDate.setYear(startDate.getYear() + 1);
-			}
-			setTimelineRange(startDate, endDate);
-			
-			setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 31, null);
+			endDate.setMonth(0);
+			endDate.setYear(startDate.getYear() + 1);
 		}
+
+		setTimelineRange(startDate,endDate);
+		setStartDate(startDate);
+		setEndDate(endDate);
 
 		// Setting criteria for searching lanes
 		laneSearchCriteria = new AdvancedCriteria();
 		laneSearchCriteria.addCriteria(new AdvancedCriteria("visible", OperatorId.EQUALS,true));
-		
+
 		/*					 Setting handlers				*/
 
 		addEventClickHandler(new EventClickHandler(){
@@ -206,7 +183,7 @@ public class ExtendedTimeline extends Timeline {
 				if (GlobalData.canWrite(selectedEvent))
 				{
 					SC.confirm("Запрос", "Удалить задачу?", new BooleanCallback(){
-	
+
 						@Override
 						public void execute(Boolean value) {
 							if (value)
@@ -215,7 +192,7 @@ public class ExtendedTimeline extends Timeline {
 								ResourceLifeCycleManager.resourceDeleted(ResourceType.TASK, selectedEvent);
 								selectedEvent = null;
 							}
-							
+
 						}});
 				}
 				else
@@ -225,24 +202,18 @@ public class ExtendedTimeline extends Timeline {
 
 		//Date modification
         addEventResizeStopHandler(event -> {
-            SC.logWarn("ExtendedTimeline: event resize");
-            Date start = modifyCalendarEventStartDate(event.getNewEvent());
-            SC.logWarn("ExtendedTimeline: startDate=" + start);
+            SC.logWarn("ExtendedTimeline: event resize startDate: " + event.getNewEvent().getStartDate() + " endDate: " + event.getNewEvent().getEndDate());
+        	if (!event.getEvent().getEndDate().equals(event.getNewEvent().getEndDate()))
+				modifyCalendarEventEndDate(event.getNewEvent());
         });
-
-		//Date modification (one more)
-        addEventRepositionStopHandler(event -> {
-                    SC.logWarn("ExtendedTimeline: event rep stop");
-                    modifyCalendarEventStartDate(event.getNewEvent());
-					modifyCalendarEventEndDate(event.getNewEvent());
-                });
 
         addEventChangedHandler(new EventChangedHandler(){
 
 			@Override
 			public void onEventChanged(CalendarEventChangedEvent event) {
-				updateTasks();
+				//updateTasks();
 				SC.logWarn("EventChangedHandler task id = " + event.getEvent().getAttribute("id"));
+                SC.logWarn("EventChangedHandler date_start= = " + event.getEvent().getAttribute("startDate") + " dateEnd = " + event.getEvent().getAttribute("endDate"));
 //				Connector.sendSystemMessageToAll(CommandType.UPDATE_TASK_ARRANGEMENT, TabManager.ResourceType.TASK, "Пользователь <b>" + GlobalData.getCurrentUser().getAttributeAsString("nickname") + "</b> обновил задачу <b>" + event.getEvent().getAttribute("name") + "</b>", (int)event.getEvent().getAttributeAsInt("id"));
 				//updateTimeline();
 		}});
@@ -267,7 +238,7 @@ public class ExtendedTimeline extends Timeline {
 				//Lane sublane = getSublaneFromPoint(event.getX() - getTimelineView().getAbsoluteLeft(), event.getY() - getAbsoluteTop() - getTimelineView().getTop() - getTimelineView().getHeaderHeight());
 				Lane lane = getLaneFromPoint(null,null);
 				Lane sublane = getSublaneFromPoint(null,null);
-				
+
 				if (distinctByUsers)
 				{
 					for (Record r: GlobalData.getUsers())
@@ -285,8 +256,8 @@ public class ExtendedTimeline extends Timeline {
 
 				getEditEventDialog(ev).setNewEvent(extendedTimeline, ev);
 				event.cancel();
-			}});       
-        
+			}});
+
 
         // set customizers
         setEventHeaderHTMLCustomizer(new EventHeaderHTMLCustomizer(){
@@ -315,7 +286,7 @@ public class ExtendedTimeline extends Timeline {
 					}
 			}
         });
-        
+
         addDropHandler(new DropHandler() {
                            @Override
                            public void onDrop(DropEvent event) {
@@ -346,94 +317,48 @@ public class ExtendedTimeline extends Timeline {
 								if(thisIsFirstCall) {
 									int delta = new Date().getDate() * 60; //+ currentRecord.getAttributeAsDate("endDate").getMinutes()/5*150 - getTimelineView().getWidth()/2;
 
-									SC.logWarn("ExtendedTimeline: need to scroll window to " + delta + " pixels (current day: " + new Date().getDate() + ")");
+									SC.logWarn("ExtendedTimeline: FetchDataHandler: need to scroll window to " + delta + " pixels (current day: " + new Date().getDate() + ")");
 									getTimelineView().scrollBodyTo(delta, 0);
 									thisIsFirstCall=false;
 									}
+
 								}
 							});
 		updateTimeline();
 	}
 
-    public Date modifyCalendarEventStartDate(CalendarEvent newEvent) {
+    private void modifyCalendarEventStartDate(CalendarEvent newEvent) {
         Date start = newEvent.getStartDate();
-        start = new Date(start.getTime() + 24*3600*1000);
-        newEvent.setStartDate(start);
-        return start;
+        start = new Date(start.getTime() - 2 * 24*3600*1000);
+        if (start.getTime() < newEvent.getEndDate().getTime())
+        	newEvent.setStartDate(start);
     }
 
-	public Date modifyCalendarEventEndDate(CalendarEvent newEvent) {
+	private void modifyCalendarEventEndDate(CalendarEvent newEvent) {
 		Date end = newEvent.getEndDate();
-		end = new Date(end.getTime() + 24*3600*1000);
-		newEvent.setEndDate(end);
-		return end;
+		end = new Date(end.getTime() - 24*3600*1000);
+		if (end.getTime() > newEvent.getStartDate().getTime())
+			newEvent.setEndDate(end);
 	}
 
     private void setTimeResolution(TimeUnit headerUnit, TimeUnit rangeUnit, int columnCount, Integer minutesPerColumn)
     {
     	HeaderLevel[] headerLevels = {};
-    	switch (headerUnit)
-    	{
-    	case MINUTE:{
-//    			HeaderLevel h0 = new HeaderLevel(TimeUnit.MINUTE);
-//
-//    			h0.setTitleFormatter(new HeaderLevelTitleCustomizer (){
-//		    		
-//					@Override
-//					public String getTitle(HeaderLevel headerLevel, Date startDate,
-//							Date endDate, String defaultValue, Calendar calendar) {
-//						 //DateTimeFormat fmt = DateTimeFormat.getFormat("HH:mm");
-//			                return "*";
-//					}});
-//		        h0.setHeaderWidth(150);
 
-    			HeaderLevel hl = new HeaderLevel(TimeUnit.MINUTE);
-		        /*!!!hl.setTitleFormatter(new HeaderLevelTitleCustomizer (){
-		
-					@Override
-					public String getTitle(HeaderLevel headerLevel, Date startDate,
-							Date endDate, String defaultValue, Calendar calendar) {
-						 DateTimeFormat fmt = DateTimeFormat.getFormat("HH:mm");
-						 
-						 if (extendedTimeline.startDate.equals(startDate))
-							 titleFixedTimeCounter=0;
-						 else
-							 titleFixedTimeCounter+=5;
-						 
-			                return String.valueOf(titleFixedTimeCounter/60) + ":" + String.valueOf(titleFixedTimeCounter%60) + "<br> [" + fmt.format(startDate)  + "]";
-					}});*/
-		        hl.setHeaderWidth(150);
-		       /// HeaderLevel hl2 = new HeaderLevel(TimeUnit.MINUTE);
-		        headerLevels = new HeaderLevel[]{hl/*,hl2*/};
-    		};break;
-    	case HOUR:{
-	        HeaderLevel hl = new HeaderLevel(TimeUnit.HOUR);
-	        hl.setTitleFormatter(new HeaderLevelTitleCustomizer(){
-	
-				@Override
-				public String getTitle(HeaderLevel headerLevel, Date startDate,
-                                       Date endDate, String defaultValue, Calendar calendar) {
-					 DateTimeFormat fmt = DateTimeFormat.getFormat("HH:mm");
-		                return fmt.format(startDate);
-				}});
-	        headerLevels = new HeaderLevel[]{hl}; break;
-    	}
-    	case DAY:
-    		{
-    	        HeaderLevel hl = new HeaderLevel(TimeUnit.DAY);
-    	        hl.setTitleFormatter(new HeaderLevelTitleCustomizer(){
-    	
-    				@Override
-    				public String getTitle(HeaderLevel headerLevel, Date startDate,
-                                           Date endDate, String defaultValue, Calendar calendar) {
-    					 DateTimeFormat fmt = DateTimeFormat.getFormat("dd.MM");
-    		                return fmt.format(startDate);
-    				}});
-    			headerLevels = new HeaderLevel[]{hl};
-    			
-    		}; break;
-    	}
-    	setResolution(headerLevels, rangeUnit, columnCount, minutesPerColumn);  
+		HeaderLevel hl = new HeaderLevel(TimeUnit.DAY);
+		hl.setTitleFormatter(new HeaderLevelTitleCustomizer(){
+
+			@Override
+			public String getTitle(HeaderLevel headerLevel, Date startDate,
+								   Date endDate, String defaultValue, Calendar   calendar) {
+					if (weekendFormat.format(startDate).equals("6") || weekendFormat.format(startDate).equals("0"))
+						return "<b>" + numberFormat.format(startDate) + "</b>";
+					else
+						return numberFormat.format(startDate);
+			}});
+		headerLevels = new HeaderLevel[]{hl};
+
+    	setResolution(headerLevels, rangeUnit, columnCount);
     }
 	
 	public void updateTimeline()
@@ -451,7 +376,7 @@ public class ExtendedTimeline extends Timeline {
 		
 		if (!distinctByUsers) //use 'lanes' DS to create lanes 
 		{
-			SortSpecifier sortSpecifier = new SortSpecifier("lane_order", SortDirection.ASCENDING);
+			SortSpecifier sortSpecifier = new SortSpecifier("laneOrder", SortDirection.ASCENDING);
 			SortSpecifier[] sortSpecifiers = { sortSpecifier };
 			dsr.setSortBy(sortSpecifiers);
 			
@@ -461,33 +386,35 @@ public class ExtendedTimeline extends Timeline {
 				public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest)
 				{
 					SC.logWarn("TaskView: lanes amount: " + dsResponse.getData().length);
-					
+					//TODO:: delete this
 					ArrayList<Lane> sublanes = new ArrayList<Lane>();
-					Lane[] emptyLaneArray = {};
+//					Lane[] emptyLaneArray = {};
 					
 					for (int i=0; i< dsResponse.getData().length; i++)
 					{
-						if (dsResponse.getData()[i].getAttributeAsInt("parent") == 0)
-						{
-							for (int j=0; j< dsResponse.getData().length; j++)
-							{
-								if (dsResponse.getData()[i].getAttributeAsInt("id").equals(dsResponse.getData()[j].getAttributeAsInt("parent")))
-									sublanes.add(new Lane(dsResponse.getData()[j].getAttribute("name"),dsResponse.getData()[j].getAttribute("name")));
-							}
+					//TODO:: delete this
+//						if (dsResponse.getData()[i].getAttributeAsInt("parent") == 0)
+//						{
+//							for (int j=0; j< dsResponse.getData().length; j++)
+//							{
+//								if (dsResponse.getData()[i].getAttributeAsInt("id").equals(dsResponse.getData()[j].getAttributeAsInt("parent")))
+//									sublanes.add(new Lane(dsResponse.getData()[j].getAttribute("name"),dsResponse.getData()[j].getAttribute("name")));
+//							}
 						
 						Lane lane = new Lane(dsResponse.getData()[i].getAttribute("name"),generateLaneTitle(dsResponse.getData()[i].getAttribute("name"),sublanes));
 						//lane.setHeight(100*sublanes.size());
 						
 						//if lane have no sublanes
-						if (sublanes.size()!=0) 
-							lane.setSublanes(sublanes.toArray(emptyLaneArray)); //sublanes.add(new Lane(dsResponse.getData()[i].getAttribute("name"),dsResponse.getData()[i].getAttribute("name")));
-						else
+						//TODO::delete this
+//						if (sublanes.size()!=0)
+//							lane.setSublanes(sublanes.toArray(emptyLaneArray)); //sublanes.add(new Lane(dsResponse.getData()[i].getAttribute("name"),dsResponse.getData()[i].getAttribute("name")));
+//						else
 							lane.setHeight(100);
 
 						addLane(lane);
-						
-						sublanes.clear();
-						}
+						//TODO:: delete this
+						//sublanes.clear();
+//						}
 					}					
 					//updateTasks();
 				}},dsr);
@@ -537,10 +464,7 @@ public class ExtendedTimeline extends Timeline {
 				
 				SC.logWarn("updateTasks(): Task list size is " + dsResponse.getData().length);
 				
-				//resizeTo("100%","99%");
-				//resizeTo("100%","100%");
-			
-				if (currentRecord != null) 
+				if (currentRecord != null)
 					Scheduler.get().scheduleDeferred(new com.google.gwt.user.client.Command(){
 						public void execute()
 						{
@@ -556,7 +480,7 @@ public class ExtendedTimeline extends Timeline {
 				if (getTimelineGranularity() == TimeUnit.DAY && thisIsFirstCall)
 				{
 					Date d = new Date();
-					int delta = d.getDay() *50; //+ currentRecord.getAttributeAsDate("endDate").getMinutes()/5*150 - getTimelineView().getWidth()/2;
+					int delta = d.getDay() *60; //+ currentRecord.getAttributeAsDate("endDate").getMinutes()/5*150 - getTimelineView().getWidth()/2;
 					SC.logWarn("ExtendedTimeline: need to scroll window to " + delta + " pixels (granuality: " + getTimelineGranularity().toString() + ")");
 					if ( delta > 0)
 						getTimelineView().scrollBodyTo(delta, 0);
@@ -628,14 +552,7 @@ public class ExtendedTimeline extends Timeline {
 		updateCallback = callback;
 	}
 
-	public void setBlockSelectMode(int mode)
-	{
-		/*if (mode>0)
-			SC.say("Укажите задачи, которуе блокируют выполнение данной");*/
-		setCursor(com.smartgwt.client.types.Cursor.CROSSHAIR);
-		blockSelectMode = mode;
-	}
-	
+
 	public CalendarEvent getSelectedEvent()
 	{
 		if (selectedEvent == null) SC.logWarn("ExtendedTimeline: NO SELECTED EVENT!");
@@ -658,8 +575,6 @@ public class ExtendedTimeline extends Timeline {
         selectedEvent.setAttribute("eventWindowStyle", s3_event_pause);
         selectedEvent.setAttribute("state", s);
         selectedEvent.setAttribute("icon", s2);
-        modifyCalendarEventStartDate(selectedEvent);
-		modifyCalendarEventEndDate(selectedEvent);
         GlobalData.getDataSource_tasks().updateData(selectedEvent, new DSCallback() {
             @Override
             public void execute(DSResponse dsResponse, Object data,
@@ -668,5 +583,7 @@ public class ExtendedTimeline extends Timeline {
                 ResourceLifeCycleManager.resourceChanged(ResourceType.TASK, getSelectedEvent());
             }
         });
+
     }
+
 }

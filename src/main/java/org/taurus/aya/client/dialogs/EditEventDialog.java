@@ -107,13 +107,6 @@ public class EditEventDialog extends BacklogTaskDialog {
 
 	@Override
 	protected void saveDialogData() {
-		//Date modification
-		if (df.getValuesAsRecord().getAttribute("startDate") != null)
-			df.setValue("startDate",new Date(df.getValuesAsRecord().getAttributeAsDate("startDate").getTime() + 24*3600*1000));
-
-		if (df.getValuesAsRecord().getAttribute("endDate") != null)
-			df.setValue("endDate",new Date(df.getValuesAsRecord().getAttributeAsDate("endDate").getTime() + 24*3600*1000));
-
 		//Validate fields
 		if (df.getField("executor").getValue() == null)
 			SC.warn("Исполнитель должен быть задан");

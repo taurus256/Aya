@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class UserController extends GenericController {
 
     UserRepository userRepository;
 
@@ -79,8 +79,8 @@ public class UserController {
             user.setSurname(surname);
             user.setPatronymic(patronymic);
             user.setNickname(nickname);
-            user.setWorkphone(workphone);
-            user.setMobphone(mobphone);
+            user.setWorkphone(filterStringValue(workphone));
+            user.setMobphone(filterStringValue(mobphone));
             user.setUsid(usid);
             user.setPasswordHash(passwordHash);
             user.setShowedName(showedName);

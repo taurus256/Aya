@@ -32,17 +32,20 @@ public class Aya implements EntryPoint {
      private StatusBar statusBar;
      @SuppressWarnings("static-access")
 	public void onModuleLoad() {
-    	mainLayout.resizeFonts(1);
-    	 
+
+        mainLayout.resizeFonts(1);
+
     	Date date = new Date();
 //    	SC.logWarn(date.toString());
 //    	DateUtil.setDefaultDisplayTimezone("+04:00");
 //    	SC.logWarn(date.toString());
 
-//    	DateUtil.setDefaultDisplayTimezone("+03:00");
+//    	DateUtil.setDefaultDisplayTimezone("+00:00");
 // 		DateUtil.setAdjustForDST(false);
+	   	SC.logWarn("Aya.java:: TODAY: " + date.toString());
 
-		KeyIdentifier debugKey = new KeyIdentifier();
+
+		 KeyIdentifier debugKey = new KeyIdentifier();
 		debugKey.setCtrlKey(true);
 		debugKey.setKeyName("D");
 
@@ -85,20 +88,20 @@ public class Aya implements EntryPoint {
 			}
          });*/
 
-		
+
 		 Window.enableScrolling(false);
          Window.setMargin("0px");
 
 
          // Создание раскладки виджетов главного окна
-         
+
          SC.logWarn("Initialization. Cookie is:" + Cookies.getCookie("usid"));
          final  String USID = Cookies.getCookie("usid");
          if (USID == null)
          {
         	 //remove the load indicator
 			 DOM.getElementById("splash").removeChild(DOM.getElementById("infinity"));
-				
+
         	 // USID в cookie отсутствует - первый вход на этой машине
         	 SC.logWarn("Initialization. No USID. Call user selection dialog");
         	 LoginDialog d = new LoginDialog();

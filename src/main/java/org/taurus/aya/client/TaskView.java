@@ -19,10 +19,8 @@ import org.taurus.aya.client.widgets.ExtendedTimeline;
 import org.taurus.aya.shared.Advice;
 import org.taurus.aya.shared.AdviceState;
 import org.taurus.aya.shared.TaskAnalyseData;
-
 import java.util.List;
-//import com.smartgwt.client.widgets.Window;
-
+import java.util.Date;
 
 public class TaskView extends ContentPane {
 	
@@ -57,7 +55,7 @@ public TaskView(Record currentRecord, int tabUID)
 		
 		timeline = new ExtendedTimeline(null, false);
 		timeline.addUpdateHandler(new UpdateHandler());
-		timeline2 = new ExtendedTimeline(null,true);
+        timeline2 = new ExtendedTimeline(null,true);
 		timeline2.addUpdateHandler(new UpdateHandler());
 		timeline2.hide();
 		VLayout vLayout = new VLayout();

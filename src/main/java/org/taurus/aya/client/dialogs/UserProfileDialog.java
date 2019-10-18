@@ -18,9 +18,10 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import org.taurus.aya.client.GlobalData;
 import org.taurus.aya.client.TabManager.ResourceType;
+import org.taurus.aya.client.generic.AbstractPropertiesDialog;
 import org.taurus.aya.client.generic.GenericPropertiesDialog;
 
-public class UserProfileDialog extends GenericPropertiesDialog {
+public class UserProfileDialog extends AbstractPropertiesDialog {
 
 	boolean userHasChangedThePassword = false;
 	DynamicForm bottomForm;
@@ -112,7 +113,8 @@ public class UserProfileDialog extends GenericPropertiesDialog {
 		vLayoutButton.addMember(button);
 		hLayoutButton.addMember(vLayoutButton);
 		hLayoutMain.addMember(hLayoutButton);
-		
+		canWriteToThisResource = true;
+
 		return hLayoutMain;
 	}
 	

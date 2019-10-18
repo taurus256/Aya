@@ -19,7 +19,7 @@ public class EventService {
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     //2019-07-19T03:12:27.000
-    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
+    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     public EventService(@Autowired EventRepository repository)
     {
@@ -34,13 +34,13 @@ public class EventService {
         //System.out.println(criteriaMap);
         if (Boolean.valueOf(criteriaMap.getOrDefault("isGraph","false")))
             return eventRepository.findAllByStartDateLessThanAndEndDateGreaterThanAndIsGraphIsTrue(
-                formatter.parse(criteriaMap.getOrDefault("startDate","2000-01-01T00:00:00.000")),
-                formatter.parse(criteriaMap.getOrDefault("endDate","2050-01-01T00:00:00.000"))
+                formatter.parse(criteriaMap.getOrDefault("startDate","2000-01-0")),
+                formatter.parse(criteriaMap.getOrDefault("endDate","2050-01-01"))
             );
         else
             return eventRepository.findAllByStartDateGreaterThanAndEndDateLessThanAndIsGraphIsFalse(
-                formatter.parse(criteriaMap.getOrDefault("startDate","2000-01-01T00:00:00.000")),
-                formatter.parse(criteriaMap.getOrDefault("endDate","2050-01-01T00:00:00.000"))
+                formatter.parse(criteriaMap.getOrDefault("startDate","2000-01-01")),
+                formatter.parse(criteriaMap.getOrDefault("endDate","2050-01-01"))
             );
     }
 

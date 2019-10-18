@@ -286,17 +286,38 @@ public class GlobalData {
 		String url = "/users";
 
 		/* Request fields */
+		DataSourceField id = new DataSourceField("id", FieldType.INTEGER);
+		id.setHidden(true);
+		DataSourceField usid = new DataSourceField("usid", FieldType.TEXT);
+		usid.setHidden(true);
+		DataSourceField passwordHash = new DataSourceField("passwordHash", FieldType.TEXT);
+		passwordHash.setHidden(true);
+		DataSourceField showedName = new DataSourceField("showedName", FieldType.TEXT,"Отображаемое имя");
+		showedName.setHidden(true);
+
+		DataSourceField firstname = new DataSourceField("firstname", FieldType.TEXT, "Имя");
+		firstname.setRequired(true);
+
+		DataSourceField surname = new DataSourceField("surname", FieldType.TEXT, "Фамилия");
+		surname.setRequired(true);
+
+		DataSourceField patronymic = new DataSourceField("patronymic", FieldType.TEXT, "Отчество");
+		patronymic.setRequired(true);
+
+		DataSourceField nickname = new DataSourceField("nickname", FieldType.TEXT, "Псевдоним (ник)");
+		nickname.setRequired(true);
+
 		DataSourceField[] fields = {
-									new DataSourceField("id", FieldType.INTEGER),
-									new DataSourceField("firstname", FieldType.TEXT),
-									new DataSourceField("surname", FieldType.TEXT),
-									new DataSourceField("patronymic", FieldType.TEXT),
-									new DataSourceField("nickname", FieldType.TEXT),
-									new DataSourceField("workphone", FieldType.TEXT),
-									new DataSourceField("mobphone", FieldType.TEXT),
-									new DataSourceField("usid", FieldType.TEXT),
-									new DataSourceField("passwordHash", FieldType.TEXT),
-									new DataSourceField("showedName", FieldType.TEXT)
+									id,
+									firstname,
+									surname,
+									patronymic,
+									nickname,
+									new DataSourceField("workphone", FieldType.TEXT,"Рабочий телефон"),
+									new DataSourceField("mobphone", FieldType.TEXT,"Мобильный телефон"),
+									usid,
+									passwordHash,
+									showedName
 									};
 
 		DataSource dataSource =
@@ -328,7 +349,7 @@ public class GlobalData {
 	private static DataSource createRestGroupDS() {
 
 		/* Request url*/
-		String dsName = "groups";
+		String dsName = "/groups";
 
 		/* Request fields */
 		DataSourceField[] fields = {
@@ -343,15 +364,12 @@ public class GlobalData {
 	private static DataSource createRestLaneDS() {
 
 		/* Request url*/
-		String dsName = "lanes";
+		String dsName = "/lanes";
 
 		/* Request fields */
 		DataSourceField id = new DataSourceField("id", FieldType.INTEGER);
 		id.setPrimaryKey(true);
-		DataSourceField parent = new DataSourceField("parent", FieldType.INTEGER);
-		parent.setForeignKey("id");
-		parent.setRootValue(0);
-
+		id.setHidden(true);
 
 		DataSourceField wuser = new DataSourceField("wuser", FieldType.INTEGER);
 		wuser.setHidden(true);
@@ -368,12 +386,14 @@ public class GlobalData {
 		DataSourceField author = new DataSourceField("author", FieldType.TEXT);
 		author.setHidden(true);
 
+		DataSourceField laneOrder = new DataSourceField("laneOrder", FieldType.INTEGER);
+		laneOrder.setHidden(true);
+
 		DataSourceField[] fields = {
 				id,
-				parent,
 				new DataSourceField("name", FieldType.TEXT, "Название"),
 				new DataSourceField("description", FieldType.TEXT, "Описание"),
-				new DataSourceField("lane_order", FieldType.INTEGER),
+				laneOrder,
 				new DataSourceField("visible", FieldType.BOOLEAN, "Видимость"),
 				author,
 				is_folder,
@@ -389,7 +409,7 @@ public class GlobalData {
 	private static DataSource createRestEventDS() {
 
 		/* Datasource name*/
-		String dsName = "events";
+		String dsName = "/events";
 
 		DataSourceField id= new DataSourceField("id", FieldType.INTEGER);
 		id.setPrimaryKey(true);
@@ -431,8 +451,8 @@ public class GlobalData {
 				lane,
 				new DataSourceField("name", FieldType.TEXT, "Название"),
 				new DataSourceField("description", FieldType.TEXT,"Описание"),
-				new DataSourceField("startDate", FieldType.DATETIME, "Дата начала"),
-				new DataSourceField("endDate", FieldType.DATETIME, "Дата завершения"),
+				new DataSourceField("startDate", FieldType.DATE, "Дата начала"),
+				new DataSourceField("endDate", FieldType.DATE, "Дата завершения"),
 				eventWindowStyle,
 				new DataSourceField("executor", FieldType.INTEGER, "Исполнитель"),
 				priority,
@@ -475,26 +495,26 @@ public class GlobalData {
 
 		//set up FETCH to use POST requests
 		OperationBinding fetch = new OperationBinding();
-		fetch.setDataURL("/" + name + "/fetch");
+		fetch.setDataURL(name + "/fetch");
 		fetch.setOperationType(DSOperationType.FETCH);
 		fetch.setDataProtocol(DSProtocol.POSTPARAMS);
 
 		//set up ADD to use POST requests~`
 		OperationBinding add = new OperationBinding();
-		add.setDataURL("/" + name + "/modify");
+		add.setDataURL(name + "/modify");
 		add.setOperationType(DSOperationType.ADD);
 		add.setDataProtocol(DSProtocol.POSTPARAMS);
 
 		//set up UPDATE to use POST
 		OperationBinding update = new OperationBinding();
 		update.setOperationType(DSOperationType.UPDATE);
-		update.setDataURL("/" + name + "/modify");
+		update.setDataURL(name + "/modify");
 		update.setDataProtocol(DSProtocol.POSTPARAMS);
 
 		//set up REMOVE to use DELETE
 		OperationBinding remove = new OperationBinding();
 		remove.setOperationType(DSOperationType.REMOVE);
-		remove.setDataURL("/" + name + "/	modify");
+		remove.setDataURL(name + "/modify");
 		remove.setDataProtocol(DSProtocol.POSTPARAMS);
 
 		dataSource.setOperationBindings(fetch, add, update, remove);

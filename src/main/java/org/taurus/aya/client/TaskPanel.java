@@ -231,7 +231,7 @@ public class TaskPanel extends VLayout implements SidePanel {
 //		});
 //		panelAllTasks.deleteCreateFolderItem();
 //
-		Tab backlogTab = new Tab("BACKLOG");
+		Tab backlogTab = new Tab("Ожидающие");
 		backlogTab.setWidth(30);
 		backlogTab.setPane(addFilterWidgetTo(panelBacklog));
 		backlogTab.setPaneMargin(2);
@@ -299,13 +299,13 @@ public class TaskPanel extends VLayout implements SidePanel {
 		r.setAttribute("isGraph", true);
 		r.setAttribute("executor", GlobalData.getCurrentUser().getAttributeAsInt("id"));
 		r.setAttribute("executorName", GlobalData.getCurrentUser().getAttribute("firstname") + " " + GlobalData.getCurrentUser().getAttribute("surname"));
-		r.setAttribute("startDate", new Date(new Date().getTime() + 24*3600*1000));
+		r.setAttribute("startDate", new Date(new Date().getTime()));
 		Long millis = r.getAttributeAsDate("startDate").getTime();
 
 		if (r.getAttribute("duration_h") != null && (r.getAttributeAsInt("duration_h") >= 8))
 			r.setAttribute("endDate", new Date(millis + r.getAttributeAsInt("duration_h") * 1000 * 3600 * 3 + 24*3600*1000));
 		else
-			r.setAttribute("endDate", new Date(millis + 1000 * 3600 * 48));
+			r.setAttribute("endDate", new Date(millis + 1000 * 3600 * 24));
 	}
 
 	private VLayout addFilterWidgetTo(GenericPanel panel)

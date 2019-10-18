@@ -73,9 +73,7 @@ public class UserChangeDialog extends Window {
 				String usid = generateUUID();
 
 				// Пишем его в Cookie 
-				Date d = new Date(System.currentTimeMillis()+24*3600*1000);
-				
-				Cookies.setCookie("usid", usid, d);
+				Cookies.setCookie("usid", "", new java.util.Date(System.currentTimeMillis()+30L*24*3600*1000),"","/",false);
 				
 				// И в БД
 				Record selectedRecord = userLogin.getSelectedRecord();

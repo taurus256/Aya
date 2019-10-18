@@ -24,8 +24,40 @@ public class LaneController extends GenericController {
     }
 
     @ResponseBody
-    @PostMapping("fetch")
+    @GetMapping
     public GwtResponse execute(HttpServletRequest request, @RequestParam String _operationType, String _operationId) throws RuntimeException
+    {
+
+        System.out.println("Operation_type=" + _operationType);
+        System.out.println("request ID is:" + _operationId);
+
+        if (_operationType.equals("custom"))
+            switch( _operationId) {
+                case "updateLaneOrder": {
+                    if (request.getParameterMap().get("indices")==null)
+                        throw new RuntimeException("Массив индексов отсусвует (==null)");
+                    if (request.getParameterMap().get("indices").length == 0)
+                        throw new RuntimeException("Массив индексов пуст");
+                    System.out.print("updateLaneOrder [");
+                    int index=0;
+                    for (String laneId: request.getParameterMap().get("indices")) {
+                        Lane lane = laneRepository.getOne(Long.valueOf(laneId));
+                        lane.setLaneOrder(index++);
+                        laneRepository.save(lane);
+                        System.out.print(index + " ");
+                    }
+                    System.out.println("]");
+
+                }; break;
+            }
+
+        Lane[] lanes = {new Lane()};
+        return new GwtResponse(0,0,0,lanes);
+    }
+
+    @ResponseBody
+    @PostMapping("fetch")
+    public GwtResponse fetch(HttpServletRequest request, @RequestParam String _operationType, String _operationId) throws RuntimeException
     {
 
         System.out.println("Operation_type=" + _operationType);
@@ -40,7 +72,7 @@ public class LaneController extends GenericController {
 
     @PostMapping("modify")
     @ResponseBody
-    public GwtResponse executePost(
+    public GwtResponse modify(
         @RequestParam String _operationType,
         @RequestParam (required = false) Long id,
         @RequestParam (required = false) String parent,
@@ -73,7 +105,10 @@ public class LaneController extends GenericController {
             case "update":
             {
                 lane.setParent(filterIntValue(parent));
+
+                if (!lane.getName().equals(name)) laneRepository.updateEventsSetLaneName(lane.getName(),name);
                 lane.setName(name);
+
                 lane.setDescription(description);
                 lane.setLaneOrder(filterIntValue(laneOrder));
                 lane.setVisible(filterBooleanValue(visible));

@@ -24,6 +24,7 @@ import org.taurus.aya.shared.Command;
 import org.taurus.aya.shared.Command.CommandType;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ApplicationMenu extends HLayout {
 	
@@ -149,7 +150,7 @@ public class ApplicationMenu extends HLayout {
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				LaneCreationDialog ld = new LaneCreationDialog(GlobalData.getDataSource_lanes(),null);
+				LaneCreationDialog ld = new LaneCreationDialog(GlobalData.getDataSource_lanes());
 				ld.show();
 			}
 		});
@@ -278,7 +279,7 @@ public class ApplicationMenu extends HLayout {
 				@Override
 				public void onClick(MenuItemClickEvent event) {
 					//обнулить cookie и обновить страницу
-					Cookies.setCookie("usid", "");
+					Cookies.setCookie("usid", "", new Date(System.currentTimeMillis()+30L*24*3600*1000),"","/",false);
 	    			com.google.gwt.user.client.Window.Location.reload();
 				}});
 

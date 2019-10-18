@@ -5,11 +5,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/** SmartGWT sends string 'null' instead of null value.
+ *  Methods below created for setting proper values in these cases
+ * */
 public class GenericController {
 
-    //Format date based on template: 2019-07-19T03:12:27.000 - "yyyy-MM-dd'T'HH:mm:ss"
+    //Format date based on template (old): 2019-07-19T03:12:27.000 - "yyyy-MM-dd'T'HH:mm:ss"
     //Now use short format for date-only
     private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+
+
+    protected String filterStringValue(String  value) {
+        return value == null || value.equals("null") ? null : value;
+    }
 
     protected Integer filterIntValue(String value) {
 
