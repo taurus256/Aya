@@ -182,7 +182,8 @@ public class MatrixAdvicer {
         Date deadline = futureTaskList.stream().map(Event::getEndDate).max(Date::compareTo).orElseThrow(() -> new AdviceException("generateDeadlineAdvice: Cannot find max future date"));
         System.out.println("deadline = " + deadline);
         Duration toDeadline = Duration.between(Instant.now(),deadline.toInstant());
-        long daysToDeadline = toDeadline.toDays();
+        System.out.println("toDeadline= = " + toDeadline.toDays());
+        long daysToDeadline = toDeadline.toDays() + 1; //последний день перед дедлайном тоже считаем
         System.out.println("daysToDeadline = " + daysToDeadline);
         double prognosisHours = prognosis.values().stream().max(Double::compareTo).orElseThrow(() -> new AdviceException("generateDeadlineAdvice: Cannot find lane name with max duration"));
         double prognosisDays = prognosisHours/WORKDAY_HOURS;

@@ -3,11 +3,19 @@ package org.taurus.aya.server.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.taurus.aya.client.EventState;
 import org.taurus.aya.server.EventRepository;
 import org.taurus.aya.server.entity.Event;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalField;
+import java.time.temporal.TemporalUnit;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -29,19 +37,26 @@ public class EventService {
 
     public List<Event> getData(String[] criteria) throws RuntimeException, ParseException
     {
+        List<Event> eventList;
         HashMap<String,String> criteriaMap = parseCriteria(criteria);
 
         //System.out.println(criteriaMap);
         if (Boolean.valueOf(criteriaMap.getOrDefault("isGraph","false")))
-            return eventRepository.findAllByStartDateLessThanAndEndDateGreaterThanAndIsGraphIsTrue(
+            eventList = eventRepository.findAllByStartDateLessThanAndEndDateGreaterThanAndIsGraphIsTrue(
                 formatter.parse(criteriaMap.getOrDefault("startDate","2000-01-0")),
                 formatter.parse(criteriaMap.getOrDefault("endDate","2050-01-01"))
             );
         else
-            return eventRepository.findAllByStartDateGreaterThanAndEndDateLessThanAndIsGraphIsFalse(
+            eventList = eventRepository.findAllByStartDateGreaterThanAndEndDateLessThanAndIsGraphIsFalse(
                 formatter.parse(criteriaMap.getOrDefault("startDate","2000-01-01")),
                 formatter.parse(criteriaMap.getOrDefault("endDate","2050-01-01"))
             );
+
+        eventList.stream().forEach(e -> e.setSpentTime(
+                new Long(Math.round(e.getSpentTime())).doubleValue()
+        ));
+
+        return eventList;
     }
 
 
@@ -74,4 +89,28 @@ public class EventService {
         return result;
     }
 
+    /**
+    * Установка времени выполнения задачи.
+    * Если задача начала выполняться - запоминает время старта, если прекратила (встала на паузу и т.п) -
+    * записывает в задачу время выполнения как разницу между временем старта и текущим.
+    * Если задача выполнялась более 1 дня - записывает время исходя из длительности "условного дня" (8 часов)
+    * @param event- задача, состояние которой изменилось
+    * */
+    public void setEventSpentTime(Event event)
+    {
+        if (event.getIsGraph())
+            if (!event.getState().equals(EventState.PROCESS)) //это переключение ИЗ режима process в какой-то другой
+            {
+                if (event.getStart() == null ) throw new RuntimeException("setEventSpentTime: event state was changed to (NEW/READY/PAUSE/FAIL) but start timestamp is NULL ");
+                if (Duration.between(event.getStart().toInstant(),Instant.now()).get(ChronoUnit.HOURS) >24) // если больше суток - считаем по длительностям "условного дня"
+                    event.setSpentTime(event.getSpentTime() + Duration.between(event.getStart().toInstant(),Instant.now()).get(ChronoUnit.DAYS) * 8 * 60);
+                else
+                    event.setSpentTime(event.getSpentTime() + Duration.between(event.getStart().toInstant(),Instant.now()).get(ChronoUnit.MINUTES));
+            }
+            else
+            {
+                //если это переключение в режим process - запоминаем время
+                event.setStart(new Date());
+            }
+    }
 }

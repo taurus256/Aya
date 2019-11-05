@@ -64,7 +64,7 @@ public class EditEventDialog extends BacklogTaskDialog {
 		//Estimation field
 		// setting selectItem values for estimation
 		LinkedHashMap<Integer,String> valueMap = new LinkedHashMap<>();
-		IntegerItem durationH = new IntegerItem("duration_h");
+		FloatItem durationH = new FloatItem("duration_h");
 
 		//Priority field
 		SelectItem priority = new SelectItem("priority");
@@ -87,7 +87,7 @@ public class EditEventDialog extends BacklogTaskDialog {
 			description.setWidth(300);
 			description.setHeight(200);
 
-			IntegerItem spentTime = new IntegerItem("spentTime");
+			FloatItem spentTime = new FloatItem("spentTime");
 
 			df.setFields(lane, name, startDate, endDate, description, executor, priority, durationH, spentTime);
 

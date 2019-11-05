@@ -106,7 +106,7 @@ public class LaneController extends GenericController {
             {
                 lane.setParent(filterIntValue(parent));
 
-                if (!lane.getName().equals(name)) laneRepository.updateEventsSetLaneName(lane.getName(),name);
+                if (lane.getName()!=null && !lane.getName().equals(name)) laneRepository.updateEventsSetLaneName(lane.getName(),name);
                 lane.setName(name);
 
                 lane.setDescription(description);

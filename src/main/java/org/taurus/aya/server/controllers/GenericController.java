@@ -25,6 +25,11 @@ public class GenericController {
         return value == null || value.equals("null") ? null : Integer.valueOf(value);
     }
 
+    protected Double filterDoubleValue(String value) {
+
+        return value == null || value.equals("null") ? null : Double.valueOf(value);
+    }
+
     protected Boolean filterBooleanValue(String value) {
         return value == null || value.equals("null") ? null : Boolean.valueOf(value);
     }

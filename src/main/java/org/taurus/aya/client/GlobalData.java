@@ -430,6 +430,8 @@ public class GlobalData {
 		//start.setCanView(false);
 		DataSourceField is_graph = new DataSourceField("isGraph", FieldType.BOOLEAN);
 		//is_graph.setCanView(false);
+		DataSourceField spentTime = new DataSourceField("spentTime", FieldType.FLOAT, "Затрачено времени");
+		spentTime.setDecimalPrecision(1);
 
 		DataSourceField lane = new DataSourceField("lane", FieldType.TEXT, "Поток");
 		lane.setForeignKey("lanes.name");
@@ -444,6 +446,9 @@ public class GlobalData {
 		valueMapPriority.put(2,HIGH_PRIORITY);
 		priority.setValueMap(valueMapPriority);
 
+		DataSourceField duration_h = new DataSourceField("duration_h", FieldType.FLOAT, "Время исполнения (часов)");
+		duration_h.setDecimalPrecision(1);
+
 		DataSourceField[] fields = {
 				id,
 				parent,
@@ -457,13 +462,13 @@ public class GlobalData {
 				new DataSourceField("executor", FieldType.INTEGER, "Исполнитель"),
 				priority,
 				new DataSourceField("duration_d", FieldType.INTEGER, "Время исполнения (дней)"),
-				new DataSourceField("duration_h", FieldType.INTEGER,"Время исполнения (часов)"),
+				duration_h,
 				icon,
 				state,
 				new DataSourceField("executorName", FieldType.TEXT, "Имя исполнителя"),
 				new DataSourceField("author", FieldType.TEXT, "Задача создана"),
 				is_backlog,
-				new DataSourceField("spentTime", FieldType.INTEGER, "Затрачено времени"),
+				spentTime,
     			is_graph,
 				new DataSourceField("wuser", FieldType.INTEGER),
 				new DataSourceField("wgroup", FieldType.INTEGER),

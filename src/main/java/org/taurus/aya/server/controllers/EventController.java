@@ -3,6 +3,7 @@ package org.taurus.aya.server.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.taurus.aya.client.EventState;
 import org.taurus.aya.server.EventRepository;
 import org.taurus.aya.server.entity.Event;
 import org.taurus.aya.server.services.EventService;
@@ -59,7 +60,6 @@ public class EventController extends GenericController {
         @RequestParam (required = false) String eventWindowStyle,//String eventwindowstyle,
         @RequestParam (required = false) String executor,       //Integer executor,
         @RequestParam (required = false) String priority,                          //  Integer priority
-        @RequestParam (required = false) String duration,     //Integer duration_d,
         @RequestParam (required = false) String duration_h,     //Integer duration_h,
         @RequestParam (required = false) String icon,            //String icon,
         @RequestParam (required = false) String state,          //Integer state,
@@ -76,9 +76,17 @@ public class EventController extends GenericController {
         assert event != null : "Cannot find event to update!";
 
         switch(_operationType){
-            case "add":
+            case "add":{
+                state = "0";
+                spentTime="0.0";
+            }
             case "update":
             {
+                if (event.getState() != null && !state.equals(event.getState()))
+                    eventService.setEventSpentTime(event);
+                else
+                    event.setSpentTime(filterDoubleValue(spentTime));
+
                 event.setParent(filterIntValue(parent));
                 event.setPrev(filterIntValue(prev));
                 event.setLane(lane);
@@ -101,11 +109,9 @@ public class EventController extends GenericController {
                 event.setEventWindowStyle(eventWindowStyle);
                 event.setExecutor(filterIntValue(executor));
                 event.setPriority(filterIntValue(priority));
-                event.setDuration_d(filterIntValue(duration));
-                event.setDuration_h(filterIntValue(duration_h));
+                event.setDuration_h(filterDoubleValue(duration_h));
                 event.setIcon(icon);
                 event.setState(filterIntValue(state));
-                event.setSpentTime(filterIntValue(spentTime));
                 event.setIsGraph(filterBooleanValue(isGraph));
 
                 event = eventRepository.save(event);

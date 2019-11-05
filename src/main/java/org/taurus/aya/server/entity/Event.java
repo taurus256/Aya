@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 public class Event {
@@ -34,16 +32,15 @@ public class Event {
   private String eventWindowStyle;
   private Integer executor;
   private Integer priority;
-  @Column(name="duration_d")
-  private Integer duration_d;
+
+  private Double spentTime = 0.0; // реальное (посчитанное системой или заданное пользователем) время выполнения задачи в часах
   @Column(name="duration_h")
-  private Integer duration_h;
+  private Double duration_h; // планируемое пользователем время выполения задачи в часах
   private String icon;
   private Integer state;
   private String executorName;
   private Integer rosTask;
   private Long author;
-  private Integer spentTime;
   private Date start;
   private Boolean isGraph;
 
@@ -112,7 +109,7 @@ public class Event {
 
   public void setStartDate(Date startDate) {
 
-    this.startDate = startDate== null ? Date.from(Instant.now().plus(1,ChronoUnit.DAYS)) : startDate;
+    this.startDate = startDate== null ? Date.from(Instant.now()) : startDate;
   }
 
 
@@ -122,7 +119,7 @@ public class Event {
 
   public void setEndDate(Date endDate) {
 
-    this.endDate = endDate== null?Date.from(Instant.now().plus(1, ChronoUnit.DAYS)):endDate;
+    this.endDate = endDate== null?Date.from(Instant.now()):endDate;
   }
 
 
@@ -190,21 +187,11 @@ public class Event {
     this.priority = priority;
   }
 
-
-  public Integer getDuration_d() {
-    return duration_d;
-  }
-
-  public void setDuration_d(Integer duration_d) {
-    this.duration_d = duration_d;
-  }
-
-
-  public Integer getDuration_h() {
+  public Double getDuration_h() {
     return duration_h;
   }
 
-  public void setDuration_h(Integer duration_h) {
+  public void setDuration_h(Double duration_h) {
 
     this.duration_h = duration_h==null ? 0 : duration_h;
   }
@@ -245,13 +232,13 @@ public class Event {
   }
 
 
-  public Integer getSpentTime() {
+  public Double getSpentTime() {
     return spentTime;
   }
 
-  public void setSpentTime(Integer spent_time) {
+  public void setSpentTime(Double spent_time) {
 
-    this.spentTime = (spent_time==null) ? 0 : spent_time;
+    this.spentTime = (spent_time==null) ? 0.0 : spent_time;
   }
 
 
@@ -271,4 +258,5 @@ public class Event {
   public void setIsGraph(Boolean isGraph) {
     this.isGraph = (isGraph == null) ? false: isGraph;
   }
+
 }
