@@ -71,7 +71,7 @@ public class EventController extends GenericController {
         if (id == null)
             event = new Event();
         else
-            event = eventRepository.getOne(filterLongValue(id));
+            event = eventRepository.findById(filterLongValue(id)).orElseThrow(IllegalArgumentException::new);
 
         assert event != null : "Cannot find event to update!";
 
@@ -82,8 +82,8 @@ public class EventController extends GenericController {
             }
             case "update":
             {
-                if (event.getState() != null && !state.equals(event.getState()))
-                    eventService.setEventSpentTime(event);
+                if (event.getState() != null && !filterIntValue(state).equals(event.getState()))
+                    eventService.setEventSpentTime(event, filterIntValue(state));
                 else
                     event.setSpentTime(filterDoubleValue(spentTime));
 

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="Aya:GWT">
+    <output-path>$PROJECT_DIR$/src/main/resources/static</output-path>
+    <root id="root">
+      <element id="gwt-compiler-output" facet="Aya/gwt/GWT" />
+    </root>
+  </artifact>
+</component>
