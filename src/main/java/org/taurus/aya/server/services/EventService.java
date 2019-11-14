@@ -7,15 +7,11 @@ import org.taurus.aya.client.EventState;
 import org.taurus.aya.server.EventRepository;
 import org.taurus.aya.server.entity.Event;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalField;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -52,6 +48,7 @@ public class EventService {
                 formatter.parse(criteriaMap.getOrDefault("endDate","2050-01-01"))
             );
 
+        // Перевод в целый вид для вывода в интерфейсе
         eventList.stream().forEach(e -> e.setSpentTime(
                 new Long(Math.round(e.getSpentTime())).doubleValue()
         ));
@@ -96,16 +93,16 @@ public class EventService {
     * Если задача выполнялась более 1 дня - записывает время исходя из длительности "условного дня" (8 часов)
     * @param event- задача, состояние которой изменилось
     * */
-    public void setEventSpentTime(Event event)
+    public void setEventSpentTime(Event event, Integer newEventState)
     {
         if (event.getIsGraph())
-            if (!event.getState().equals(EventState.PROCESS)) //это переключение ИЗ режима process в какой-то другой
+            if (!newEventState.equals(EventState.PROCESS.ordinal())) //это переключение ИЗ режима process в какой-то другой
             {
                 if (event.getStart() == null ) throw new RuntimeException("setEventSpentTime: event state was changed to (NEW/READY/PAUSE/FAIL) but start timestamp is NULL ");
-                if (Duration.between(event.getStart().toInstant(),Instant.now()).get(ChronoUnit.HOURS) >24) // если больше суток - считаем по длительностям "условного дня"
-                    event.setSpentTime(event.getSpentTime() + Duration.between(event.getStart().toInstant(),Instant.now()).get(ChronoUnit.DAYS) * 8 * 60);
+                if (Duration.between(event.getStart().toInstant(),Instant.now()).toHours() >24) // если больше суток - считаем по длительностям "условного дня"
+                    event.setSpentTime(event.getSpentTime() + Duration.between(event.getStart().toInstant(),Instant.now()).toDays() * 8 * 60);
                 else
-                    event.setSpentTime(event.getSpentTime() + Duration.between(event.getStart().toInstant(),Instant.now()).get(ChronoUnit.MINUTES));
+                    event.setSpentTime(event.getSpentTime() + Duration.between(event.getStart().toInstant(),Instant.now()).toMinutes());
             }
             else
             {

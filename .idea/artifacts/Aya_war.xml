@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="Aya:war">
+    <output-path>$PROJECT_DIR$/out/artifacts/Aya_war</output-path>
+    <root id="archive" name="Aya_war.war">
+      <element id="artifact" artifact-name="Aya:war exploded" />
+      <element id="gwt-compiler-output" facet="Aya/gwt/GWT" />
+    </root>
+  </artifact>
+</component>

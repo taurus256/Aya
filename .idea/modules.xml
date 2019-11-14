@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/aya.iml" filepath="$PROJECT_DIR$/aya.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Aya.iml" filepath="$PROJECT_DIR$/.idea/Aya.iml" />
     </modules>
   </component>
 </project>
