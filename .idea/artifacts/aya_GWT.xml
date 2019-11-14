@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="aya:GWT">
+    <output-path>$PROJECT_DIR$/src/main/resources/static/aya</output-path>
+    <properties id="ant-preprocessing">
+      <options enabled="true" />
+    </properties>
+    <root id="root">
+      <element id="gwt-compiler-output" facet="aya/gwt/GWT" />
+    </root>
+  </artifact>
+</component>
