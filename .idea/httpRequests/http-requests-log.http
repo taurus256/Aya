@@ -1,0 +1,44 @@
+POST http://localhost:8080/events
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 226
+Origin: http://localhost:8080
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 YaBrowser/19.6.2.599 Yowser/2.5 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Accept: */*
+Referer: http://localhost:8080/app/aya.html
+Accept-Encoding: gzip, deflate, br
+Accept-Language: ru,en;q=0.9
+Cookie: GLog=%7B%0A%20%20%20%20trackRPC%3Afalse%2C%20%0A%20%20%20%20isc_pageURL%3A%22http%3A//localhost%3A8080/S5/%22%2C%20%0A%20%20%20%20isc_pageGUID%3A%228925BEE1-C39D-4E85-A173-66AD14D28EA3%22%2C%20%0A%20%20%20%20priorityDefaults%3A%7B%0A%20%20%20%20%20%20%20%20sgwtInternal%3A1%0A%20%20%20%20%7D%2C%20%0A%20%20%20%20defaultPriority%3A3%2C%20%0A%20%20%20%20left%3A960%2C%20%0A%20%20%20%20top%3A0%2C%20%0A%20%20%20%20width%3A943%2C%20%0A%20%20%20%20height%3A991%0A%7D
+
+parent=0^&author=25^&rgroup=null^&wgroup=null^&is_backlog=true^&lane=null^&name=1^&description=1^&priority=1^&duration_h=1^&_operationType=add^&_textMatchStyle=exact^&_dataSource=isc_GlobalData_3_0^&isc_metaDataPrefix=_^&isc_dataFormat=json
+
+###
+
+POST http://localhost:8080/events
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 226
+Origin: http://localhost:8080
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 YaBrowser/19.6.2.599 Yowser/2.5 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Accept: */*
+Referer: http://localhost:8080/app/aya.html
+Accept-Encoding: gzip, deflate, br
+Accept-Language: ru,en;q=0.9
+Cookie: GLog=%7B%0A%20%20%20%20trackRPC%3Afalse%2C%20%0A%20%20%20%20isc_pageURL%3A%22http%3A//localhost%3A8080/S5/%22%2C%20%0A%20%20%20%20isc_pageGUID%3A%228925BEE1-C39D-4E85-A173-66AD14D28EA3%22%2C%20%0A%20%20%20%20priorityDefaults%3A%7B%0A%20%20%20%20%20%20%20%20sgwtInternal%3A1%0A%20%20%20%20%7D%2C%20%0A%20%20%20%20defaultPriority%3A3%2C%20%0A%20%20%20%20left%3A960%2C%20%0A%20%20%20%20top%3A0%2C%20%0A%20%20%20%20width%3A943%2C%20%0A%20%20%20%20height%3A991%0A%7D
+
+###
+
+POST http://localhost:8080/aya/user
+
+<> 2019-07-11T033914.404.json
+
+###
+
+POST http://localhost:8080/user
+
+<> 2019-07-11T033908.404.json
+
+###
+
