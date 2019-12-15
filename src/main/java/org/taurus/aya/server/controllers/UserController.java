@@ -83,7 +83,6 @@ public class UserController extends GenericController {
             user.setMobphone(filterStringValue(mobphone));
             user.setUsid(usid);
             user.setPasswordHash(passwordHash);
-            user.setShowedName(showedName);
             userRepository.save(user);
             System.out.println("User saved");
         }

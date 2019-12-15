@@ -33,7 +33,8 @@ public class Aya implements EntryPoint {
      @SuppressWarnings("static-access")
 	public void onModuleLoad() {
 
-        mainLayout.resizeFonts(1);
+        mainLayout.resizeFonts(3);
+		 mainLayout.resizeControls(3);
 
     	Date date = new Date();
 //    	SC.logWarn(date.toString());

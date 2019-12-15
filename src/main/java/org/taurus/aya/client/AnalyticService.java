@@ -6,5 +6,5 @@ import org.taurus.aya.shared.TaskAnalyseData;
 
 @RemoteServiceRelativePath("analytic")
 public interface AnalyticService extends RemoteService {
-    public TaskAnalyseData getPrognosis() throws Exception;
+    public TaskAnalyseData getPrognosis(Long userId) throws Exception;
 }

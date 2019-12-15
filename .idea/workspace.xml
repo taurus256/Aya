@@ -5,23 +5,15 @@
   </component>
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="Aya:jar" />
+      <artifact name="Aya:GWT" />
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9db01848-e3cb-4582-923d-3115d9d4d86a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_isomorphic_smartgwt_lgpl_smartgwt_lgpl_12_0_p20191204.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_isomorphic_smartgwt_lgpl_smartgwt_skins_12_0_p20191204.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/web/WEB-INF/web.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/widgets/TimelineData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Aya.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Aya.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Aya_GWT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/Aya_GWT.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/artifacts/aya_GWT.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/artifacts/aya_jar.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/artifacts/aya_war.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/artifacts/aya_war_exploded.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/805cd149-22de-4901-b956-e327f75e3fd8.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/805cd149-22de-4901-b956-e327f75e3fd8/storage_v2/_src_/database/s4.IQ4AAA.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/805cd149-22de-4901-b956-e327f75e3fd8/storage_v2/_src_/database/s4.IQ4AAA/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
@@ -32,19 +24,15 @@
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/805cd149-22de-4901-b956-e327f75e3fd8/storage_v2/_staging_/database/s4.IQ4AAA/schema/public.abK9xQ.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/805cd149-22de-4901-b956-e327f75e3fd8/storage_v2/_staging_/database/s4.IQ4AAA/schema/public.abK9xQ/routine/calc_duration.XW-H_g.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/805cd149-22de-4901-b956-e327f75e3fd8/storage_v2/_staging_/database/s4.IQ4AAA/schema/public.abK9xQ/routine/calc_duration.XW-H_g.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__smartgwt_smartgwt_12_0.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__smartgwt_smartgwt_skins_12_0.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/GlobalData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/GlobalData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/widgets/ExtendedTimeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/widgets/ExtendedTimeline.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/EventController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/services/EventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/services/EventService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/AnalyticService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/AnalyticService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/AnalyticServiceAsync.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/AnalyticServiceAsync.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/Aya.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/Aya.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/TaskView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/TaskView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/servlets/AnalyticServiceimpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/servlets/AnalyticServiceimpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/servlets/advicers/MatrixAdvicer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/servlets/advicers/MatrixAdvicer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/servlets/advicers/StatData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/servlets/advicers/StatData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -301,7 +289,7 @@
       <workItem from="1576070017092" duration="35396000" />
       <workItem from="1576265429555" duration="662000" />
       <workItem from="1576266183007" duration="6327000" />
-      <workItem from="1576400771660" duration="5883000" />
+      <workItem from="1576400771660" duration="24068000" />
     </task>
     <task id="LOCAL-00001" summary="Initial project commit">
       <created>1564302873095</created>
@@ -422,7 +410,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572960169358</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="feature: calculating conglomerate data for completed tasks">
+      <created>1576414710828</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1576414710828</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TodoView">
@@ -479,7 +474,8 @@
     <MESSAGE value="fix: changing lane name in the events when lane name changes" />
     <MESSAGE value="application.properties added" />
     <MESSAGE value="web.xml added" />
-    <option name="LAST_COMMIT_MESSAGE" value="web.xml added" />
+    <MESSAGE value="feature: calculating conglomerate data for completed tasks" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: calculating conglomerate data for completed tasks" />
   </component>
   <component name="WindowStateProjectService">
     <state x="423" y="181" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1576270212998">
@@ -494,62 +490,74 @@
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="1015" y="351" width="753" height="590" key="#xdebugger.evaluate/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576178573650" />
-    <state width="1525" height="276" key="GridCell.Tab.0.bottom" timestamp="1576403662809">
+    <state x="482" y="119" key="CommitChangelistDialog2" timestamp="1576414710206">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1525" height="276" key="GridCell.Tab.0.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576403662809" />
-    <state width="1525" height="276" key="GridCell.Tab.0.center" timestamp="1576403662809">
+    <state x="482" y="119" key="CommitChangelistDialog2/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576414710206" />
+    <state width="1493" height="276" key="GridCell.Tab.0.bottom" timestamp="1576437224330">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1525" height="276" key="GridCell.Tab.0.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576403662809" />
-    <state width="1525" height="276" key="GridCell.Tab.0.left" timestamp="1576403662809">
+    <state width="1493" height="276" key="GridCell.Tab.0.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576437224330" />
+    <state width="1493" height="276" key="GridCell.Tab.0.center" timestamp="1576437224330">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1525" height="276" key="GridCell.Tab.0.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576403662809" />
-    <state width="1525" height="276" key="GridCell.Tab.0.right" timestamp="1576403662809">
+    <state width="1493" height="276" key="GridCell.Tab.0.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576437224330" />
+    <state width="1493" height="276" key="GridCell.Tab.0.left" timestamp="1576437224330">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1525" height="276" key="GridCell.Tab.0.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576403662809" />
-    <state width="1525" height="276" key="GridCell.Tab.1.bottom" timestamp="1576403662809">
+    <state width="1493" height="276" key="GridCell.Tab.0.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576437224330" />
+    <state width="1493" height="276" key="GridCell.Tab.0.right" timestamp="1576437224330">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1525" height="276" key="GridCell.Tab.1.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576403662809" />
-    <state width="1525" height="276" key="GridCell.Tab.1.center" timestamp="1576403662809">
+    <state width="1493" height="276" key="GridCell.Tab.0.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576437224330" />
+    <state width="1493" height="276" key="GridCell.Tab.1.bottom" timestamp="1576437224330">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1525" height="276" key="GridCell.Tab.1.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576403662809" />
-    <state width="1525" height="276" key="GridCell.Tab.1.left" timestamp="1576403662809">
+    <state width="1493" height="276" key="GridCell.Tab.1.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576437224330" />
+    <state width="1493" height="276" key="GridCell.Tab.1.center" timestamp="1576437224330">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1525" height="276" key="GridCell.Tab.1.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576403662809" />
-    <state width="1525" height="276" key="GridCell.Tab.1.right" timestamp="1576403662809">
+    <state width="1493" height="276" key="GridCell.Tab.1.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576437224330" />
+    <state width="1493" height="276" key="GridCell.Tab.1.left" timestamp="1576437224330">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1525" height="276" key="GridCell.Tab.1.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576403662809" />
-    <state width="1144" height="340" key="GridCell.Tab.2.bottom" timestamp="1576272255395">
+    <state width="1493" height="276" key="GridCell.Tab.1.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576437224330" />
+    <state width="1493" height="276" key="GridCell.Tab.1.right" timestamp="1576437224330">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1144" height="340" key="GridCell.Tab.2.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576272255395" />
-    <state width="1144" height="340" key="GridCell.Tab.2.center" timestamp="1576272255395">
+    <state width="1493" height="276" key="GridCell.Tab.1.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576437224330" />
+    <state width="1493" height="340" key="GridCell.Tab.2.bottom" timestamp="1576434200272">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1144" height="340" key="GridCell.Tab.2.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576272255395" />
-    <state width="1144" height="340" key="GridCell.Tab.2.left" timestamp="1576272255395">
+    <state width="1493" height="340" key="GridCell.Tab.2.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576434200272" />
+    <state width="1493" height="340" key="GridCell.Tab.2.center" timestamp="1576434200272">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1144" height="340" key="GridCell.Tab.2.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576272255395" />
-    <state width="1144" height="340" key="GridCell.Tab.2.right" timestamp="1576272255395">
+    <state width="1493" height="340" key="GridCell.Tab.2.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576434200272" />
+    <state width="1493" height="340" key="GridCell.Tab.2.left" timestamp="1576434200272">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1144" height="340" key="GridCell.Tab.2.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576272255395" />
+    <state width="1493" height="340" key="GridCell.Tab.2.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576434200272" />
+    <state width="1493" height="340" key="GridCell.Tab.2.right" timestamp="1576434200272">
+      <screen x="0" y="0" width="1920" height="1044" />
+    </state>
+    <state width="1493" height="340" key="GridCell.Tab.2.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576434200272" />
     <state x="447" y="101" key="SettingsEditor" timestamp="1576163166721">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="447" y="101" key="SettingsEditor/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576163166721" />
+    <state width="961" height="523" key="XDebugger.FullValuePopup" timestamp="1576433887515">
+      <screen x="0" y="0" width="1920" height="1044" />
+    </state>
+    <state width="961" height="523" key="XDebugger.FullValuePopup/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576433887515" />
     <state x="722" y="370" key="cloudConfig.SelfSettingsDialog" timestamp="1576090823786">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="722" y="370" key="cloudConfig.SelfSettingsDialog/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576090823786" />
+    <state x="99" y="99" width="1722" height="846" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1576422262002">
+      <screen x="0" y="0" width="1920" height="1044" />
+    </state>
+    <state x="99" y="99" width="1722" height="846" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1576422262002" />
     <state x="623" y="229" width="672" height="678" key="search.everywhere.popup" timestamp="1576081371126">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
@@ -559,6 +567,7 @@
     <watches-manager>
       <configuration name="SpringBootApplicationConfigurationType">
         <watch expression="u" language="JAVA" />
+        <watch expression="spentTime / ((endDate.getTime() - startDate.getTime())/(24*3600*1000.0))" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

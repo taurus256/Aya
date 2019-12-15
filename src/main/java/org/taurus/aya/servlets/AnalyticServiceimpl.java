@@ -54,7 +54,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
     }
 
     @Override
-    public TaskAnalyseData getPrognosis() throws Exception {
+    public TaskAnalyseData getPrognosis(Long userId) throws Exception {
 
         System.out.println("AnalyticServiceimpl.getPrognosis");
         String labelText="";
@@ -186,6 +186,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
             labelText = getLabel(oldEventsList, futureEventsList);
 
             return new TaskAnalyseData(labelText,new MatrixAdvicer().compute(
+            userId,
             userList,
             laneList,
             oldEventsList,

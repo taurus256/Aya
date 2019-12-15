@@ -184,7 +184,7 @@ public TaskView(Record currentRecord, int tabUID)
 	private void getServerAnalyseData()
 	{
 		try {
-			GlobalData.getAnalyticService().getPrognosis(new AsyncCallback<TaskAnalyseData>() {
+			GlobalData.getAnalyticService().getPrognosis(GlobalData.getCurrentUser().getAttributeAsLong("id"), new AsyncCallback<TaskAnalyseData>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					analyseResultLabel.setContents("Что-то пошло не так и не туда");

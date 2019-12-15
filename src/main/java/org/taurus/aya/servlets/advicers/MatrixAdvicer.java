@@ -16,6 +16,7 @@ public class MatrixAdvicer {
 
     private HashMap<Long,Integer> userIds = new HashMap<>();
     private HashMap<String,Integer> laneIds = new HashMap<>();
+    private HashMap<Long,String> users= new HashMap<>();
 
     private StatData[][] matrix;
     private static final double WORKDAY_HOURS = 8.0;
@@ -56,11 +57,12 @@ public class MatrixAdvicer {
 
         public Double getCalculatedDayDuration()
         {
-             return spentTime / ((endDate.getTime() - startDate.getTime())/(24*3600*1000));
+             return spentTime / ((endDate.getTime() - startDate.getTime())/(24*3600*1000.0));
         }
     }
 
     public List<Advice> compute(
+            Long userId,
             List<User> userList,
             List<Lane> laneList,
             LinkedList<Event> oldEventsList,
@@ -80,7 +82,6 @@ public class MatrixAdvicer {
             if (b.isPresent())
                 throw new AdviceException("У задачи '" + b.get().getName() + "' некорректное время начала и окончания (" + b.get().getStartDate().toString() + " -  " + b.get().getEndDate().toString() + ")");;
 
-            getAverageUserDayDurations(userList, oldEventsList);
             initialize(userList, laneList, oldEventsList);
 
             // расчет прогнозируемых времен выполнения потоков
@@ -91,15 +92,23 @@ public class MatrixAdvicer {
             advices.add(generateLaneAdvice(futureEventsList,lanePrognosisMap));
 
             // расчет прогнозируемых затрат времени для каждого пользователя
-            Map<String,Double> userPrognosisMap = computeFutureUserPrognosis(futureEventsList);
+            Map<Long,Double> userPrognosisMap = computeFutureUserPrognosis(futureEventsList);
+            Map<Long,Double> userDayDurations = getAverageUserDayDurations(userList, oldEventsList);
 
-            advices.add(generateUserAdvices(futureEventsList, userPrognosisMap));
+            advices.add(generateUserAdvice(futureEventsList, userPrognosisMap, userDayDurations));
 
+            // генерация совета с данными о среднем времени, затрачиваемом в день на решение задач
 
+            advices.add(generateAverageLoadAdvice(userId,userDayDurations));
         }
         catch(AdviceException ae)
         {
             advices.add(new Advice(AdviceState.NOT_DEFINED,ae.getLocalizedMessage()));
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+            advices.add(new Advice(AdviceState.NOT_DEFINED,ex.getLocalizedMessage()));
         }
 
         return advices;
@@ -126,23 +135,27 @@ public class MatrixAdvicer {
         return prognosis;
     }
 
-    public Map<String,Double> computeFutureUserPrognosis(LinkedList<Event>  eventFutureList) throws AdviceException
+    /** Вычисление суммарной прогнозируемой трудоемкости задач для каждого пользователя
+     * @param eventFutureList список запланированных задач
+     * @return Ассоциативный массив вида <Имя пользователя, вычисленная трудоемкость в часах>
+    * */
+    public Map<Long,Double> computeFutureUserPrognosis(LinkedList<Event>  eventFutureList) throws AdviceException
     {
         LinkedList<Event> internalList = new LinkedList(eventFutureList);
         Iterator iter = internalList.iterator();
         System.out.println("PAdvicer.computeFutureUserPrognosis hasNext=" + iter.hasNext());
-        Map<String,LinkedList<Event>> userMap = new HashMap<>();
-        // Разбор задач по потокам
+        Map<Long,LinkedList<Event>> userMap = new HashMap<>();
+        // Разбор задач по пользователям
         while (iter.hasNext()) {
             Event e = internalList.remove();
-            userMap.computeIfAbsent(e.getExecutorName(), k -> new LinkedList<>());
-            userMap.get(e.getExecutorName()).add(e);
+            userMap.computeIfAbsent(e.getExecutor().longValue(), k -> new LinkedList<>());
+            userMap.get(e.getExecutor().longValue()).add(e);
         }
 
-        // Вычисление прогноза для каждого потока
-        Map<String,Double> prognosis = new HashMap<>();
-        for (String userName: userMap.keySet())
-            prognosis.put(userName,userMap.get(userName).stream().map(e -> {try{ return getEventTimePrognosis(e);} catch(AdviceException ae){return 0;}}).mapToDouble(d -> d.doubleValue()).sum());
+        // Вычисление прогноза для каждого пользователя
+        Map<Long,Double> prognosis = new HashMap<>();
+        for (Long user: userMap.keySet())
+            prognosis.put(user,userMap.get(user).stream().map(e -> {try{ return getEventTimePrognosis(e);} catch(AdviceException ae){return 0;}}).mapToDouble(d -> d.doubleValue()).sum());
 
         return prognosis;
     }
@@ -216,6 +229,11 @@ public class MatrixAdvicer {
 
     public void initialize(List<User> userList, List<Lane> laneList, List<Event> eventList) throws AdviceException
     {
+        //Заполнение ассоциативного массива пользователей
+        for (User u: userList)
+            users.put(u.getId(),u.getShowedName());
+
+        // Инициализация расчетной части.
         // Инициализация списков значений Id
         int i=0;
         for (User u: userList) userIds.put(u.getId(),i++);
@@ -276,7 +294,15 @@ public class MatrixAdvicer {
                 "\"");
     }
 
-    private Advice generateUserAdvices(List<Event> futureTaskList, Map<String,Double> prognosis) throws AdviceException
+    /** Анализ прогнозируемой нагрузки на пользователей и генерация советов. Выдает предупреждение в случае, если
+     * прогнозируемое время выполнения работ одним или несколькими пользователями выходит за планируемое время окончания работ
+     * (конец крайней планируемой задачи). В противном случае выдает сообщение о том, у какого пользователя нагрузка максимальна
+     * @param futureTaskList - список запланированных задач
+     * @param prognosis ассоциативный массив с рассчитанной нагрузкой на пользователей в часах
+     * @param dayDurations - ассоциативный массив, содержащий рассчитанное количество часов в день, которое пользователь тратит на задачи, для каждого пользователя
+     * @return Предупреждение со списком пользователей, у которых превышена нагрузка или сообщение с именем максимально загруженного пользователя
+     * */
+    private Advice generateUserAdvice(List<Event> futureTaskList, Map<Long,Double> prognosis, Map<Long,Double> dayDurations) throws AdviceException
     {
         Date deadline = futureTaskList.stream().map(Event::getEndDate).max(Date::compareTo).orElseThrow(() -> new AdviceException("generateDeadlineAdvice: Cannot find max future date"));
         System.out.println("deadline = " + deadline);
@@ -284,20 +310,33 @@ public class MatrixAdvicer {
         System.out.println("toDeadline= = " + toDeadline.toDays());
         long daysToDeadline = toDeadline.toDays() + 1; //последний день перед дедлайном тоже считаем
         System.out.println("daysToDeadline = " + daysToDeadline);
-        double prognosisHours = prognosis.values().stream().max(Double::compareTo).orElseThrow(() -> new AdviceException("generateDeadlineAdvice: Cannot find lane name with max duration"));
-        double prognosisDays = prognosisHours/WORKDAY_HOURS;
-        System.out.println("prognosisDays = " + prognosisHours/WORKDAY_HOURS);
 
-        if (prognosisDays <= daysToDeadline)
-            return new Advice(AdviceState.OK,"<br> Самый загруженный пользователь: \"" +  prognosis.keySet().stream().filter(name -> prognosis.get(name).equals(prognosisHours)).findFirst().orElseThrow(() -> new AdviceException("generateDeadlineAdvice: Cannot find lane name with max value")) +
-                    "\"");
-        else {
-            final List<String> messages = new LinkedList<String>(){{add("Превышение нагрузки:");}};
-            prognosis.keySet().stream().filter(user -> prognosis.get(user) / WORKDAY_HOURS >= prognosisDays).forEach(user ->{
-                messages.add("у " + user + " на " + (prognosis.get(user) / WORKDAY_HOURS - daysToDeadline) + " дн. <br>");
-            });
-            return new Advice(AdviceState.CRITICAL, messages.stream().collect(Collectors.joining("<br>")));
+        double maxPrognosisDays = -1;
+        Long maxLoadedUser = null;
+        final List<String> overloadedUsers = new LinkedList<String>();
+        for (Long user: prognosis.keySet()){
+
+            double prognosisDays = prognosis.get(user) / dayDurations.get(user);
+            if (prognosisDays> maxPrognosisDays)
+            {
+                maxPrognosisDays = prognosisDays;
+                maxLoadedUser = user;
+            }
+            if (prognosisDays > daysToDeadline) // фиксируем превышение нагрузки
+                overloadedUsers.add("<b>" + getUserName(user) + "</b> на <b>" + String.format("%4.2f",(prognosisDays - daysToDeadline)) + " дн.</b>");
         }
+
+        if (maxPrognosisDays < 0 || maxLoadedUser==null)
+            throw new AdviceException("generateUserAdvice: Не удалось расчитать нагрузку для пользователей: данные прогноза отсутствуют или некорректны");
+
+        System.out.println("prognosisDays = " + maxPrognosisDays);
+
+        if (maxPrognosisDays <= daysToDeadline)
+            return new Advice(AdviceState.OK,"<br> Самый загруженный пользователь: <b>\"" + getUserName(maxLoadedUser) + "\"</b>");
+        else
+            return new Advice(AdviceState.CRITICAL,
+                    "Превышение нагрузки у:<br>" +
+                    overloadedUsers.stream().collect(Collectors.joining("<br>")));
     }
 
     /** Заполнение нулевых полей мартрицы вычисленными средними */
@@ -351,12 +390,41 @@ public class MatrixAdvicer {
         return conglomerateList;
     }
 
+    /** Генерирует совет, выводящий среднее время, которое указанны пользователь тратит на решение задач
+     * @param userId идентификатор пользователя
+     * @param dayDurations - ассоциативный массив, содержащий рассчитанное количество часов в день, которое пользователь тратит на задачи, для каждого пользователя
+     */
+    public Advice generateAverageLoadAdvice(Long userId, Map<Long,Double> dayDurations) throws AdviceException
+    {
+        Double averageLoad = dayDurations.get(userId);
+        if (averageLoad == null)
+            throw new AdviceException("Для текущего пользователя не определены данные по средней нагрузке за день");
+        else
+            if (averageLoad >= 1.0 || averageLoad <= 12.0)
+                return new Advice(AdviceState.NOT_DEFINED,"Среднее время, затрачиваемое на решение задач: <b>" +
+                        String.format("%4.2f",averageLoad ) + " ч.</b> в день");
+            else
+                return new Advice(AdviceState.WARNING,"Среднее время, затрачиваемое на решение задач: <b>" +
+                        String.format("%4.2f",averageLoad ) + " ч.</b> в день"
+                        + "<br>Возможна ошибка в исходных данных");
+
+    }
+
+    private String getUserName(Long id)
+    {
+        return users.get(id);
+    }
+
     private Map<Long,Double> getAverageUserDayDurations( List<User> userList, LinkedList<Event> oldEventsList) throws AdviceException
     {
         Map<Long,Double> userDayDurations = new HashMap<>();
         for (User u: userList) {
             List<Event> list = oldEventsList.stream().filter(e -> e.getExecutor()==u.getId().intValue()).collect(Collectors.toList());
-            if (list.size()==0) continue;
+            if (list.size()==0)
+            {
+                userDayDurations.put(u.getId(),8.0); // установить значение по умолчанию
+                continue;
+            }
 
             List<Conglomerate> conglomerateList = getConglomerates(list);
 

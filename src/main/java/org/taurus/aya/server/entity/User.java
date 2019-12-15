@@ -122,11 +122,7 @@ public class User {
   }
 
   public String getShowedName() {
-    return showedName;
-  }
-
-  public void setShowedName(String showedName) {
-    this.showedName = showedName;
+    return firstname + " " + surname;
   }
 
   public List<Group> getGroups() {
