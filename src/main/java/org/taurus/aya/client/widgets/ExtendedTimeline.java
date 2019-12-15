@@ -203,8 +203,9 @@ public class ExtendedTimeline extends Timeline {
 		//Date modification
         addEventResizeStopHandler(event -> {
             SC.logWarn("ExtendedTimeline: event resize startDate: " + event.getNewEvent().getStartDate() + " endDate: " + event.getNewEvent().getEndDate());
-        	if (!event.getEvent().getEndDate().equals(event.getNewEvent().getEndDate()))
-				modifyCalendarEventEndDate(event.getNewEvent());
+			if (!event.getEvent().getStartDate().equals(event.getNewEvent().getStartDate()))
+				modifyCalendarEventStartDate(event.getNewEvent(),event.getEvent());
+			SC.logWarn("ExtendedTimeline: event resize startDate: " + event.getNewEvent().getStartDate() + " endDate: " + event.getNewEvent().getEndDate());
         });
 
         addEventChangedHandler(new EventChangedHandler(){
@@ -212,8 +213,8 @@ public class ExtendedTimeline extends Timeline {
 			@Override
 			public void onEventChanged(CalendarEventChangedEvent event) {
 				//updateTasks();
-				SC.logWarn("EventChangedHandler task id = " + event.getEvent().getAttribute("id"));
-                SC.logWarn("EventChangedHandler date_start= = " + event.getEvent().getAttribute("startDate") + " dateEnd = " + event.getEvent().getAttribute("endDate"));
+				SC.logWarn("EventChangedHandler task id => " + event.getEvent().getAttribute("id"));
+                SC.logWarn("EventChangedHandler date_start => " + event.getEvent().getAttribute("startDate") + " dateEnd = " + event.getEvent().getAttribute("endDate"));
 //				Connector.sendSystemMessageToAll(CommandType.UPDATE_TASK_ARRANGEMENT, TabManager.ResourceType.TASK, "Пользователь <b>" + GlobalData.getCurrentUser().getAttributeAsString("nickname") + "</b> обновил задачу <b>" + event.getEvent().getAttribute("name") + "</b>", (int)event.getEvent().getAttributeAsInt("id"));
 				//updateTimeline();
 		}});
@@ -327,17 +328,20 @@ public class ExtendedTimeline extends Timeline {
 		updateTimeline();
 	}
 
-    private void modifyCalendarEventStartDate(CalendarEvent newEvent) {
+    private void modifyCalendarEventStartDate(CalendarEvent newEvent, CalendarEvent oldEvent) {
         Date start = newEvent.getStartDate();
-        start = new Date(start.getTime() - 2 * 24*3600*1000);
+		start = new Date(start.getTime() + 24*3600*1000);
+
+		// защита от установки нулевого или отрицательного размера прямоугольника задачи
         if (start.getTime() < newEvent.getEndDate().getTime())
         	newEvent.setStartDate(start);
     }
 
-	private void modifyCalendarEventEndDate(CalendarEvent newEvent) {
+	private void modifyCalendarEventEndDate(CalendarEvent newEvent, CalendarEvent oldEvent) {
 		Date end = newEvent.getEndDate();
-		end = new Date(end.getTime() - 24*3600*1000);
-		if (end.getTime() > newEvent.getStartDate().getTime())
+		end = new Date(end.getTime() + 24*3600*1000);
+		// защита от установки нулевого или отрицательного размера прямоугольника задачи
+		if (end.getTime() >= newEvent.getStartDate().getTime())
 			newEvent.setEndDate(end);
 	}
 

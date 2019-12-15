@@ -6,13 +6,11 @@ import org.taurus.aya.server.entity.User;
 import org.taurus.aya.servlets.AdviceException;
 import org.taurus.aya.shared.Advice;
 import org.taurus.aya.shared.AdviceState;
-import org.taurus.aya.shared.TaskAnalyseData;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MatrixAdvicer {
 
@@ -21,6 +19,46 @@ public class MatrixAdvicer {
 
     private StatData[][] matrix;
     private static final double WORKDAY_HOURS = 8.0;
+
+    private class Conglomerate{
+
+        Date startDate, endDate;
+        Double spentTime;
+
+        public Conglomerate(Event e) throws AdviceException
+        {
+            if (e.getStartDate().getTime() >= e.getEndDate().getTime())
+                throw new AdviceException("У задачи '" + e.getName() + "' некорректное время начала и окончания (" + e.getStartDate().toString() + " - " + e.getEndDate().toString() + ")");
+
+            startDate = e.getStartDate();
+            endDate = e.getEndDate();
+            spentTime = e.getSpentTime();
+        }
+
+        public boolean addToCurrent(Event e) throws AdviceException
+        {
+            if (e.getStartDate().getTime() >= e.getEndDate().getTime())
+                throw new AdviceException("У задачи '" + e.getName() + "' некорректное время начала и окончания (" + e.getStartDate().toString() + " -  " + e.getEndDate().toString() + ")");
+
+            if (e.getStartDate().getTime() < endDate.getTime()) {
+                add(e);
+                return true;
+            }
+            else
+                return false;
+        }
+
+        private void add(Event e)
+        {
+            endDate = e.getEndDate();
+            spentTime+=e.getSpentTime();
+        }
+
+        public Double getCalculatedDayDuration()
+        {
+             return spentTime / ((endDate.getTime() - startDate.getTime())/(24*3600*1000));
+        }
+    }
 
     public List<Advice> compute(
             List<User> userList,
@@ -31,16 +69,33 @@ public class MatrixAdvicer {
     {
         List<Advice> advices = new LinkedList<>();
         try {
+
             if (futureEventsList.size() == 0) throw new AdviceException("Нет запланированных задач");
             if (oldEventsList.size() == 0) throw new AdviceException("Нет ни одной завершенной задачи за последние 60 дней");
 
+            Optional<Event> b = oldEventsList.stream().filter(e -> e.getStartDate().getTime() >= e.getEndDate().getTime()).findFirst();
+            if (b.isPresent())
+                throw new AdviceException("У задачи '" + b.get().getName() + "' некорректное время начала и окончания (" + b.get().getStartDate().toString() + " -  " + b.get().getEndDate().toString() + ")");;
+            b = futureEventsList.stream().filter(e -> e.getStartDate().getTime() >= e.getEndDate().getTime()).findFirst();
+            if (b.isPresent())
+                throw new AdviceException("У задачи '" + b.get().getName() + "' некорректное время начала и окончания (" + b.get().getStartDate().toString() + " -  " + b.get().getEndDate().toString() + ")");;
+
+            getAverageUserDayDurations(userList, oldEventsList);
             initialize(userList, laneList, oldEventsList);
 
-            Map<String, Double> prognosisMap = computeFuturePrognosis(futureEventsList);
+            // расчет прогнозируемых времен выполнения потоков
+            Map<String, Double> lanePrognosisMap = computeFutureLanePrognosis(futureEventsList);
 
-            for (String k : prognosisMap.keySet()) System.out.println("prognosis: " + k + " " + prognosisMap.get(k));
+            for (String k : lanePrognosisMap.keySet()) System.out.println("lane prognosis: " + k + " " + lanePrognosisMap.get(k));
 
-            advices.add(generateDeadlineAdvice(futureEventsList,prognosisMap));
+            advices.add(generateLaneAdvice(futureEventsList,lanePrognosisMap));
+
+            // расчет прогнозируемых затрат времени для каждого пользователя
+            Map<String,Double> userPrognosisMap = computeFutureUserPrognosis(futureEventsList);
+
+            advices.add(generateUserAdvices(futureEventsList, userPrognosisMap));
+
+
         }
         catch(AdviceException ae)
         {
@@ -50,11 +105,11 @@ public class MatrixAdvicer {
         return advices;
     }
 
-    public Map<String,Double> computeFuturePrognosis(LinkedList<Event>  eventFutureList) throws AdviceException
+    public Map<String,Double> computeFutureLanePrognosis(LinkedList<Event>  eventFutureList) throws AdviceException
     {
         LinkedList<Event> internalList = new LinkedList(eventFutureList);
         Iterator iter = internalList.iterator();
-        System.out.println("PAdvicer.computeFuturePrognosis hasNext=" + iter.hasNext());
+        System.out.println("PAdvicer.computeFutureLanePrognosis hasNext=" + iter.hasNext());
         Map<String,LinkedList<Event>> laneMap = new HashMap<>();
         // Разбор задач по потокам
         while (iter.hasNext()) {
@@ -67,6 +122,27 @@ public class MatrixAdvicer {
         Map<String,Double> prognosis = new HashMap<>();
         for (String laneName: laneMap.keySet())
             prognosis.put(laneName,getLaneTime(laneMap.get(laneName)));
+
+        return prognosis;
+    }
+
+    public Map<String,Double> computeFutureUserPrognosis(LinkedList<Event>  eventFutureList) throws AdviceException
+    {
+        LinkedList<Event> internalList = new LinkedList(eventFutureList);
+        Iterator iter = internalList.iterator();
+        System.out.println("PAdvicer.computeFutureUserPrognosis hasNext=" + iter.hasNext());
+        Map<String,LinkedList<Event>> userMap = new HashMap<>();
+        // Разбор задач по потокам
+        while (iter.hasNext()) {
+            Event e = internalList.remove();
+            userMap.computeIfAbsent(e.getExecutorName(), k -> new LinkedList<>());
+            userMap.get(e.getExecutorName()).add(e);
+        }
+
+        // Вычисление прогноза для каждого потока
+        Map<String,Double> prognosis = new HashMap<>();
+        for (String userName: userMap.keySet())
+            prognosis.put(userName,userMap.get(userName).stream().map(e -> {try{ return getEventTimePrognosis(e);} catch(AdviceException ae){return 0;}}).mapToDouble(d -> d.doubleValue()).sum());
 
         return prognosis;
     }
@@ -177,7 +253,7 @@ public class MatrixAdvicer {
         printMatrix(matrix);
     }
 
-    private Advice generateDeadlineAdvice(List<Event> futureTaskList, Map<String,Double> prognosis) throws AdviceException
+    private Advice generateLaneAdvice(List<Event> futureTaskList, Map<String,Double> prognosis) throws AdviceException
     {
         Date deadline = futureTaskList.stream().map(Event::getEndDate).max(Date::compareTo).orElseThrow(() -> new AdviceException("generateDeadlineAdvice: Cannot find max future date"));
         System.out.println("deadline = " + deadline);
@@ -200,6 +276,30 @@ public class MatrixAdvicer {
                 "\"");
     }
 
+    private Advice generateUserAdvices(List<Event> futureTaskList, Map<String,Double> prognosis) throws AdviceException
+    {
+        Date deadline = futureTaskList.stream().map(Event::getEndDate).max(Date::compareTo).orElseThrow(() -> new AdviceException("generateDeadlineAdvice: Cannot find max future date"));
+        System.out.println("deadline = " + deadline);
+        Duration toDeadline = Duration.between(Instant.now(),deadline.toInstant());
+        System.out.println("toDeadline= = " + toDeadline.toDays());
+        long daysToDeadline = toDeadline.toDays() + 1; //последний день перед дедлайном тоже считаем
+        System.out.println("daysToDeadline = " + daysToDeadline);
+        double prognosisHours = prognosis.values().stream().max(Double::compareTo).orElseThrow(() -> new AdviceException("generateDeadlineAdvice: Cannot find lane name with max duration"));
+        double prognosisDays = prognosisHours/WORKDAY_HOURS;
+        System.out.println("prognosisDays = " + prognosisHours/WORKDAY_HOURS);
+
+        if (prognosisDays <= daysToDeadline)
+            return new Advice(AdviceState.OK,"<br> Самый загруженный пользователь: \"" +  prognosis.keySet().stream().filter(name -> prognosis.get(name).equals(prognosisHours)).findFirst().orElseThrow(() -> new AdviceException("generateDeadlineAdvice: Cannot find lane name with max value")) +
+                    "\"");
+        else {
+            final List<String> messages = new LinkedList<String>(){{add("Превышение нагрузки:");}};
+            prognosis.keySet().stream().filter(user -> prognosis.get(user) / WORKDAY_HOURS >= prognosisDays).forEach(user ->{
+                messages.add("у " + user + " на " + (prognosis.get(user) / WORKDAY_HOURS - daysToDeadline) + " дн. <br>");
+            });
+            return new Advice(AdviceState.CRITICAL, messages.stream().collect(Collectors.joining("<br>")));
+        }
+    }
+
     /** Заполнение нулевых полей мартрицы вычисленными средними */
     private void prepareMatrix() throws AdviceException
     {
@@ -215,7 +315,7 @@ public class MatrixAdvicer {
         }
         Double avgAll = velocityList.stream().filter(x -> !x.equals(Double.NaN)).mapToDouble(x -> x).average().orElse(Double.NaN);
 
-        if (avgAll.equals(Double.NaN)) throw new AdviceException("ALL velocity values is NaN: input data is incorrect!");
+        if (avgAll.equals(Double.NaN)) throw new AdviceException("У выполненных задач указано нулевое время выполнения");
 
         for (int i=0; i< userIds.size(); i++) {
             final Double dispersion =  dispersionList.get(i);
@@ -223,6 +323,56 @@ public class MatrixAdvicer {
             Arrays.asList(matrix[i]).parallelStream().filter(StatData::getValueIsEmpty).forEach(x -> x.setD(dispersion));
         }
     }
+
+    private List<Conglomerate> getConglomerates(List<Event> eventList) throws AdviceException
+    {
+        Queue<Event> eventQueue = new PriorityQueue<Event>(eventList.size(), (e1, e2) -> {
+            long result = e1.getStartDate().getTime() - e2.getStartDate().getTime();
+            if (result>0)
+                return 1;
+            else return (result<0)?-1:0;
+        });
+        eventQueue.addAll(eventList);
+
+        Conglomerate c = null;
+        List<Conglomerate> conglomerateList = new LinkedList<>();
+        while (!eventQueue.isEmpty()) {
+            Event e = eventQueue.remove();
+            if (c == null)
+                c = new Conglomerate(e);
+            else
+            if (!c.addToCurrent(e)) { // если задача входит в текущий конгломерат -добавляем, иначе
+                conglomerateList.add(c); // добавляем предыдущий в список
+                c = new Conglomerate(e); // и создаем новый
+            }
+        }
+        conglomerateList.add(c); // добавляем последний конгломерат (он не может добавиться в цикле)
+
+        return conglomerateList;
+    }
+
+    private Map<Long,Double> getAverageUserDayDurations( List<User> userList, LinkedList<Event> oldEventsList) throws AdviceException
+    {
+        Map<Long,Double> userDayDurations = new HashMap<>();
+        for (User u: userList) {
+            List<Event> list = oldEventsList.stream().filter(e -> e.getExecutor()==u.getId().intValue()).collect(Collectors.toList());
+            if (list.size()==0) continue;
+
+            List<Conglomerate> conglomerateList = getConglomerates(list);
+
+            userDayDurations.put(
+                    u.getId(),
+                    conglomerateList.stream().mapToDouble(Conglomerate::getCalculatedDayDuration)
+                            .average()
+                            .orElseThrow(() -> new AdviceException("Ошибка при расчете нагрузки для пользователя "+ u.getShowedName()))
+            );
+        }
+
+        System.out.println("userDayDurations = " + userDayDurations);
+
+        return userDayDurations;
+    }
+
 
     private void printList(Collection l)
     {

@@ -3,6 +3,7 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="gwt" url="file://$PROJECT_DIR$" />
     <file type="web" url="file://$PROJECT_DIR$/out/artifacts/Aya_war_exploded/WEB-INF/classes/WEB-INF/web.xml" />
+    <file type="web" url="file://$PROJECT_DIR$/out/artifacts/Aya_war_exploded/WEB-INF/web.xml" />
   </component>
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />

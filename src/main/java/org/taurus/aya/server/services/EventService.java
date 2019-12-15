@@ -100,9 +100,9 @@ public class EventService {
             {
                 if (event.getStart() == null ) throw new RuntimeException("setEventSpentTime: event state was changed to (NEW/READY/PAUSE/FAIL) but start timestamp is NULL ");
                 if (Duration.between(event.getStart().toInstant(),Instant.now()).toHours() >24) // если больше суток - считаем по длительностям "условного дня"
-                    event.setSpentTime(event.getSpentTime() + Duration.between(event.getStart().toInstant(),Instant.now()).toDays() * 8 * 60);
+                    event.setSpentTime(event.getSpentTime() + Duration.between(event.getStart().toInstant(),Instant.now()).toDays() * 8.0);
                 else
-                    event.setSpentTime(event.getSpentTime() + Duration.between(event.getStart().toInstant(),Instant.now()).toMinutes());
+                    event.setSpentTime(event.getSpentTime() + Duration.between(event.getStart().toInstant(),Instant.now()).toMinutes()/60.0);
             }
             else
             {

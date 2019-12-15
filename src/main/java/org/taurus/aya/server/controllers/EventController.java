@@ -98,6 +98,9 @@ public class EventController extends GenericController {
                 event.setStartDate(d);
 
                 d = (event.getEndDate() == null || event.getState().equals(filterIntValue(state))) ? filterDateValue(endDate) : event.getEndDate();
+                d.setHours(23);
+                d.setMinutes(59);
+                d.setSeconds(59);
                 event.setEndDate(d);
 
                 event.setAuthor(filterLongValue(author));

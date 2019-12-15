@@ -13,7 +13,7 @@ public class StatData {
     Double D = null;
     boolean valueIsEmpty = true;
 
-    /** Добавление задачи в список для расчета ствтистики
+    /** Добавление задачи в список для расчета статистики
     * @param e - entity задачи
     * */
     void addEvent(Event e)
@@ -45,7 +45,7 @@ public class StatData {
     }
 
     /** Считает дисперсию средних скоростей.  При первом обращении - считает её
-    * @return Значени дисперсии
+    * @return Значение дисперсии
     * */
     Double getD()
     {

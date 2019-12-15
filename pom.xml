@@ -71,17 +71,29 @@
         </dependency>
 
         <!-- SmartGWt from local repository-->
-        <dependency>
-            <groupId>smartgwt</groupId>
-            <artifactId>smartgwt</artifactId>
-            <version>12.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>smartgwt</groupId>-->
+<!--            <artifactId>smartgwt</artifactId>-->
+<!--            <version>12.0</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>smartgwt</groupId>
-            <artifactId>smartgwt-skins</artifactId>
-            <version>12.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>smartgwt</groupId>-->
+<!--            <artifactId>smartgwt-skins</artifactId>-->
+<!--            <version>12.0</version>-->
+<!--        </dependency>-->
+
+            <dependency>
+                    <groupId>com.isomorphic.smartgwt.lgpl</groupId>
+                    <artifactId>smartgwt-lgpl</artifactId>
+                    <version>12.0-p20191204</version>
+            </dependency>
+
+            <dependency>
+                 <groupId>com.isomorphic.smartgwt.lgpl</groupId>
+                <artifactId>smartgwt-skins</artifactId>
+                <version>12.0-p20191204</version>
+            </dependency>
 
     </dependencies>
 
