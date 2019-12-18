@@ -8,6 +8,8 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.*;
 
 import org.taurus.aya.client.GlobalData;
+import org.taurus.aya.client.TabManager;
+import org.taurus.aya.client.generic.AbstractPropertiesDialog;
 import org.taurus.aya.client.widgets.ExtendedTimeline;
 
 import java.util.Date;
@@ -15,11 +17,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class EditEventDialog extends BacklogTaskDialog {
+public class EditEventDialog extends AbstractPropertiesDialog {
 
 	public EditEventDialog(Record r)
 	{
-		super(r);
+		super(r,"task.png", TabManager.ResourceType.TASK, GlobalData.getDataSource_tasks(), "задачи");
 		r.setAttribute("isGraph",true);
 
 		addVisibilityChangedHandler(event -> {
@@ -33,10 +35,8 @@ public class EditEventDialog extends BacklogTaskDialog {
 	{
 		this.addItem(createFormLayout());
 		this.addItem(createSecurityLayout());
-
 		this.addItem(createButtonsLayout());
-
-		if (record.getAttributeAsInt("id") != null) tagListGrid.fetchData(new Criteria(getColumnName(), record.getAttributeAsString("id")));
+		//if (record.getAttributeAsInt("id") != null) tagListGrid.fetchData(new Criteria(getColumnName(), record.getAttributeAsString("id")));
 	}
 	
 	public void setNewEvent(ExtendedTimeline tv, Record event)
@@ -49,8 +49,6 @@ public class EditEventDialog extends BacklogTaskDialog {
 
 	protected Widget createFormLayout()
 	{
-		df = (DynamicForm) super.createFormLayout();
-
 		DateItem startDate = new DateItem("startDate");
 		DateItem endDate = new DateItem("endDate");
 

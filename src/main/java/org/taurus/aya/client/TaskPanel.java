@@ -51,8 +51,7 @@ public class TaskPanel extends VLayout implements SidePanel {
 					r.setAttribute("wgroup",GlobalData.ACCESS_ALL);
 					
 					EditEventDialog ee = new EditEventDialog(r);
-					ee.show();
-				}});	    
+				}});
 		}
 	}
 

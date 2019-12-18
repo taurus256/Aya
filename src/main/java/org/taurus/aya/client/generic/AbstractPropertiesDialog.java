@@ -73,6 +73,8 @@ abstract public class AbstractPropertiesDialog extends Dialog {
 
 	public AbstractPropertiesDialog(Record r, String imgName, ResourceType resType, DataSource ds, String suff)
 	{
+		hide();
+
 		thisDialog = this;
 		record = r;
 		dataSource = ds;
@@ -87,10 +89,10 @@ abstract public class AbstractPropertiesDialog extends Dialog {
 			SC.logWarn("SecurityDescriptorDialog: record IS NULL");
 			return;
 		}
-		SC.logInfo("GPD-3");
-		setCanDragReposition(true);  
+		setCanDragReposition(true);
 		setCanDragResize(false);
-		setSize("400px", "100px");
+		setSize("550px", "100px");
+		setWidth(550);
 		if (record.getAttribute("id") == null)
 			setTitle("Создание " + suffix);
 		else
@@ -104,10 +106,9 @@ abstract public class AbstractPropertiesDialog extends Dialog {
 		setAnimateShowEffect(AnimationEffect.FADE);
 		setAnimateTime(2000);
 		canWriteToThisResource = GlobalData.canWrite(r);
-		SC.logInfo("GPD-5");
-		
+		createDynamicForm();
 		constructInterface();
-		SC.logInfo("GPD-6");
+
 		//Add handler forEnter key
 		addKeyPressHandler(new KeyPressHandler(){
 
@@ -118,6 +119,8 @@ abstract public class AbstractPropertiesDialog extends Dialog {
 					saveDialogData();
 				}
 			}});
+		hide();
+		SC.logWarn("Конструктор AbstractPropertiesDialog отработал");
 	}
 
 	abstract protected void constructInterface();
@@ -145,11 +148,10 @@ abstract public class AbstractPropertiesDialog extends Dialog {
 		return imageName;
 	}
 	
-	protected Widget createFormLayout()
+	protected void createDynamicForm()
 	{
 		df = new DynamicForm();
 		df.setDataSource(dataSource);
-		df.editRecord(record);
 //		df.setShowInlineErrors(true);
 //		df.setShowErrorIcons(true);
 		df.setShowErrorText(false);
@@ -158,12 +160,14 @@ abstract public class AbstractPropertiesDialog extends Dialog {
 		df.setWrapItemTitles(false);
 		df.setWidth100();
 		df.setMargin(10);
-		df.setColWidths(new Object[]{
-            new Integer(200),
-            new Integer(350),
-            new Integer(0)});
+		df.setColWidths(200,350,0);
 		df.setShowInlineErrors(false);
 		df.setShowErrorIcons(false);
+	}
+
+	protected Widget createFormLayout()
+	{
+		df.editRecord(record);
 		return df;
 	}
 	

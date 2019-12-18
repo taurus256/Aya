@@ -159,6 +159,7 @@ public class ExtendedTimeline extends Timeline {
 				if (event.isAltKeyDown())
 				{
 					EditEventDialog ee = getEditEventDialog(event.getEvent());
+					SC.logWarn("ExtendedTimeline: Сейчас буду показывать диалог");
 					ee.focusInNextTabElement();
 				}
 				else {
@@ -255,7 +256,8 @@ public class ExtendedTimeline extends Timeline {
 					if (sublane != null) ev.setAttribute("sublane", sublane.getName());
 				}
 
-				getEditEventDialog(ev).setNewEvent(extendedTimeline, ev);
+				EditEventDialog ee = getEditEventDialog(ev);
+				ee.setNewEvent(extendedTimeline, ev);
 				event.cancel();
 			}});
 
@@ -296,7 +298,7 @@ public class ExtendedTimeline extends Timeline {
 
                                //TODO:: вынести проверку на null в отдельный метод
                                if (r.getAttribute("lane") == null || r.getAttribute("lane").equals("null"))
-                                    new BacklogTaskDialog(r);
+								   new BacklogTaskDialog(r);
                                else {
                                    r.setAttribute("isGraph", true);
                                    GlobalData.getDataSource_tasks().updateData(r, new DSCallback() {
@@ -390,37 +392,17 @@ public class ExtendedTimeline extends Timeline {
 				public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest)
 				{
 					SC.logWarn("TaskView: lanes amount: " + dsResponse.getData().length);
-					//TODO:: delete this
 					ArrayList<Lane> sublanes = new ArrayList<Lane>();
-//					Lane[] emptyLaneArray = {};
-					
+
 					for (int i=0; i< dsResponse.getData().length; i++)
 					{
-					//TODO:: delete this
-//						if (dsResponse.getData()[i].getAttributeAsInt("parent") == 0)
-//						{
-//							for (int j=0; j< dsResponse.getData().length; j++)
-//							{
-//								if (dsResponse.getData()[i].getAttributeAsInt("id").equals(dsResponse.getData()[j].getAttributeAsInt("parent")))
-//									sublanes.add(new Lane(dsResponse.getData()[j].getAttribute("name"),dsResponse.getData()[j].getAttribute("name")));
-//							}
-						
+
 						Lane lane = new Lane(dsResponse.getData()[i].getAttribute("name"),generateLaneTitle(dsResponse.getData()[i].getAttribute("name"),sublanes));
-						//lane.setHeight(100*sublanes.size());
-						
-						//if lane have no sublanes
-						//TODO::delete this
-//						if (sublanes.size()!=0)
-//							lane.setSublanes(sublanes.toArray(emptyLaneArray)); //sublanes.add(new Lane(dsResponse.getData()[i].getAttribute("name"),dsResponse.getData()[i].getAttribute("name")));
-//						else
+
 							lane.setHeight(100);
 
 						addLane(lane);
-						//TODO:: delete this
-						//sublanes.clear();
-//						}
-					}					
-					//updateTasks();
+					}
 				}},dsr);
 		}
 		else //use 'user' DS to create lanes
@@ -468,13 +450,14 @@ public class ExtendedTimeline extends Timeline {
 				
 				SC.logWarn("updateTasks(): Task list size is " + dsResponse.getData().length);
 				
-				if (currentRecord != null)
-					Scheduler.get().scheduleDeferred(new com.google.gwt.user.client.Command(){
-						public void execute()
-						{
+				if (currentRecord != null) {
+
+					Scheduler.get().scheduleDeferred(new com.google.gwt.user.client.Command() {
+						public void execute() {
 							selectRecord(currentRecord);
 						}
 					});
+				}
 
 				if (updateCallback != null) updateCallback.run();
 
@@ -579,6 +562,7 @@ public class ExtendedTimeline extends Timeline {
         selectedEvent.setAttribute("eventWindowStyle", s3_event_pause);
         selectedEvent.setAttribute("state", s);
         selectedEvent.setAttribute("icon", s2);
+
         GlobalData.getDataSource_tasks().updateData(selectedEvent, new DSCallback() {
             @Override
             public void execute(DSResponse dsResponse, Object data,

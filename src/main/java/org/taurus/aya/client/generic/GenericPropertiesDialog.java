@@ -42,6 +42,7 @@ public class GenericPropertiesDialog extends AbstractPropertiesDialog {
 	public GenericPropertiesDialog(Record r, String imgName, ResourceType resType, DataSource ds, String suff)
 	{
 		super(r,imgName,resType,ds,suff);
+		df.show();
 		show();
 	}
 

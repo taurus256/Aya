@@ -20,24 +20,24 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
 	{
 		super(r, "task.png", ResourceType.TASK, GlobalData.getDataSource_tasks(), "задачи");
 		setWidth(520);
-		SC.logWarn("BacklogTaskDialog:start");
+        SC.logWarn("Конструктор BacklogTaskDialog отработал");
 	}
 
 	@Override
 	protected void constructInterface()
 	{
-		this.addItem(createFormLayout());
+        SC.logWarn("constructInterface для BacklogTaskDialog вызван");
+        this.addItem(createFormLayout());
 		this.addItem(createTagsLayout());
 		this.addItem(createSecurityLayout());
 
 		this.addItem(createButtonsLayout());
 		if (record.getAttributeAsInt("id") != null) tagListGrid.fetchData(new Criteria(getColumnName(), record.getAttributeAsString("id")));
+        SC.logWarn("constructInterface для BacklogTaskDialog отработал");
 	}
 
     protected Widget createFormLayout()
     {
-        df = (DynamicForm) super.createFormLayout();
-
         DateItem startDate = new DateItem("startDate");
         DateItem endDate = new DateItem("endDate");
 
@@ -84,11 +84,9 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
             description.setWidth(300);
             description.setHeight(200);
 
-            SC.logWarn(">2");
             df.setFields(lane, name, startDate, endDate, description, executor, priority, durationH);
 
             df.editRecord(record);
-            SC.logWarn(">3");
 
             if (!GlobalData.canWrite(record))
                 df.disable();
