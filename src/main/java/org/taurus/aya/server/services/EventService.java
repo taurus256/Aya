@@ -11,7 +11,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -93,21 +92,27 @@ public class EventService {
     * Если задача выполнялась более 1 дня - записывает время исходя из длительности "условного дня" (8 часов)
     * @param event- задача, состояние которой изменилось
     * */
-    public void setEventSpentTime(Event event, Integer newEventState)
+    public boolean calculateEventSpentTime(Event event, Integer newEventState)
     {
+        boolean needUserCorrection = false;
         if (event.getIsGraph())
             if (!newEventState.equals(EventState.PROCESS.ordinal())) //это переключение ИЗ режима process в какой-то другой
             {
                 if (event.getStart() == null ) throw new RuntimeException("setEventSpentTime: event state was changed to (NEW/READY/PAUSE/FAIL) but start timestamp is NULL ");
-                if (Duration.between(event.getStart().toInstant(),Instant.now()).toHours() >24) // если больше суток - считаем по длительностям "условного дня"
-                    event.setSpentTime(event.getSpentTime() + Duration.between(event.getStart().toInstant(),Instant.now()).toDays() * 8.0);
+                if (Duration.between(event.getStart().toInstant(),Instant.now()).toHours() > 24 ) // если больше суток - считаем по длительностям "условного дня"
+                {
+                    event.setSpentTime(event.getSpentTime() + Duration.between(event.getStart().toInstant(), Instant.now()).toDays() * 8.0);
+                    needUserCorrection = true;
+                }
                 else
                     event.setSpentTime(event.getSpentTime() + Duration.between(event.getStart().toInstant(),Instant.now()).toMinutes()/60.0);
+                event.setStart(null);
             }
             else
             {
                 //если это переключение в режим process - запоминаем время
                 event.setStart(new Date());
             }
+        return needUserCorrection;
     }
 }

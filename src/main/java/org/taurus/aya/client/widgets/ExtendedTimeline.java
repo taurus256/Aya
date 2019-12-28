@@ -2,17 +2,26 @@ package org.taurus.aya.client.widgets;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.ui.HasAutoHorizontalAlignment;
 import com.smartgwt.client.data.*;
-import com.smartgwt.client.types.AutoFitWidthApproach;
-import com.smartgwt.client.types.OperatorId;
-import com.smartgwt.client.types.SortDirection;
-import com.smartgwt.client.types.TimeUnit;
+import com.smartgwt.client.types.*;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.util.ValueCallback;
+import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.Dialog;
+import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.calendar.*;
 import com.smartgwt.client.widgets.calendar.events.*;
 import com.smartgwt.client.widgets.events.*;
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.ClickHandler;
@@ -26,7 +35,9 @@ import org.taurus.aya.shared.Command.CommandType;
 import com.smartgwt.client.widgets.calendar.CalendarEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 
 public class ExtendedTimeline extends Timeline {
 	
@@ -310,13 +321,11 @@ public class ExtendedTimeline extends Timeline {
                                }
                            }
                        });
-                //  set menu and load the data
-
-                setContextMenu(getContextMenu());
 
 		addFetchDataHandler(new FetchDataHandler() {
 								@Override
 								public void onFilterData(FetchDataEvent event) {
+
 								if(thisIsFirstCall) {
 									int delta = new Date().getDate() * 60; //+ currentRecord.getAttributeAsDate("endDate").getMinutes()/5*150 - getTimelineView().getWidth()/2;
 
@@ -327,6 +336,11 @@ public class ExtendedTimeline extends Timeline {
 
 								}
 							});
+
+		//  set menu and load the data
+
+		setContextMenu(getContextMenu());
+
 		updateTimeline();
 	}
 
@@ -461,6 +475,11 @@ public class ExtendedTimeline extends Timeline {
 
 				if (updateCallback != null) updateCallback.run();
 
+				Optional<Record> optTask = Arrays.stream(dsResponse.getData()).filter(d -> d.getAttributeAsBoolean("userCorrectSpentTime")).findFirst();
+				if (optTask.isPresent()) {
+					Record task = optTask.get();
+					showRevisionDialog(task);
+				}
 				GlobalData.getStatusBar().stopIndicateProcess();
 				
 				// Scroll feature availible only in DAY granuality 
@@ -573,5 +592,110 @@ public class ExtendedTimeline extends Timeline {
         });
 
     }
+
+    private void showRevisionDialog(Record task)
+	{
+		final Dialog dialog = new Dialog();
+		dialog.setTitle("Уточнение значения");
+		dialog.addItem(new Label("Завершенная вами задача " +
+				"\"" + task.getAttribute("name") + "\" " +
+				"длилась более одного дня.<br/>Система рассчитала время её выполнения, вы можете изменить его или оставить рассчитанное"));
+		dialog.setWidth(500);
+		dialog.setHeight(260);
+		dialog.setMembersMargin(10);
+		DynamicForm df = new DynamicForm();
+		df.setHeight(50);
+
+		TextItem value = new TextItem("Время выполнения (в часах)");
+		Button btAccept = new Button("Изменить");
+		btAccept.disable();
+		Button btCancel = new Button("Оставить");
+
+
+		value.addChangeHandler(new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent changeEvent) {
+				btAccept.enable();
+			}
+		});
+		value.addKeyPressHandler(new com.smartgwt.client.widgets.form.fields.events.KeyPressHandler() {
+			@Override
+			public void onKeyPress(com.smartgwt.client.widgets.form.fields.events.KeyPressEvent keyPressEvent) {
+				if (keyPressEvent.getKeyName().equals("Enter"))
+				{
+					try {
+						Integer duration = Integer.valueOf(value.getValueAsString());
+						if (duration < 0 || duration > 1000)
+							SC.warn("Введенное значение некорректно!");
+						else {
+							task.setAttribute("spentTime", duration);
+							GlobalData.getDataSource_tasks().updateData(task, new DSCallback() {
+								@Override
+								public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
+									dialog.hide();
+								}
+							});
+						}
+					} catch (NumberFormatException nfe) {
+						SC.warn("Введенное значение не является числом!");
+					}
+				}
+			}
+		});
+		value.setValue(task.getAttributeAsDouble("spentTime"));
+		df.setFields(value);
+
+		df.setHiliteRequiredFields(false);
+		df.setWrapItemTitles(false);
+		df.setWidth(450);
+		df.setColWidths(200,350,0);
+		dialog.addItem(df);
+
+		VLayout vlayout = new VLayout();
+		vlayout.setHeight("50px");
+		vlayout.setAlign(VerticalAlignment.CENTER);
+
+		HLayout hlayout = new HLayout();
+		hlayout.setAlign(Alignment.RIGHT);
+		hlayout.setMembersMargin(10);
+
+		vlayout.addMember(hlayout);
+
+
+
+		btAccept.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+			@Override
+			public void onClick(ClickEvent clickEvent) {
+				try {
+					Integer duration = Integer.valueOf(value.getValueAsString());
+					if (duration < 0 || duration > 1000)
+						SC.warn("Введенное значение некорректно!");
+					else {
+						task.setAttribute("spentTime", duration);
+						GlobalData.getDataSource_tasks().updateData(task, new DSCallback() {
+							@Override
+							public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
+								dialog.hide();
+							}
+						});
+					}
+				} catch (NumberFormatException nfe) {
+					SC.warn("Введенное значение не является числом!");
+				}
+			}
+		});
+
+		btCancel.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+			@Override
+			public void onClick(ClickEvent clickEvent) {
+				dialog.hide();
+			}
+		});
+		hlayout.setMembers(btAccept,btCancel);
+		dialog.addItem(vlayout);
+
+		dialog.draw();
+		dialog.centerInPage();
+	}
 
 }

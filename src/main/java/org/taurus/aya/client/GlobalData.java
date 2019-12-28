@@ -470,6 +470,7 @@ public class GlobalData {
 				is_backlog,
 				spentTime,
     			is_graph,
+				new DataSourceField("userCorrectSpentTime",FieldType.BOOLEAN),
 				new DataSourceField("wuser", FieldType.INTEGER),
 				new DataSourceField("wgroup", FieldType.INTEGER),
 				new DataSourceField("ruser", FieldType.INTEGER),

@@ -43,6 +43,15 @@ public class Event {
   private Long author;
   private Date start;
   private Boolean isGraph;
+  private Boolean userCorrectSpentTime = false;
+
+  public Boolean getUserCorrectSpentTime() {
+    return userCorrectSpentTime;
+  }
+
+  public void setUserCorrectSpentTime(Boolean needRevision) {
+    this.userCorrectSpentTime = needRevision;
+  }
 
   @ManyToOne
   @JoinColumn(name="executor", insertable = false, updatable = false)

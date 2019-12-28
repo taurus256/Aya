@@ -3,7 +3,6 @@ package org.taurus.aya.server.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.taurus.aya.client.EventState;
 import org.taurus.aya.server.EventRepository;
 import org.taurus.aya.server.entity.Event;
 import org.taurus.aya.server.services.EventService;
@@ -64,7 +63,8 @@ public class EventController extends GenericController {
         @RequestParam (required = false) String icon,            //String icon,
         @RequestParam (required = false) String state,          //Integer state,
         @RequestParam (required = false) String spentTime,     //Integer spent_time,
-        @RequestParam (required = false) String isGraph        //Boolean is_graph
+        @RequestParam (required = false) String isGraph,        //Boolean is_graph,
+        @RequestParam (required = false) String userCorrectSpentTime        //Boolean userCorrectSpentTime
     ) throws ParseException
     {
         Event event;
@@ -82,10 +82,14 @@ public class EventController extends GenericController {
             }
             case "update":
             {
-                if (event.getState() != null && !filterIntValue(state).equals(event.getState()))
-                    eventService.setEventSpentTime(event, filterIntValue(state));
-                else
+                boolean needCorrection;
+                if (event.getState() != null && !filterIntValue(state).equals(event.getState()) && !filterBooleanValue(userCorrectSpentTime))
+                    needCorrection = eventService.calculateEventSpentTime(event, filterIntValue(state));
+                else {
                     event.setSpentTime(filterDoubleValue(spentTime));
+                    needCorrection = false;
+                }
+                event.setUserCorrectSpentTime(needCorrection);
 
                 event.setParent(filterIntValue(parent));
                 event.setPrev(filterIntValue(prev));
