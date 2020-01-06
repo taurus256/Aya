@@ -53,9 +53,9 @@ public TaskView(Record currentRecord, int tabUID)
 		taskView = this; 
 		
 		
-		timeline = new ExtendedTimeline(null, false);
+		timeline = new ExtendedTimeline(this, false);
 		timeline.addUpdateHandler(new UpdateHandler());
-        timeline2 = new ExtendedTimeline(null,true);
+        timeline2 = new ExtendedTimeline(this,true);
 		timeline2.addUpdateHandler(new UpdateHandler());
 		timeline2.hide();
 		VLayout vLayout = new VLayout();
@@ -310,5 +310,16 @@ public TaskView(Record currentRecord, int tabUID)
 		menu.setItems(closeItem, commandItem);
 		return menu;
 	}
-	
+
+	public native void setBrowserIconToRunning(boolean setPlay, String title)
+	/*-{
+    	console.log("setPlay=" + setPlay);
+		var link = window.top.document.querySelector("link[rel*='icon']") || window.top.document.createElement('link');
+		link.type = 'image/x-icon';
+		link.rel = 'shortcut icon';
+		link.href = setPlay ? 'images/icon_play.png' : 'images/icon.png';
+		console.log("href=" + link.href);
+		window.top.document.getElementsByTagName('head')[0].appendChild(link);
+		window.top.document.title = title;
+	}-*/;
 }

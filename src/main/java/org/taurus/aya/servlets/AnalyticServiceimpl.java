@@ -198,7 +198,8 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
 
     private String getLabel(List<Event> oldEventList, List<Event> futureEventList)
     {
-        return oldEventList.size() + "/" + futureEventList.size();
+        //return oldEventList.size() + "/" + futureEventList.size();
+        return "Прогноз";
     }
 
     private int dayCount(Date start, Date end) throws Exception

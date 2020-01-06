@@ -43,13 +43,13 @@ public class ExtendedTimeline extends Timeline {
 	
 	private Menu menu;
 	private int blockSelectMode = 0;
-	ListGridField lgf, sublane_field;
+	ListGridField lgf;
 	Record currentRecord;
+	TaskView panel;
 	AdvancedCriteria laneSearchCriteria;
 	boolean distinctByUsers = true;
 	private MenuItem dialogOpenMenu, eventPropertiesMenu;
 	private CalendarEvent selectedEvent=null;
-	private EditEventDialog editEventDialog;
 	private boolean thisIsFirstCall = true;
 	private Runnable updateCallback = null;
 	
@@ -60,9 +60,9 @@ public class ExtendedTimeline extends Timeline {
     DateTimeFormat weekendFormat = DateTimeFormat.getFormat("c");
     DateTimeFormat numberFormat = DateTimeFormat.getFormat("dd.MM");
 	
-	public ExtendedTimeline(Record currentRecord, final boolean distinctByUsers)
+	public ExtendedTimeline(TaskView panel, final boolean distinctByUsers)
 	{
-		this.currentRecord = currentRecord;
+		this.panel = panel;
 		this.distinctByUsers = distinctByUsers;
 		extendedTimeline = this;
 		
@@ -475,11 +475,20 @@ public class ExtendedTimeline extends Timeline {
 
 				if (updateCallback != null) updateCallback.run();
 
+				// Поиск задачи с установленным флагом запроса корректировки времени
 				Optional<Record> optTask = Arrays.stream(dsResponse.getData()).filter(d -> d.getAttributeAsBoolean("userCorrectSpentTime")).findFirst();
 				if (optTask.isPresent()) {
 					Record task = optTask.get();
 					showRevisionDialog(task);
 				}
+				// Поиск задачи на сегодня в состоянии PROCESS
+				Long currentTime = new Date().getTime();
+				optTask = Arrays.stream(dsResponse.getData()).filter(d -> d.getAttributeAsInt("state").equals(EventState.PROCESS.ordinal()) && (d.getAttributeAsDate("startDate").getTime() < currentTime && d.getAttributeAsDate("endDate").getTime() > currentTime )).findFirst();
+				if (optTask.isPresent())
+					panel.setBrowserIconToRunning(true, "Aya - " + optTask.get().getAttributeAsString("name"));
+				else
+					panel.setBrowserIconToRunning(false, "Aya");
+
 				GlobalData.getStatusBar().stopIndicateProcess();
 				
 				// Scroll feature availible only in DAY granuality 
