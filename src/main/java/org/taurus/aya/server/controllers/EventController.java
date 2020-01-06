@@ -82,14 +82,23 @@ public class EventController extends GenericController {
             }
             case "update":
             {
-                boolean needCorrection;
-                if (event.getState() != null && !filterIntValue(state).equals(event.getState()) && !filterBooleanValue(userCorrectSpentTime))
-                    needCorrection = eventService.calculateEventSpentTime(event, filterIntValue(state));
-                else {
+
+                if (filterBooleanValue(userCorrectSpentTime)) // если флаг коррекции поднят - записываем то, что пришло с клиента, и выходим
+                {
                     event.setSpentTime(filterDoubleValue(spentTime));
-                    needCorrection = false;
+                    event.setUserCorrectSpentTime(false);
+                    event = eventRepository.save(event);
+                    return new  GwtResponse(0,1,1,event);
                 }
-                event.setUserCorrectSpentTime(needCorrection);
+
+                boolean needsCorrection = false;
+
+                if (event.getState() != null && !filterIntValue(state).equals(event.getState()))  // если состояние задачи изменилось - считаем время выполнения
+                    needsCorrection = eventService.processEventStartAndSpentTime(event, filterIntValue(state));
+                else {
+                    event.setSpentTime(filterDoubleValue(spentTime)); // иначе - просто пишем время выполнения с клиента
+                }
+                event.setUserCorrectSpentTime(needsCorrection);
 
                 event.setParent(filterIntValue(parent));
                 event.setPrev(filterIntValue(prev));

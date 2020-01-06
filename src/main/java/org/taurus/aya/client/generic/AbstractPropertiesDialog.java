@@ -7,10 +7,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.AnimationEffect;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.Dialog;
-import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.ImgButton;
-import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.*;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.KeyPressEvent;
@@ -48,7 +45,7 @@ import java.util.LinkedHashMap;
 *  Для создания наследуемого класса достаточно реализовать ConstructInterface. Чтобы диалог отобразился, нужно также
 *   вызвать в конструкторе унаследованного класса метод show() - т.к. абстрактный диалог создается невидимым.
 * */
-abstract public class AbstractPropertiesDialog extends Dialog {
+abstract public class AbstractPropertiesDialog extends Window {
 
 	AbstractPropertiesDialog thisDialog;
 	protected Record record, previousRecord;

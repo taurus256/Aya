@@ -476,14 +476,22 @@ public class ExtendedTimeline extends Timeline {
 				if (updateCallback != null) updateCallback.run();
 
 				// Поиск задачи с установленным флагом запроса корректировки времени
-				Optional<Record> optTask = Arrays.stream(dsResponse.getData()).filter(d -> d.getAttributeAsBoolean("userCorrectSpentTime")).findFirst();
+				Optional<Record> optTask = Arrays.stream(dsResponse.getData())
+						.filter(d -> d.getAttributeAsBoolean("userCorrectSpentTime") && d.getAttributeAsInt("executor").equals(GlobalData.getCurrentUser().getAttributeAsInt("id")))
+						.findFirst();
 				if (optTask.isPresent()) {
 					Record task = optTask.get();
 					showRevisionDialog(task);
 				}
 				// Поиск задачи на сегодня в состоянии PROCESS
 				Long currentTime = new Date().getTime();
-				optTask = Arrays.stream(dsResponse.getData()).filter(d -> d.getAttributeAsInt("state").equals(EventState.PROCESS.ordinal()) && (d.getAttributeAsDate("startDate").getTime() < currentTime && d.getAttributeAsDate("endDate").getTime() > currentTime )).findFirst();
+				optTask = Arrays.stream(dsResponse.getData())
+						.filter(d -> d.getAttributeAsInt("state").equals(EventState.PROCESS.ordinal())
+								&& (d.getAttributeAsDate("startDate").getTime() < currentTime
+								&& d.getAttributeAsDate("endDate").getTime() > currentTime)
+								&& d.getAttributeAsInt("executor").equals(GlobalData.getCurrentUser().getAttributeAsInt("id"))
+						)
+						.findFirst();
 				if (optTask.isPresent())
 					panel.setBrowserIconToRunning(true, "Aya - " + optTask.get().getAttributeAsString("name"));
 				else
@@ -604,14 +612,16 @@ public class ExtendedTimeline extends Timeline {
 
     private void showRevisionDialog(Record task)
 	{
-		final Dialog dialog = new Dialog();
+		final Window dialog = new Window();
 		dialog.setTitle("Уточнение значения");
-		dialog.addItem(new Label("Завершенная вами задача " +
+		Label label = new Label("Завершенная вами задача " +
 				"\"" + task.getAttribute("name") + "\" " +
-				"длилась более одного дня.<br/>Система рассчитала время её выполнения, вы можете изменить его или оставить рассчитанное"));
+				"длилась более одного дня.<br/>Система рассчитала время её выполнения, вы можете изменить его или оставить рассчитанное");
+		label.setMargin(5);
+		dialog.addItem(label);
 		dialog.setWidth(500);
 		dialog.setHeight(260);
-		dialog.setMembersMargin(10);
+		dialog.setCanDragReposition(true);
 		DynamicForm df = new DynamicForm();
 		df.setHeight(50);
 
@@ -656,6 +666,7 @@ public class ExtendedTimeline extends Timeline {
 
 		df.setHiliteRequiredFields(false);
 		df.setWrapItemTitles(false);
+		df.setMargin(5);
 		df.setWidth(450);
 		df.setColWidths(200,350,0);
 		dialog.addItem(df);
@@ -667,10 +678,9 @@ public class ExtendedTimeline extends Timeline {
 		HLayout hlayout = new HLayout();
 		hlayout.setAlign(Alignment.RIGHT);
 		hlayout.setMembersMargin(10);
+		hlayout.setMargin(5);
 
 		vlayout.addMember(hlayout);
-
-
 
 		btAccept.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
@@ -697,7 +707,12 @@ public class ExtendedTimeline extends Timeline {
 		btCancel.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
 			public void onClick(ClickEvent clickEvent) {
-				dialog.hide();
+				GlobalData.getDataSource_tasks().updateData(task, new DSCallback() {
+					@Override
+					public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
+						dialog.hide();
+					}
+				});
 			}
 		});
 		hlayout.setMembers(btAccept,btCancel);

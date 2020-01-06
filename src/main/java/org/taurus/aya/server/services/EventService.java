@@ -92,7 +92,7 @@ public class EventService {
     * Если задача выполнялась более 1 дня - записывает время исходя из длительности "условного дня" (8 часов)
     * @param event- задача, состояние которой изменилось
     * */
-    public boolean calculateEventSpentTime(Event event, Integer newEventState)
+    public boolean processEventStartAndSpentTime(Event event, Integer newEventState)
     {
         boolean needUserCorrection = false;
         if (event.getIsGraph())
@@ -106,7 +106,6 @@ public class EventService {
                 }
                 else
                     event.setSpentTime(event.getSpentTime() + Duration.between(event.getStart().toInstant(),Instant.now()).toMinutes()/60.0);
-                event.setStart(null);
             }
             else
             {

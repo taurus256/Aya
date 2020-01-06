@@ -44,15 +44,6 @@ public class Event {
   private Date start;
   private Boolean isGraph;
   private Boolean userCorrectSpentTime = false;
-
-  public Boolean getUserCorrectSpentTime() {
-    return userCorrectSpentTime;
-  }
-
-  public void setUserCorrectSpentTime(Boolean needRevision) {
-    this.userCorrectSpentTime = needRevision;
-  }
-
   @ManyToOne
   @JoinColumn(name="executor", insertable = false, updatable = false)
   User user;
@@ -267,5 +258,13 @@ public class Event {
   public void setIsGraph(Boolean isGraph) {
     this.isGraph = (isGraph == null) ? false: isGraph;
   }
+
+  public Boolean getUserCorrectSpentTime() {
+    return userCorrectSpentTime;
+  }
+  public void setUserCorrectSpentTime(Boolean needRevision) {
+    this.userCorrectSpentTime = needRevision;
+  }
+
 
 }
