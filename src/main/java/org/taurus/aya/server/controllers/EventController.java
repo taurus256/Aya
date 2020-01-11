@@ -83,15 +83,15 @@ public class EventController extends GenericController {
             case "update":
             {
 
-                if (filterBooleanValue(userCorrectSpentTime)) // если флаг коррекции поднят - записываем то, что пришло с клиента, и выходим
+                Boolean needsCorrection = filterBooleanValue(userCorrectSpentTime);
+                if ( needsCorrection == null ? false: needsCorrection ) // может быть null
                 {
+                    // если флаг коррекции поднят - записываем то, что пришло с клиента, и выходим
                     event.setSpentTime(filterDoubleValue(spentTime));
                     event.setUserCorrectSpentTime(false);
                     event = eventRepository.save(event);
                     return new  GwtResponse(0,1,1,event);
                 }
-
-                boolean needsCorrection = false;
 
                 if (event.getState() != null && !filterIntValue(state).equals(event.getState()))  // если состояние задачи изменилось - считаем время выполнения
                     needsCorrection = eventService.processEventStartAndSpentTime(event, filterIntValue(state));

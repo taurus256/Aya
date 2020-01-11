@@ -38,11 +38,11 @@ public class Aya implements EntryPoint {
 
     	Date date = new Date();
 //    	SC.logWarn(date.toString());
-//    	DateUtil.setDefaultDisplayTimezone("+04:00");
+    	DateUtil.setDefaultDisplayTimezone("+00:00");
 //    	SC.logWarn(date.toString());
 
 //    	DateUtil.setDefaultDisplayTimezone("+00:00");
-// 		DateUtil.setAdjustForDST(false);
+ 		DateUtil.setAdjustForDST(false);
 	   	SC.logWarn("Aya.java:: TODAY: " + date.toString());
 
 

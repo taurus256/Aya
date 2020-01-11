@@ -213,12 +213,12 @@ public class ExtendedTimeline extends Timeline {
 			}});
 
 		//Date modification
-        addEventResizeStopHandler(event -> {
-            SC.logWarn("ExtendedTimeline: event resize startDate: " + event.getNewEvent().getStartDate() + " endDate: " + event.getNewEvent().getEndDate());
-			if (!event.getEvent().getStartDate().equals(event.getNewEvent().getStartDate()))
-				modifyCalendarEventStartDate(event.getNewEvent(),event.getEvent());
-			SC.logWarn("ExtendedTimeline: event resize startDate: " + event.getNewEvent().getStartDate() + " endDate: " + event.getNewEvent().getEndDate());
-        });
+//        addEventResizeStopHandler(event -> {
+//            SC.logWarn("ExtendedTimeline: event resize startDate: " + event.getNewEvent().getStartDate() + " endDate: " + event.getNewEvent().getEndDate());
+//			if (!event.getEvent().getStartDate().equals(event.getNewEvent().getStartDate()))
+//				modifyCalendarEventStartDate(event.getNewEvent(),event.getEvent());
+//			SC.logWarn("ExtendedTimeline: event resize startDate: " + event.getNewEvent().getStartDate() + " endDate: " + event.getNewEvent().getEndDate());
+//        });
 
         addEventChangedHandler(new EventChangedHandler(){
 
