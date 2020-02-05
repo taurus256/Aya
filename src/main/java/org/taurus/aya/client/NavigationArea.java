@@ -16,7 +16,7 @@ public class NavigationArea extends com.smartgwt.client.widgets.layout.HLayout {
 	private ScriptPanel scriptPanel;
 	private TagPanel tagPanel;
 	private ChatPanel chatPanel;
-	
+
 	TreeGrid taskTree;
 	private int myWidth;
 	private final SectionStack sectionStack;
@@ -36,7 +36,7 @@ public class NavigationArea extends com.smartgwt.client.widgets.layout.HLayout {
 	    scriptPanel = new ScriptPanel();
 	    tagPanel = new TagPanel();
 	    chatPanel = new ChatPanel();
-	
+
 	     
 	    sectionStack = new SectionStack();
 	    sectionStack.setShowExpandControls(true);
@@ -99,11 +99,11 @@ public class NavigationArea extends com.smartgwt.client.widgets.layout.HLayout {
 	public TagPanel getTagPanel() {
 		return tagPanel;
 	}
-	
+
 	public ChatPanel getChatPanel(){
 		return chatPanel;
 	}
-	
+
 	public SectionStackSection getSection(String name)
 	{
 		int index = sectionStack.getSectionNumber(name);

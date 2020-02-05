@@ -2,10 +2,7 @@ package org.taurus.aya.client;
 
 import com.google.gwt.core.client.GWT;
 import com.smartgwt.client.data.*;
-import com.smartgwt.client.types.DSDataFormat;
-import com.smartgwt.client.types.DSOperationType;
-import com.smartgwt.client.types.DSProtocol;
-import com.smartgwt.client.types.FieldType;
+import com.smartgwt.client.types.*;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.tab.TabSet;
 import org.taurus.aya.client.generic.GenericPanel;
@@ -14,7 +11,9 @@ import java.util.LinkedHashMap;
 
 public class GlobalData {
 
-	private static DataSource dataSource_tasks = createRestEventDS();//DataSource.get("tasks");
+	private static DataSource dataSource_events = createRestEventDS();//DataSource.get("tasks");
+
+	private static DataSource dataSource_tasks = createRestTaskDS();//DataSource.get("tasks");
 	private static DataSource dataSource_lanes = createRestLaneDS();//DataSource.get("lanes");
 	private static DataSource dataSource_docs = DataSource.get("docs");
 	private static DataSource dataSource_content = DataSource.get("content");
@@ -60,9 +59,9 @@ public class GlobalData {
 		GlobalData.currentPanel = currentPanel;
 	}
 	
-	public static DataSource getDataSource_tasks() {
-		return dataSource_tasks;
-	}
+	public static DataSource getDataSource_events() { return dataSource_events;}
+	public static DataSource getDataSource_tasks() {return dataSource_tasks;}
+
 	public static DataSource getDataSource_lanes() {
 		return dataSource_lanes;
 	}
@@ -189,9 +188,9 @@ public class GlobalData {
 //		AdvancedCriteria advancedCriteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{crit_index,crit_group});
 //
 		//return advancedCriteria;
-        return new AdvancedCriteria();
+        return new AdvancedCriteria("userId", OperatorId.EQUALS, GlobalData.getCurrentUser().getAttributeAsString("id"));
 	}
-	
+
 	//Get all users, belonging to one of groups, with current user belongs to
 	public static AdvancedCriteria getUserFilterCriteria()
 	{
@@ -406,6 +405,68 @@ public class GlobalData {
 		return createDS(dsName,fields);
 	}
 
+	private static DataSource createRestTaskDS() {
+
+		/* Datasource name*/
+		String dsName = "/tasks";
+
+		DataSourceField id= new DataSourceField("id", FieldType.INTEGER);
+		id.setPrimaryKey(true);
+
+		//eventWindowStyle.setCanView(false);
+		DataSourceField icon = new DataSourceField("icon", FieldType.TEXT);
+		//icon.setCanView(false);
+
+		DataSourceField state = new DataSourceField("state", FieldType.INTEGER);
+		//state.setCanView(false);
+		//start.setCanView(false);
+		DataSourceField processTime = new DataSourceField("spentTime", FieldType.FLOAT, "Затрачено времени");
+		processTime.setDecimalPrecision(1);
+
+		DataSourceField lane = new DataSourceField("lane", FieldType.TEXT, "Поток");
+		lane.setForeignKey("lanes.name");
+		lane.setForeignDisplayField("name");
+		lane.setUseLocalDisplayFieldValue(false);
+
+		DataSourceField priority = new DataSourceField("priority", FieldType.INTEGER, "Приоритет");
+		LinkedHashMap<Integer,String> valueMapPriority = new LinkedHashMap<>();
+
+		valueMapPriority.put(0,LOW_PRIORITY);
+		valueMapPriority.put(1,NORMAL_PRIORITY);
+		valueMapPriority.put(2,HIGH_PRIORITY);
+		priority.setValueMap(valueMapPriority);
+
+		DataSourceField plannedDuration = new DataSourceField("duration_h", FieldType.FLOAT, "Планируемое время исполнения (часов)");
+		plannedDuration.setDecimalPrecision(1);
+
+		DataSourceField[] fields = {
+				id,
+				new DataSourceField("taskId", FieldType.INTEGER,"Предыдущая задача"),
+				lane,
+				new DataSourceField("name", FieldType.TEXT, "Название"),
+				new DataSourceField("description", FieldType.TEXT,"Описание"),
+				new DataSourceField("startDate", FieldType.DATETIME, "Дата начала"),
+				new DataSourceField("endDate", FieldType.DATETIME, "Дата завершения"),
+				new DataSourceField("executor", FieldType.INTEGER, "Исполнитель"),
+				priority,
+				new DataSourceField("duration_d", FieldType.INTEGER, "Время исполнения (дней)"),
+				plannedDuration,
+				icon,
+				state,
+				new DataSourceField("executorName", FieldType.TEXT, "Имя исполнителя"),
+				new DataSourceField("author", FieldType.TEXT, "Задача создана"),
+				processTime,
+				new DataSourceField("userCorrectSpentTime",FieldType.BOOLEAN),
+				new DataSourceField("fragmented",FieldType.BOOLEAN),
+				new DataSourceField("wuser", FieldType.INTEGER),
+				new DataSourceField("wgroup", FieldType.INTEGER),
+				new DataSourceField("ruser", FieldType.INTEGER),
+				new DataSourceField("rgroup", FieldType.INTEGER)
+		};
+
+		return createDS(dsName,fields);
+	}
+
 	private static DataSource createRestEventDS() {
 
 		/* Datasource name*/
@@ -452,7 +513,7 @@ public class GlobalData {
 		DataSourceField[] fields = {
 				id,
 				parent,
-				new DataSourceField("prev", FieldType.INTEGER,"Предыдущая задача"),
+				new DataSourceField("taskId", FieldType.INTEGER,"Задача"),
 				lane,
 				new DataSourceField("name", FieldType.TEXT, "Название"),
 				new DataSourceField("description", FieldType.TEXT,"Описание"),
@@ -471,13 +532,14 @@ public class GlobalData {
 				spentTime,
     			is_graph,
 				new DataSourceField("userCorrectSpentTime",FieldType.BOOLEAN),
+				new DataSourceField("fragmented",FieldType.BOOLEAN),
 				new DataSourceField("wuser", FieldType.INTEGER),
 				new DataSourceField("wgroup", FieldType.INTEGER),
 				new DataSourceField("ruser", FieldType.INTEGER),
 				new DataSourceField("rgroup", FieldType.INTEGER)
 		};
 
-		return createDS(dsName,fields);
+		return createEventDS(dsName,fields);
 	}
 
 	private static DataSource createDS(String name, DataSourceField[] fields)
@@ -531,4 +593,63 @@ public class GlobalData {
 		/* finally set data source */
 		return dataSource;
 	}
+
+	private static DataSource createEventDS(String name, DataSourceField[] fields)
+	{
+		DataSource dataSource =
+				new RestDataSource() {
+					protected Object transformRequest(DSRequest dsRequest) {
+						return super.transformRequest(dsRequest);
+					}
+
+					protected void transformResponse(DSResponse response, DSRequest request, Object data) {
+						super.transformResponse(response, request, data);
+					}
+				};
+
+		dataSource.setID(name);
+		dataSource.setDataFormat(DSDataFormat.JSON);
+		dataSource.setDataProtocol(DSProtocol.GETPARAMS);
+		dataSource.setJsonPrefix("");
+		dataSource.setJsonSuffix("");
+
+		//set up FETCH to use POST requests
+		OperationBinding fetch = new OperationBinding();
+		fetch.setDataURL(name + "/fetch");
+		fetch.setOperationType(DSOperationType.FETCH);
+		fetch.setDataProtocol(DSProtocol.POSTPARAMS);
+
+		//set up ADD to use POST requests~`
+		OperationBinding add = new OperationBinding();
+		add.setDataURL(name + "/modify");
+		add.setOperationType(DSOperationType.ADD);
+		add.setDataProtocol(DSProtocol.POSTPARAMS);
+
+		//set up UPDATE to use POST
+		OperationBinding update = new OperationBinding();
+		update.setOperationType(DSOperationType.UPDATE);
+		update.setDataURL(name + "/modify");
+		update.setDataProtocol(DSProtocol.POSTPARAMS);
+
+		//set up REMOVE to use DELETE
+		OperationBinding remove = new OperationBinding();
+		remove.setOperationType(DSOperationType.REMOVE);
+		remove.setDataURL(name + "/modify");
+		remove.setDataProtocol(DSProtocol.POSTPARAMS);
+
+		//set up REMOVE to use DELETE
+		OperationBinding moveToBacklog = new OperationBinding();
+		moveToBacklog.setOperationType(DSOperationType.CUSTOM);
+		moveToBacklog.setDataURL(name + "/moveToBacklog");
+		moveToBacklog.setDataProtocol(DSProtocol.POSTPARAMS);
+
+		dataSource.setOperationBindings(fetch, add, update, remove, moveToBacklog);
+
+		dataSource.setDataURL(name);
+		dataSource.setFields(fields);
+
+		/* finally set data source */
+		return dataSource;
+	}
+
 }

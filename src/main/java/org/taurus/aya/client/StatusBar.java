@@ -172,7 +172,7 @@ public class StatusBar extends HLayout {
 					{
 						case TASK:
 						{
-							GlobalData.getDataSource_tasks().fetchData(new Criteria("id",event.getRecord().getAttributeAsString("id")),new DSCallback(){
+							GlobalData.getDataSource_events().fetchData(new Criteria("id",event.getRecord().getAttributeAsString("id")),new DSCallback(){
 
 								@Override
 								public void execute(DSResponse dsResponse,

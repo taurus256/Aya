@@ -4,7 +4,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.*;
 
 import org.taurus.aya.client.GlobalData;
@@ -12,7 +11,6 @@ import org.taurus.aya.client.TabManager;
 import org.taurus.aya.client.generic.AbstractPropertiesDialog;
 import org.taurus.aya.client.widgets.ExtendedTimeline;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -21,7 +19,7 @@ public class EditEventDialog extends AbstractPropertiesDialog {
 
 	public EditEventDialog(Record r)
 	{
-		super(r,"task.png", TabManager.ResourceType.TASK, GlobalData.getDataSource_tasks(), "задачи");
+		super(r,"task.png", TabManager.ResourceType.TASK, GlobalData.getDataSource_events(), "задачи");
 		r.setAttribute("isGraph",true);
 
 		addVisibilityChangedHandler(event -> {

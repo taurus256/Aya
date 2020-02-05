@@ -83,7 +83,7 @@ public class TagView  extends ContentPane {
 					case TASK: {
 						crit.addCriteria("id", selectedRecord.getAttribute("task_id"));
 						GlobalData.getStatusBar().indicateProcess("Открываю график задач...");
-						GlobalData.getDataSource_tasks().fetchData(crit, new DSCallback(){
+						GlobalData.getDataSource_events().fetchData(crit, new DSCallback(){
 
 							@Override
 							public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest) {

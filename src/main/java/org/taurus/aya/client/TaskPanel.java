@@ -2,7 +2,6 @@ package org.taurus.aya.client;
 
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.*;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.events.DragStartEvent;
@@ -17,6 +16,7 @@ import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 import org.taurus.aya.client.TabManager.ResourceType;
+import org.taurus.aya.client.dialogs.BacklogTaskDialog;
 import org.taurus.aya.client.dialogs.EditEventDialog;
 import org.taurus.aya.client.generic.GenericPanel;
 import org.taurus.aya.client.widgets.FilterWidget;
@@ -74,7 +74,7 @@ public class TaskPanel extends VLayout implements SidePanel {
 
 				@Override
 				public void onClick(MenuItemClickEvent event) {
-					EditEventDialog ee = new EditEventDialog(treeGrid.getSelectedRecord());
+					new BacklogTaskDialog(treeGrid.getSelectedRecord());
 				}});
 
 		}
@@ -95,7 +95,7 @@ public class TaskPanel extends VLayout implements SidePanel {
 		
 		panelBacklog = new BacklogPanel(GlobalData.getDataSource_tasks(), "task.png", ResourceType.TASK, "Новая задача", "задачи");
 		//найти все задачи бэклога, к которым у пользователя есть доступ
-		AdvancedCriteria backlogCriteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{GlobalData.createSearchCriteria(),new AdvancedCriteria("isGraph", OperatorId.EQUALS,false)});
+		AdvancedCriteria backlogCriteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{GlobalData.createSearchCriteria(),new AdvancedCriteria("showInBacklog", OperatorId.EQUALS,"true")});
 //
 //		panelBacklog.setBaseCriteria(backlogCriteria);
 
@@ -134,18 +134,21 @@ public class TaskPanel extends VLayout implements SidePanel {
 			
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				
-				if (panelBacklog.getTreeSelectedRecord() != null)
-				{
-					Record r = panelBacklog.getTreeSelectedRecord();
-					updateTaskRecord();
 
-					GlobalData.getDataSource_tasks().updateData(r, new DSCallback(){
-								@Override
-								public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest) {
-									//TabManager.openTab(ResourceType.GRAPH,null);
-								}
-							});
+				Record taskRecord = panelBacklog.getTreeSelectedRecord();
+
+				if (taskRecord != null)
+				{
+					Record r = createEventRecord(taskRecord);;
+					GlobalData.getDataSource_events().addData(r);
+					taskRecord.setAttribute("showInBacklog",false);
+					taskRecord.setAttribute("executor",GlobalData.getCurrentUser().getAttribute("id"));
+					GlobalData.getDataSource_tasks().updateData(taskRecord, new DSCallback() {
+						@Override
+						public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
+							panelBacklog.getTreeGrid().refreshData();
+						}
+					});
 				}
 			}
 		});
@@ -154,7 +157,7 @@ public class TaskPanel extends VLayout implements SidePanel {
 											 @Override
 											 public void onDragStart(DragStartEvent event) {
 												 if (panelBacklog.getTreeSelectedRecord() != null) {
-													 updateTaskRecord();
+													 createEventRecord(panelBacklog.getTreeSelectedRecord() );
 												 }
 											 }
 										 });
@@ -232,7 +235,7 @@ public class TaskPanel extends VLayout implements SidePanel {
 //
 		Tab backlogTab = new Tab("Ожидающие");
 		backlogTab.setWidth(30);
-		backlogTab.setPane(addFilterWidgetTo(panelBacklog));
+		backlogTab.setPane(panelBacklog);
 		backlogTab.setPaneMargin(2);
 
 //		Tab myTab = new Tab("Мои");
@@ -292,9 +295,10 @@ public class TaskPanel extends VLayout implements SidePanel {
 
 	}
 
-	private void updateTaskRecord() {
-		Record r = panelBacklog.getTreeSelectedRecord();
-		r.setAttribute("isBacklog", false);
+	private Record createEventRecord(Record record) {
+		Record r = Record.copyAttributes(record,record.getAttributes());
+		r.setAttribute("id","null");
+		r.setAttribute("taskId",panelBacklog.getTreeSelectedRecord().getAttributeAsLong("id"));
 		r.setAttribute("isGraph", true);
 		r.setAttribute("executor", GlobalData.getCurrentUser().getAttributeAsInt("id"));
 		r.setAttribute("executorName", GlobalData.getCurrentUser().getAttribute("firstname") + " " + GlobalData.getCurrentUser().getAttribute("surname"));
@@ -305,6 +309,8 @@ public class TaskPanel extends VLayout implements SidePanel {
 			r.setAttribute("endDate", new Date(millis + r.getAttributeAsInt("duration_h") * 1000 * 3600 * 3 + 24*3600*1000));
 		else
 			r.setAttribute("endDate", new Date(millis + 1000 * 3600 * 24));
+
+		return r;
 	}
 
 	private VLayout addFilterWidgetTo(GenericPanel panel)

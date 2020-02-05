@@ -66,8 +66,6 @@ public class GenericPanel extends VLayout implements SidePanel{
 		treeGrid.setDragDataAction(DragDataAction.MOVE);
 		treeGrid.setCanDragRecordsOut(true);//!
 		
-		treeGrid.setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS,false));
-		treeGrid.setCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS,false));
 		treeGrid.setAutoSaveEdits(false);
 		treeGrid.setAutoFetchData(true);
 		
@@ -332,7 +330,8 @@ public class GenericPanel extends VLayout implements SidePanel{
 	{
 		SC.logWarn("GenericPanel: performing update (tg)");
 		treeGrid.invalidateCache();
-		treeGrid.fetchData(searchCriteria);
+		SC.logWarn("crit::" + searchCriteria.getCriteria());
+		treeGrid.fetchData(new AdvancedCriteria(OperatorId.AND,searchCriteria.getCriteria())); //send Criterion[]
 		SC.logWarn("GenericPanel: end of update (tg)");
 	}
 }

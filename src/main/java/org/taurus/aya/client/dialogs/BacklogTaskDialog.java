@@ -3,7 +3,6 @@ package org.taurus.aya.client.dialogs;
 import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
@@ -38,9 +37,6 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
 
     protected Widget createFormLayout()
     {
-        DateItem startDate = new DateItem("startDate");
-        DateItem endDate = new DateItem("endDate");
-
         // Executor field
         LinkedHashMap<Integer,String> usersMap = new LinkedHashMap<>();
         for (Record u: GlobalData.getUsers())
@@ -60,8 +56,8 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
         valueMap.put(24,"3 дня");
         valueMap.put(56,"5 дней");
 
-        SelectItem durationH = new SelectItem("duration_h");
-        durationH.setValueMap(valueMap);
+        SelectItem plannedDuration = new SelectItem("planned");
+        plannedDuration.setValueMap(valueMap);
 
         //Priority field
         SelectItem priority = new SelectItem("priority");
@@ -84,7 +80,7 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
             description.setWidth(300);
             description.setHeight(200);
 
-            df.setFields(lane, name, startDate, endDate, description, executor, priority, durationH);
+            df.setFields(lane, name, description, executor, priority, plannedDuration);
 
             df.editRecord(record);
 

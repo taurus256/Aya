@@ -19,7 +19,7 @@ public class GenericController {
 
 
     protected String filterStringValue(String  value) {
-        return value == null || value.equals("null") ? null : value;
+        return value == null || value.equals("null") ? "" : value;
     }
 
     protected Integer filterIntValue(String value) {

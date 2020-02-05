@@ -30,6 +30,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     //Метод для выборки "будущих" задач
     LinkedList<Event> findAllByStartDateGreaterThanAndIsGraphIsTrue(Date intervalStart);
 
+    //Метод для выборки всех event-ов одного task-а
+    LinkedList<Event> findAllByTaskId(Long taskId);
+
     //Метод, увеличивающий endDate у задач в состоянии PROCESS
     @Modifying
     @Query("UPDATE Event e SET e.endDate=current_timestamp WHERE e.endDate<current_timestamp AND e.state=1")

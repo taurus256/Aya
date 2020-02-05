@@ -2,6 +2,8 @@ package org.taurus.aya.server.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.taurus.aya.client.EventState;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -10,261 +12,294 @@ import java.util.Date;
 @Entity
 public class Event {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-  private Integer parent;
-  private Integer prev;
-  private String lane;
-  private String name;
-  private String description;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-  @Column(name = "startdate")
-  private Date startDate;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-  @Column(name = "enddate")
-  private Date endDate;
-  private Integer wuser;
-  private Integer wgroup;
-  private Integer ruser;
-  private Integer rgroup;
-  @Column(name = "eventwindowstyle")
-  private String eventWindowStyle;
-  private Integer executor;
-  private Integer priority;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long main;
+
+    private String lane;
+    private String name;
+    private String description;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @Column(name = "startdate")
+    private Date startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @Column(name = "enddate")
+    private Date endDate;
+    private Integer wuser;
+    private Integer wgroup;
+    private Integer ruser;
+    private Integer rgroup;
+    @Column(name = "eventwindowstyle")
+    private String eventWindowStyle;
+    private Integer executor;
+    private Integer priority;
+
+    private Double spentTime = 0.0; // реальное (посчитанное системой или заданное пользователем) время выполнения задачи в часах
+    @Column(name="duration_h")
+    private Double duration_h; // планируемое пользователем время выполения задачи в часах
+    private String icon;
+    private Integer state;
+    private Long author;
+    private Date start;
+    private Boolean isGraph;
+    private Boolean userCorrectSpentTime = false;
+    private Integer index = 0;
+    @ManyToOne
+    @JoinColumn(name="executor", insertable = false, updatable = false)
+    User user;
+
+    @Column(insertable = false, updatable = false)
+    private Long taskId;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name="taskId")
+    private Task task;
+
+    public Event(){}
+    public Event(
+            Task t,
+            Integer index,
+            Long executor,
+            Date startDate,
+            Date endDate,
+            String eventWindowStyle,
+            String icon,
+            Integer state
+    ){
+        this.task = t;
+        this.index = index;
+        if (executor != null)
+            task.setExecutor(executor);
+        else
+            throw  new IllegalArgumentException("Event constructor: executor cannot be null");
+
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.eventWindowStyle = eventWindowStyle;
+        this.icon = icon;
+        this.state = state;
+        this.isGraph = true;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getLane() {
+        return task.getLane();
+    }
+
+    public void setLane(String lane) {
+        task.setLane(lane);
+    }
+
+
+    public String getName() {
+        return task.getName();
+    }
+
+    public void setName(String name) {
+        task.setName(name);
+    }
+
+
+    public String getDescription() {
+        return task.getDescription();
+    }
+
+    public void setDescription(String description) {
 
-  private Double spentTime = 0.0; // реальное (посчитанное системой или заданное пользователем) время выполнения задачи в часах
-  @Column(name="duration_h")
-  private Double duration_h; // планируемое пользователем время выполения задачи в часах
-  private String icon;
-  private Integer state;
-  private String executorName;
-  private Integer rosTask;
-  private Long author;
-  private Date start;
-  private Boolean isGraph;
-  private Boolean userCorrectSpentTime = false;
-  @ManyToOne
-  @JoinColumn(name="executor", insertable = false, updatable = false)
-  User user;
+        task.setDescription(description);
+    }
 
-  public Long getId() {
-    return id;
-  }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public Date getStartDate() {
+        return startDate;
+    }
 
+    public void setStartDate(Date startDate) {
 
-  public Integer getParent() {
-    return parent;
-  }
+        this.startDate = startDate == null ? Date.from(Instant.now()) : startDate;
+    }
 
-  public void setParent(Integer parent) {
-    this.parent = parent;
-  }
 
+    public Date getEndDate() {
+        return endDate;
+    }
 
-  public Integer getPrev() {
-    return prev;
-  }
+    public void setEndDate(Date endDate) {
 
-  public void setPrev(Integer prev) {
-    this.prev = prev;
-  }
+        this.endDate = endDate== null?Date.from(Instant.now()):endDate;
+    }
 
 
-  public String getLane() {
-    return lane;
-  }
+    public Integer getWuser() {
+        return task.getWuser();
+    }
 
-  public void setLane(String lane) {
-    this.lane = lane;
-  }
+    public void setWuser(Integer wuser) {
+        task.setWuser(wuser);
+    }
 
 
-  public String getName() {
-    return name;
-  }
+    public Integer getWgroup() {
+        return task.getWgroup();
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setWgroup(Integer wgroup) {
+        task.setWgroup(wgroup);
+    }
 
 
-  public String getDescription() {
-    return description;
-  }
+    public Integer getRuser() {
+        return task.getRuser();
+    }
 
-  public void setDescription(String description) {
+    public void setRuser(Integer ruser) {
+        task.setRuser(ruser);
+    }
 
-    this.description = description==null?"":description;
-  }
 
+    public Integer getRgroup() {
+        return task.getRgroup();
+    }
 
-  public Date getStartDate() {
-    return startDate;
-  }
+    public void setRgroup(Integer rgroup) {
+        task.setRgroup(rgroup);
+    }
 
-  public void setStartDate(Date startDate) {
+    public String getEventWindowStyle() {
+        switch(EventState.values()[task.getState()]) {
+            case NEW: return "s3_event_new";
+            case PROCESS: return "s3_event_process";
+            case PAUSE: return "s3_event_pause";
+            case READY: return "s3_event_ready";
+            case FAIL: return "s3_event_fail";
+        }
+        return "s3_event_new";
+    }
 
-    this.startDate = startDate== null ? Date.from(Instant.now()) : startDate;
-  }
+    public void setEventWindowStyle(String eventWindowStyle) {
+        if (eventWindowStyle != null)
+            this.eventWindowStyle = eventWindowStyle;
+        else
+            this.eventWindowStyle = "s3_event_new";
+    }
 
 
-  public Date getEndDate() {
-    return endDate;
-  }
+    public Integer getExecutor() {
+        return task.getExecutor().intValue();
+    }
 
-  public void setEndDate(Date endDate) {
+    public void setExecutor(Integer executor) {
+        task.setExecutor(executor.longValue());
+    }
 
-    this.endDate = endDate== null?Date.from(Instant.now()):endDate;
-  }
 
+    public Integer getPriority() {
+        return task.getPriority();
+    }
 
-  public Integer getWuser() {
-    return wuser;
-  }
+    public void setPriority(Integer priority) {
+        task.setPriority(priority);
+    }
 
-  public void setWuser(Integer wuser) {
-    this.wuser = wuser;
-  }
+    public Double getDuration_h() {
+        return task.getPlannedDuration();
+    }
 
+    public void setDuration_h(Double duration_h) {
 
-  public Integer getWgroup() {
-    return wgroup;
-  }
+        task.setPlannedDuration(duration_h==null ? 0 : duration_h);
+    }
 
-  public void setWgroup(Integer wgroup) {
-    this.wgroup = wgroup;
-  }
 
+    public String getIcon() {
+        return icon;
+    }
 
-  public Integer getRuser() {
-    return ruser;
-  }
+    public void setIcon(String icon) {
+        if (icon != null)
+            this.icon = icon;
+        else
+            this.icon = "tree/task0.png";
+    }
 
-  public void setRuser(Integer ruser) {
-    this.ruser = ruser;
-  }
+    public Integer getState() {
+        return task.getState();
+    }
 
+    public void setState(Integer state) {
+        task.setState(state==null? 0 : state);
+    }
 
-  public Integer getRgroup() {
-    return rgroup;
-  }
 
-  public void setRgroup(Integer rgroup) {
-    this.rgroup = rgroup;
-  }
+    public String getExecutorName() {
+        if (user != null)
+            return user.getShowedName();
+        else return "";
+    }
 
-  public String getEventWindowStyle() {
-    return eventWindowStyle;
-  }
+    public Long getAuthor() {
+        return task.getAuthor();
+    }
 
-  public void setEventWindowStyle(String eventWindowStyle) {
-    if (eventWindowStyle != null)
-      this.eventWindowStyle = eventWindowStyle;
-    else
-      this.eventWindowStyle = "s3_event_new";
-  }
+    public void setAuthor(Long author) {
+        task.setAuthor(author);
+    }
 
 
-  public Integer getExecutor() {
-    return executor;
-  }
+    public Double getSpentTime() {
+        return task.getSpentTime();
+    }
 
-  public void setExecutor(Integer executor) {
-    this.executor = executor;
-  }
+    public void setSpentTime(Double spent_time) {
 
+        task.setSpentTime(spent_time==null? 0.0 : spent_time);
+    }
 
-  public Integer getPriority() {
-    return priority;
-  }
 
-  public void setPriority(Integer priority) {
-    this.priority = priority;
-  }
+    public Date getStart() {
+        return task.getStart();
+    }
 
-  public Double getDuration_h() {
-    return duration_h;
-  }
+    public void setStart(Date start) {
+        task.setStart(start);
+    }
 
-  public void setDuration_h(Double duration_h) {
 
-    this.duration_h = duration_h==null ? 0 : duration_h;
-  }
+    public Boolean getIsGraph() {
+        return true;
+    }
 
+    public void setIsGraph(Boolean isGraph) {
+        this.isGraph = (isGraph == null) ? false: isGraph;
+    }
 
-  public String getIcon() {
-    return icon;
-  }
+    public Boolean getUserCorrectSpentTime() {
+        return userCorrectSpentTime;
+    }
 
-  public void setIcon(String icon) {
-    if (icon != null)
-      this.icon = icon;
-    else
-      this.icon = "tree/task0.png";
-  }
+    public void setUserCorrectSpentTime(Boolean needRevision) {
+        this.userCorrectSpentTime = needRevision;
+    }
 
-  public Integer getState() {
-    return state;
-  }
+    public Long getTaskId() { return taskId; }
 
-  public void setState(Integer state) {
-    this.state = state==null? 0 : state;
-  }
+    public void setTaskId(Long taskId) { this.taskId = taskId; }
 
+    public Task getTask() {
+        return task;
+    }
 
-  public String getExecutorName() {
-    if (user != null)
-      return user.getShowedName();
-    else return "";
-  }
-
-  public Long getAuthor() {
-    return author;
-  }
-
-  public void setAuthor(Long author) {
-    this.author = author;
-  }
-
-
-  public Double getSpentTime() {
-    return spentTime;
-  }
-
-  public void setSpentTime(Double spent_time) {
-
-    this.spentTime = (spent_time==null) ? 0.0 : spent_time;
-  }
-
-
-  public Date getStart() {
-    return start;
-  }
-
-  public void setStart(Date start) {
-    this.start = start;
-  }
-
-
-  public Boolean getIsGraph() {
-    return isGraph;
-  }
-
-  public void setIsGraph(Boolean isGraph) {
-    this.isGraph = (isGraph == null) ? false: isGraph;
-  }
-
-  public Boolean getUserCorrectSpentTime() {
-    return userCorrectSpentTime;
-  }
-  public void setUserCorrectSpentTime(Boolean needRevision) {
-    this.userCorrectSpentTime = needRevision;
-  }
-
-
+    public Boolean getFragmented()
+    {
+        return task.getFragmented();
+    }
 }

@@ -542,7 +542,7 @@ public class TabManager {
 		final String absentDescription;
 		switch (type)
 		{
-			case TASK: { ds = GlobalData.getDataSource_tasks(); absentDescription ="Система не может найти требуемую задачу. Возможно, она была удалена";  break;}
+			case TASK: { ds = GlobalData.getDataSource_events(); absentDescription ="Система не может найти требуемую задачу. Возможно, она была удалена";  break;}
 			case DOCUMENT: { ds = GlobalData.getDataSource_docs(); absentDescription ="Система не может найти требуемый документ. Возможно, он был удален";  break;}
 			case SCRIPT: { ds = GlobalData.getDataSource_scripts(); absentDescription ="Система н может найти требуемый скрипт Возможно, он был удален";  break;}
 			case TAG: { ds = GlobalData.getDataSource_tags(); absentDescription ="Система не может открыть требуемый тег. Возможно, он был удален";  break;}

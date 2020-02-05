@@ -1,3 +1,35 @@
+POST http://localhost:8080/events/fetch
+Connection: keep-alive
+Origin: http://localhost:8080
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36 OPR/66.0.3515.44
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Referer: http://localhost:8080/app/aya.html
+Accept-Encoding: gzip, deflate, br
+Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+operator=and&_constructor=AdvancedCriteria&criteria=%7B%22fieldName%22%3A%22isGraph%22%2C%22operator%22%3A%22equals%22%2C%22value%22%3Atrue%7D&criteria=%7B%22fieldName%22%3A%22startDate%22%2C%22operator%22%3A%22lessThan%22%2C%22value%22%3A%222020-03-01T23%3A59%3A59.998%22%7D&criteria=%7B%22fieldName%22%3A%22endDate%22%2C%22operator%22%3A%22greaterThan%22%2C%22value%22%3A%222020-02-01T00%3A00%3A00.000%22%7D&_operationType=fetch&_startRow=0&_endRow=75&_textMatchStyle=exact&_componentId=isc_ExtendedTimeline_0&_dataSource=%2Fevents&isc_metaDataPrefix=_&isc_dataFormat=json
+
+###
+
+POST http://localhost:8080/events/fetch
+Connection: keep-alive
+Origin: http://localhost:8080
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36 OPR/66.0.3515.44
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Referer: http://localhost:8080/app/aya.html
+Accept-Encoding: gzip, deflate, br
+Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+operator=and&_constructor=AdvancedCriteria&criteria=%7B%22fieldName%22%3A%22isGraph%22%2C%22operator%22%3A%22equals%22%2C%22value%22%3Atrue%7D&criteria=%7B%22fieldName%22%3A%22startDate%22%2C%22operator%22%3A%22lessThan%22%2C%22value%22%3A%222020-03-01T23%3A59%3A59.998%22%7D&criteria=%7B%22fieldName%22%3A%22endDate%22%2C%22operator%22%3A%22greaterThan%22%2C%22value%22%3A%222020-02-01T00%3A00%3A00.000%22%7D&_operationType=fetch&_startRow=0&_endRow=75&_textMatchStyle=exact&_componentId=isc_ExtendedTimeline_0&_dataSource=%2Fevents&isc_metaDataPrefix=_&isc_dataFormat=json
+
+###
+
 POST http://localhost:8080/events
 Host: localhost:8080
 Connection: keep-alive

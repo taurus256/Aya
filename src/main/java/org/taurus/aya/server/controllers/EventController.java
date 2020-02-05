@@ -2,10 +2,14 @@ package org.taurus.aya.server.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.taurus.aya.server.EventRepository;
+import org.taurus.aya.server.TaskRepository;
 import org.taurus.aya.server.entity.Event;
+import org.taurus.aya.server.entity.Task;
 import org.taurus.aya.server.services.EventService;
+import org.taurus.aya.server.services.TaskService;
 import org.taurus.aya.shared.GwtResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,16 +23,22 @@ public class EventController extends GenericController {
 
     private EventRepository eventRepository;
 
+    private TaskRepository taskRepository;
+
+    private TaskService taskService;
     private EventService eventService;
 
-    public EventController(@Autowired EventRepository repository, @Autowired EventService service)
+    public EventController(@Autowired EventRepository eventRepository, @Autowired TaskRepository taskRepository, @Autowired TaskService taskService, @Autowired EventService service)
     {
-        this.eventRepository = repository;
+        this.eventRepository = eventRepository;
+        this.taskRepository = taskRepository;
+        this.taskService = taskService;
         this.eventService = service;
     }
 
     @ResponseBody
     @PostMapping("/fetch")
+    @Transactional
     public GwtResponse execute(HttpServletRequest request, @RequestParam String _operationType, @RequestParam (required=false) String[] criteria) throws RuntimeException, ParseException
     {
 
@@ -44,8 +54,6 @@ public class EventController extends GenericController {
     public GwtResponse executePost(
         @RequestParam String _operationType,
         @RequestParam (required = false) String id,          //integer,
-        @RequestParam (required = false) String parent,          //integer
-        @RequestParam (required = false) String prev,           //Integer
         @RequestParam (required = false) String lane,
         @RequestParam (required = false) String name,
         @RequestParam (required = false) String description,
@@ -64,21 +72,61 @@ public class EventController extends GenericController {
         @RequestParam (required = false) String state,          //Integer state,
         @RequestParam (required = false) String spentTime,     //Integer spent_time,
         @RequestParam (required = false) String isGraph,        //Boolean is_graph,
-        @RequestParam (required = false) String userCorrectSpentTime        //Boolean userCorrectSpentTime
-    ) throws ParseException
+        @RequestParam (required = false) String userCorrectSpentTime,        //Boolean userCorrectSpentTime
+        @RequestParam (required = false) String taskId        //Task ID
+
+    ) throws ParseException, IllegalArgumentException
     {
         Event event;
-        if (id == null)
+        if (filterLongValue(id) == null)
             event = new Event();
         else
             event = eventRepository.findById(filterLongValue(id)).orElseThrow(IllegalArgumentException::new);
 
-        assert event != null : "Cannot find event to update!";
+        Task task;
 
         switch(_operationType){
             case "add":{
-                state = "0";
-                spentTime="0.0";
+                //Добавление новой задачи с графика
+                Long idTask = filterLongValue(taskId);
+                if (idTask ==  null)
+                {
+                    task = new Task(
+                        name,
+                        filterStringValue(description),
+                        lane,
+                        filterLongValue(author),
+                        filterLongValue(executor),
+                        filterIntValue(priority),
+                        filterIntValue(wuser),
+                        filterIntValue(wgroup),
+                        filterIntValue(ruser),
+                        filterIntValue(rgroup),
+                        filterDoubleValue(duration_h)
+                    );
+                    task = taskRepository.saveAndFlush(task);
+                }
+                else
+                    task = taskRepository.findById(idTask).orElseThrow(IllegalArgumentException::new );
+
+                Date dEnd = filterDateValue(endDate);
+                dEnd.setHours(23);
+                dEnd.setMinutes(59);
+                dEnd.setSeconds(59);
+
+                Event e = new Event(
+                        task,
+                        0,
+                        filterLongValue(executor),
+                        filterDateValue(startDate),
+                        dEnd,
+                        eventWindowStyle,
+                        icon,
+                        filterIntValue(state)
+                );
+                event = eventRepository.saveAndFlush(e);
+                event.setTaskId(task.getId());
+                return new GwtResponse(0,1,1,new Event[] {event});
             }
             case "update":
             {
@@ -93,15 +141,13 @@ public class EventController extends GenericController {
                     return new  GwtResponse(0,1,1,event);
                 }
 
-                if (event.getState() != null && !filterIntValue(state).equals(event.getState()))  // если состояние задачи изменилось - считаем время выполнения
+                if (event.getState() != null && !event.getState().equals(filterIntValue(state)))  // если состояние задачи изменилось - считаем время выполнения
                     needsCorrection = eventService.processEventStartAndSpentTime(event, filterIntValue(state));
                 else {
                     event.setSpentTime(filterDoubleValue(spentTime)); // иначе - просто пишем время выполнения с клиента
                 }
                 event.setUserCorrectSpentTime(needsCorrection);
 
-                event.setParent(filterIntValue(parent));
-                event.setPrev(filterIntValue(prev));
                 event.setLane(lane);
                 event.setName(name);
                 event.setDescription(description);
@@ -122,7 +168,6 @@ public class EventController extends GenericController {
                 event.setRuser(filterIntValue(ruser));
                 event.setRgroup(filterIntValue(rgroup));
 
-                event.setEventWindowStyle(eventWindowStyle);
                 event.setExecutor(filterIntValue(executor));
                 event.setPriority(filterIntValue(priority));
                 event.setDuration_h(filterDoubleValue(duration_h));
@@ -130,15 +175,25 @@ public class EventController extends GenericController {
                 event.setState(filterIntValue(state));
                 event.setIsGraph(filterBooleanValue(isGraph));
 
-                event = eventRepository.save(event);
+                event = eventRepository.saveAndFlush(event);
                 System.out.println("Event saved");
-            } break;
+                return new GwtResponse(0,1,1,event.getTaskId()==null ? event : eventRepository.findAllByTaskId(event.getTaskId()));
+            }
             case "remove":
             {
-                eventRepository.delete(event);
+                taskRepository.delete(event.getTask());
                 return new GwtResponse(0,1,1,new Event[] {});
             }
         }
-        return new GwtResponse(0,1,1,new Event[] {event});
+        return new GwtResponse(0,1,1,event.getTaskId()==null ? event : eventRepository.findAllByTaskId(event.getTaskId()));
     }
+
+    @PostMapping("/moveToBacklog")
+    @ResponseBody
+    public GwtResponse moveToBacklog(@RequestParam String taskId)
+    {
+        taskService.moveToBacklog(filterLongValue(taskId));
+        return new GwtResponse(0,1,1,new Event[] {});
+    }
+
 }

@@ -2,14 +2,11 @@ package org.taurus.aya.client.widgets;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.ui.HasAutoHorizontalAlignment;
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.*;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Button;
-import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.calendar.*;
@@ -89,7 +86,7 @@ public class ExtendedTimeline extends Timeline {
 		setUseSublanes(false);
         setRowHeight(200);
 
-        setDataSource(GlobalData.getDataSource_tasks());
+        setDataSource(GlobalData.getDataSource_events());
 		setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS,true));
 		setAutoFetchData(true);
 
@@ -200,11 +197,18 @@ public class ExtendedTimeline extends Timeline {
 						public void execute(Boolean value) {
 							if (value)
 							{
-								removeEvent(selectedEvent);
-								ResourceLifeCycleManager.resourceDeleted(ResourceType.TASK, selectedEvent);
-								selectedEvent = null;
+								GlobalData.getDataSource_events().removeData(selectedEvent, new DSCallback() {
+									@Override
+									public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
+										//Если удаляемая задача была разбита на фрагменты
+										SC.logWarn("Fragmented = " + selectedEvent.getAttributeAsBoolean("fragmented"));
+										if (selectedEvent.getAttributeAsBoolean("fragmented"))
+											updateTasks();
+										ResourceLifeCycleManager.resourceDeleted(ResourceType.TASK, selectedEvent);
+										selectedEvent = null;
+									}
+								});
 							}
-
 						}});
 				}
 				else
@@ -312,7 +316,7 @@ public class ExtendedTimeline extends Timeline {
 								   new BacklogTaskDialog(r);
                                else {
                                    r.setAttribute("isGraph", true);
-                                   GlobalData.getDataSource_tasks().updateData(r, new DSCallback() {
+                                   GlobalData.getDataSource_events().updateData(r, new DSCallback() {
 									   @Override
 									   public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest) {
 										   CommandExecutor.exec(new Command(CommandType.UPDATE_TASK_PANEL));
@@ -522,9 +526,20 @@ public class ExtendedTimeline extends Timeline {
         moveToBacklogMenu.addClickHandler(new ClickHandler() {
                                               @Override
                                               public void onClick(MenuItemClickEvent event) {
-                                                  selectedEvent.setAttribute("isGraph",false);
-                                                  GlobalData.getDataSource_tasks().updateData(selectedEvent);
-                                                  }
+                                              		Record currentRecord =  getSelectedEvent();
+												  if (currentRecord != null) {
+													  DSRequest dsr = new DSRequest();
+													  dsr.setData(currentRecord);
+													  GlobalData.getDataSource_events().performCustomOperation("moveToBacklog", currentRecord, new DSCallback() {
+														  @Override
+														  public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
+														  	GlobalData.getNavigationArea().getTaskPanel().update();
+														  }
+													  }, dsr);
+												  }
+												  else
+													  SC.logWarn("Задача не выбрана");
+											  }
                                           });
         menu.addItem(moveToBacklogMenu);
         menu.addItem(new com.smartgwt.client.widgets.menu.MenuItemSeparator());
@@ -599,7 +614,7 @@ public class ExtendedTimeline extends Timeline {
         selectedEvent.setAttribute("state", s);
         selectedEvent.setAttribute("icon", s2);
 
-        GlobalData.getDataSource_tasks().updateData(selectedEvent, new DSCallback() {
+        GlobalData.getDataSource_events().updateData(selectedEvent, new DSCallback() {
             @Override
             public void execute(DSResponse dsResponse, Object data,
                                 DSRequest dsRequest) {
@@ -648,7 +663,7 @@ public class ExtendedTimeline extends Timeline {
 							SC.warn("Введенное значение некорректно!");
 						else {
 							task.setAttribute("spentTime", duration);
-							GlobalData.getDataSource_tasks().updateData(task, new DSCallback() {
+							GlobalData.getDataSource_events().updateData(task, new DSCallback() {
 								@Override
 								public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
 									dialog.hide();
@@ -691,7 +706,7 @@ public class ExtendedTimeline extends Timeline {
 						SC.warn("Введенное значение некорректно!");
 					else {
 						task.setAttribute("spentTime", duration);
-						GlobalData.getDataSource_tasks().updateData(task, new DSCallback() {
+						GlobalData.getDataSource_events().updateData(task, new DSCallback() {
 							@Override
 							public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
 								dialog.hide();
@@ -707,7 +722,7 @@ public class ExtendedTimeline extends Timeline {
 		btCancel.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
 			public void onClick(ClickEvent clickEvent) {
-				GlobalData.getDataSource_tasks().updateData(task, new DSCallback() {
+				GlobalData.getDataSource_events().updateData(task, new DSCallback() {
 					@Override
 					public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
 						dialog.hide();
