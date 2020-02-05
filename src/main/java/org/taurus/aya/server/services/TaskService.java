@@ -56,7 +56,7 @@ public class TaskService {
         if (c != null)
                 //System.out.println("input:'" + c + "'");
                 if (c.contains("fieldName")) {
-                    if (c.contains("AdvancedCriteria")) {
+                    if (c.contains("\"criteria\":")) {
                         result.putAll(parseCriteria(
                                 c.substring(c.indexOf("[") + 1, c.indexOf("]") - 1)
                                 )

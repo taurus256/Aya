@@ -349,4 +349,5 @@ public class TaskPanel extends VLayout implements SidePanel {
 //			panelMyTasks.update();
 //			panelOtherTasks.update();
 	};
+
 }

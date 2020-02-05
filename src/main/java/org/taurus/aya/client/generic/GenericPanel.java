@@ -330,8 +330,7 @@ public class GenericPanel extends VLayout implements SidePanel{
 	{
 		SC.logWarn("GenericPanel: performing update (tg)");
 		treeGrid.invalidateCache();
-		SC.logWarn("crit::" + searchCriteria.getCriteria());
-		treeGrid.fetchData(new AdvancedCriteria(OperatorId.AND,searchCriteria.getCriteria())); //send Criterion[]
+		treeGrid.fetchData(new AdvancedCriteria(OperatorId.AND, new Criterion[]{searchCriteria})); //send Criterion[]
 		SC.logWarn("GenericPanel: end of update (tg)");
 	}
 }

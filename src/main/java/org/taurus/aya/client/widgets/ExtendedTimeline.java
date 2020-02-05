@@ -534,6 +534,7 @@ public class ExtendedTimeline extends Timeline {
 														  @Override
 														  public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
 														  	GlobalData.getNavigationArea().getTaskPanel().update();
+														  	updateTasks();
 														  }
 													  }, dsr);
 												  }
