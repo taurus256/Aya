@@ -7,20 +7,21 @@ import org.taurus.aya.client.AnalyticService;
 import org.taurus.aya.client.EventState;
 import org.taurus.aya.server.EventRepository;
 import org.taurus.aya.server.LaneRepository;
+import org.taurus.aya.server.TaskRepository;
 import org.taurus.aya.server.UserRepository;
 import org.taurus.aya.server.entity.Event;
 import org.taurus.aya.server.entity.Lane;
 import org.taurus.aya.server.entity.User;
 import org.taurus.aya.servlets.advicers.MatrixAdvicer;
+import org.taurus.aya.shared.GraphData;
 import org.taurus.aya.shared.TaskAnalyseData;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import java.time.Duration;
-import java.time.Instant;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @WebServlet(urlPatterns = "/app/aya/analytic", loadOnStartup = 1)
@@ -38,6 +39,9 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
 
 
     @Autowired
+    TaskRepository taskRepository;
+
+    @Autowired
     EventRepository eventRepository;
 
     @Autowired
@@ -52,6 +56,9 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
                 config.getServletContext());
     }
+
+    // коэффициент, устанавливающий степень превышения значений графика группы над графиком пользователя
+    double GROUP_USER_RAISE_FACTOR = 1.5;
 
     @Override
     public TaskAnalyseData getPrognosis(Long userId) throws Exception {
@@ -78,10 +85,12 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
             //Получаем список задач, выполненных за последний месяц
             start = Instant.now().minus(Duration.ofDays(60));
             LinkedList oldEventsList = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date.from(start), new Date(), EventState.READY.ordinal());
+            LinkedList oldTasksList = taskRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(start), new Date(), EventState.READY.ordinal());
             System.out.println("AnalyticServiceimpl oldEventList.size = " + oldEventsList.size());
+            System.out.println("AnalyticServiceimpl oldTasksList.size = " + oldTasksList.size());
 
             //        Lane lane1 = new Lane();
-            //        lane1.setName("Lane_1");
+            //        lane1.setName("Lane_1");но
             //
             //        Lane lane2 = new Lane();
             //        lane2.setName("Lane_2");
@@ -189,6 +198,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
             userId,
             userList,
             laneList,
+            oldTasksList,
             oldEventsList,
             futureEventsList
             ));
@@ -225,17 +235,51 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
 
         return workingDays;
     }
-    private void createEMF()
+
+    public GraphData getMonthGraph(Long userId) throws IllegalArgumentException
     {
-        Map<String, String> properties = new HashMap<String, String>();
-        properties.put("javax.persistence.jdbc.user", "postgres");
-        properties.put("javax.persistence.jdbc.password", "postgres");
-        properties.put("javax.persistence.jdbc.driver","org.postgresql.Driver");
-        try {
-            EntityManagerFactory emf = Persistence.createEntityManagerFactory("jdbc:postgresql://localhost:5432/s5", properties);
-        }catch(Exception e)
-        {
-            System.out.println(e.getLocalizedMessage());
+        //getting current user ID and amount of users
+        Long currentUserId = userRepository.getOne(userId).getId();
+        long userCount = userRepository.count();
+
+        LocalDateTime startDate = LocalDateTime.now().minusMonths(1);
+        LocalDateTime endDate = LocalDateTime.now();
+        List<Event> list = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(java.sql.Date.valueOf(startDate.toLocalDate()), java.sql.Date.valueOf(endDate.toLocalDate()), EventState.READY.ordinal());
+        Duration d = Duration.between(startDate,endDate);
+        double[] daysLocal = new double[Long.valueOf(d.toDays()).intValue()];
+        Arrays.setAll(daysLocal,(a) -> {return 0.0;});
+
+        double[] daysGroup = new double[Long.valueOf(d.toDays()).intValue()];
+        Arrays.setAll(daysGroup,(a) -> {return 0.0;});
+
+        //setting the captions array
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd.MM");
+        String[] captions =new String[Long.valueOf(d.toDays()).intValue()];
+        Arrays.setAll(captions,i -> {return startDate.plus(i, ChronoUnit.DAYS).format(df);});
+
+
+        for (Event e: list){
+            LocalDateTime eventLocalStart = e.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            LocalDateTime eventLocalEnd = e.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            double dayCost = e.getSpentTime()/(Duration.between(eventLocalStart, eventLocalEnd).toDays());
+            if (eventLocalStart.isBefore(startDate)) eventLocalStart = startDate;
+            if (eventLocalEnd.isAfter(endDate)) throw new IllegalArgumentException("Для задачи '" + e.getName() + "' указано неверное время завершения");
+            long offsetStart = Duration.between(startDate,eventLocalStart).toDays();
+            long offsetEnd = Duration.between(startDate, eventLocalEnd).toDays();
+            if (currentUserId.equals(e.getTask().getExecutor()))
+                for (int i=Long.valueOf(offsetStart).intValue(); i <=offsetEnd; i++) {
+                    daysLocal[i] += dayCost;
+                    daysGroup[i] += dayCost;
+                }
+            else
+                for (int i=Long.valueOf(offsetStart).intValue(); i <=offsetEnd; i++)
+                    daysGroup[i] += dayCost;
+
         }
+        return new GraphData(
+                            Arrays.stream(daysLocal).mapToLong(r -> Double.valueOf(r).longValue()).boxed().toArray(Long[]::new),
+                            Arrays.stream(daysGroup).mapToLong(r -> Double.valueOf(r/userCount*GROUP_USER_RAISE_FACTOR).longValue()).boxed().toArray(Long[]::new),
+                            captions
+        );
     }
 }

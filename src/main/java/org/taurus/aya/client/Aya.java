@@ -14,6 +14,8 @@ import com.smartgwt.client.util.PageKeyHandler;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
+import org.moxieapps.gwt.highcharts.client.Chart;
+import org.moxieapps.gwt.highcharts.client.Series;
 import org.taurus.aya.client.dialogs.LoginDialog;
 
 import java.util.Date;
@@ -179,12 +181,13 @@ public class Aya implements EntryPoint {
 
 										westLayout = new NavigationArea();
 										westLayout.setWidth("15%");
+										westLayout.setMinWidth(280);
 
 										eastLayout = new MainArea();
 										eastLayout.setWidth("85%");
 
 										southLayout = new HLayout();
-										southLayout.setMembers(westLayout, eastLayout);
+										southLayout.setMembers(westLayout, eastLayout, new StatisticsPanel());
 
 										mainLayout.addMember(northLayout);
 										mainLayout.addMember(southLayout);

@@ -287,10 +287,12 @@ public TaskView(Record currentRecord, int tabUID)
 		pane = new VLayout();
 		pane.setWidth(300);
 		pane.setHeight(500);
+		pane.setBackgroundColor("white");
 
 		HLayout arrowDownLayout = new HLayout();
 		arrowDownLayout.setAlign(Alignment.CENTER);
 		arrowDownLayout.setWidth("100%");
+		arrowDownLayout.setBackgroundColor("#f2f2f2");
 		Img arrowDown = new Img("forms/down.png");
 		arrowDown.setWidth(25);
 		arrowDown.setHeight(25);

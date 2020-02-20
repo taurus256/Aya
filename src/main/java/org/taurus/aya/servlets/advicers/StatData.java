@@ -1,6 +1,7 @@
 package org.taurus.aya.servlets.advicers;
 
 import org.taurus.aya.server.entity.Event;
+import org.taurus.aya.server.entity.Task;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,13 +15,13 @@ public class StatData {
     boolean valueIsEmpty = true;
 
     /** Добавление задачи в список для расчета статистики
-    * @param e - entity задачи
+    * @param t - entity задачи
     * */
-    void addEvent(Event e)
+    void addTask(Task t)
     {
         System.out.println("StatData.addEvent");
-        if (e.getDuration_h()!=null && e.getSpentTime()!=null && e.getSpentTime()!=0) {
-            velocityList.add(e.getDuration_h().doubleValue() / e.getSpentTime().doubleValue());
+        if (t.getPlannedDuration()!=null && t.getSpentTime()!=null && t.getSpentTime()!=0) {
+            velocityList.add(t.getPlannedDuration() / t.getSpentTime());
             n++;
         }
     }

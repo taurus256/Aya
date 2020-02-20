@@ -58,8 +58,11 @@ public class GenericPanel extends VLayout implements SidePanel{
 
 
 		treeGrid.setSelectionType(SelectionStyle.SINGLE);
-		treeGrid.setShowHeader(false);
+		treeGrid.setShowHeader(true);
+		treeGrid.setShowHeaderMenuButton(false);
+		treeGrid.setCanSort(false);
 		treeGrid.setCanEdit(false);
+		treeGrid.setShowCellContextMenus(false);
 //		treeGrid.setCanReparentNodes(true);
 		treeGrid.setCanRemoveRecords(false);
 		treeGrid.setCanAcceptDroppedRecords(false);

@@ -26,13 +26,13 @@ public class Event {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "enddate")
     private Date endDate;
-    private Integer wuser;
-    private Integer wgroup;
-    private Integer ruser;
-    private Integer rgroup;
+    private Long wuser;
+    private Long wgroup;
+    private Long ruser;
+    private Long rgroup;
     @Column(name = "eventwindowstyle")
     private String eventWindowStyle;
-    private Integer executor;
+    private Long executor;
     private Integer priority;
 
     private Double spentTime = 0.0; // реальное (посчитанное системой или заданное пользователем) время выполнения задачи в часах
@@ -256,12 +256,12 @@ public class Event {
 
 
     public Double getSpentTime() {
-        return task.getSpentTime();
+        return spentTime;
     }
 
     public void setSpentTime(Double spent_time) {
 
-        task.setSpentTime(spent_time==null? 0.0 : spent_time);
+        spentTime = (spent_time==null)? 0.0 : spent_time;
     }
 
 

@@ -4,9 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.taurus.aya.client.EventState;
 import org.taurus.aya.server.entity.Event;
-import org.taurus.aya.server.entity.Lane;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -24,7 +22,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     //Метод для запроса данных графиков (используется инверсный выбор дат)
     List<Event> findAllByStartDateLessThanAndEndDateGreaterThanAndIsGraphIsTrue(Date startdate, Date enddate);
 
-    //Метод для выборки списка задач, завершенных в заданном интервале
+    @Query("select e from Event e inner join e.task where e.endDate > ?1 and e.endDate<?2 and e.task.state=?3")
+    List<Event> findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date startDate, Date endDate, Integer state);
+
+    //Метод для выборки списка задач, завершенных в заданном интервалеtate
     LinkedList<Event> findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date intervalStart, Date intervalEnd, Integer state);
 
     //Метод для выборки "будущих" задач

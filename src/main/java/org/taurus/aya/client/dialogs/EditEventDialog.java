@@ -47,8 +47,8 @@ public class EditEventDialog extends AbstractPropertiesDialog {
 
 	protected Widget createFormLayout()
 	{
-		DateItem startDate = new DateItem("startDate");
-		DateItem endDate = new DateItem("endDate");
+		DateItem startDate = new DateTimeItem("startDate");
+		DateItem endDate = new DateTimeItem("endDate");
 
 		// Executor field
 		LinkedHashMap<Integer,String> usersMap = new LinkedHashMap<>();

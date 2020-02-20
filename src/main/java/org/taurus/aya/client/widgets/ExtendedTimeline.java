@@ -95,12 +95,14 @@ public class ExtendedTimeline extends Timeline {
 		Date d = new Date();
 		d.setTime(d.getTime() + 24*3600*1000);
 		indicator1.setEndDate(d);
-		indicator1.setName("Текущая дата");
+		indicator1.setCanDrag(false);
+		indicator1.setName("");
         indicator1.setHeaderBackgroundColor("white");
         indicator1.setHeaderBorderColor("white");
 
 		CalendarEvent indicator2 = new CalendarEvent();
 		indicator2.setStartDate(d);
+		indicator2.setCanEdit(false);
 		indicator2.setName("");
         indicator2.setHeaderBackgroundColor("white");
         indicator2.setHeaderBorderColor("white");
@@ -124,7 +126,7 @@ public class ExtendedTimeline extends Timeline {
 
 //         Configure the time range
 
-		setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 31, null);
+		setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 28, null);
 
 		startDate = new Date();
 		endDate = new Date();
@@ -133,12 +135,14 @@ public class ExtendedTimeline extends Timeline {
 		endDate.setDate(1);
 		if (startDate.getMonth() < 11) {
 			endDate.setMonth(startDate.getMonth() + 1);
+			endDate.setYear(startDate.getYear());
 		}
 		else
 		{
 			endDate.setMonth(0);
 			endDate.setYear(startDate.getYear() + 1);
 		}
+		endDate = new Date(endDate.getTime() - 24 * 3600 * 1000);
 
 		setTimelineRange(startDate,endDate);
 		setStartDate(startDate);

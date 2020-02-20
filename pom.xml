@@ -95,6 +95,12 @@
                 <version>12.0-p20191204</version>
             </dependency>
 
+            <dependency>
+                <groupId>moxieapps</groupId>
+                <artifactId>moxieapps-gwt</artifactId>
+                <version>1.7.0</version>
+            </dependency>
+
     </dependencies>
 
     <build>

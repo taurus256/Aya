@@ -42,9 +42,10 @@ public class TaskService {
                  taskList = taskRepository.findAllByShowInBacklogIsTrue();
 
         // Перевод в целый вид для вывода в интерфейсе
-        taskList.stream().forEach(e -> e.setSpentTime(
-                new Long(Math.round(e.getSpentTime())).doubleValue()
-        ));
+        //TODO:: delete this after testing!
+//        taskList.stream().forEach(e -> e.setSpentTime(
+//                new Long(Math.round(e.getSpentTime())).doubleValue()
+//        ));
 
         return taskList;
     }

@@ -110,22 +110,22 @@ public class TaskPanel extends VLayout implements SidePanel {
 		ListGridField nameField = new ListGridField("name", 220);
 		nameField.setShowTitle(true);
 		panelBacklog.getTreeGrid().setFields(imageField, nameField);
-		panelBacklog.getTreeGrid().setGroupByField("priority");
+		panelBacklog.getTreeGrid().setGroupByField("lane");
 		panelBacklog.getTreeGrid().setCanGroupBy(true);
 		panelBacklog.getTreeGrid().setSortByGroupFirst(true);
-		panelBacklog.getTreeGrid().setGroupSortNormalizer(new GroupSortNormalizer(){
-															  @Override
-															  public Object normalize(ListGridRecord record, String fieldName, ListGrid context) {
-																  switch (record.getAttribute("priority"))
-																  {
-																	  case GlobalData.LOW_PRIORITY: return 2;
-																	  case GlobalData.NORMAL_PRIORITY: return 1;
-																	  case GlobalData.HIGH_PRIORITY: return 0;
-																  }
-																  return -1;
-															  }
-														  });
-		panelBacklog.getTreeGrid().groupBy("priority");
+//		panelBacklog.getTreeGrid().setGroupSortNormalizer(new GroupSortNormalizer(){
+//															  @Override
+//															  public Object normalize(ListGridRecord record, String fieldName, ListGrid context) {
+//																  switch (record.getAttribute("priority"))
+//																  {
+//																	  case GlobalData.LOW_PRIORITY: return 2;
+//																	  case GlobalData.NORMAL_PRIORITY: return 1;
+//																	  case GlobalData.HIGH_PRIORITY: return 0;
+//																  }
+//																  return -1;
+//															  }
+//														  });
+		panelBacklog.getTreeGrid().groupBy("lane");
 
 		panelBacklog.getTreeGrid().setMinWidth(250);
 		panelBacklog.getTreeGrid().setGroupStartOpen(GroupStartOpen.ALL);

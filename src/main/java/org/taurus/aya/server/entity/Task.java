@@ -193,10 +193,6 @@ public class Task {
         return spentTime;
     }
 
-    public void setSpentTime(Double processTime) {
-        this.spentTime = processTime;
-    }
-
     public Integer getPauseDays() {
         return pauseDays;
     }
@@ -238,4 +234,11 @@ public class Task {
 
     @JsonIgnore
     public List<Event> getEvents() { return events; }
+
+    public void recalculateFields()
+    {
+        startDate = events.stream().map(Event::getStartDate).min(Date::compareTo).orElseThrow(IllegalArgumentException::new);
+        endDate = events.stream().map(Event::getEndDate).max(Date::compareTo).orElseThrow(IllegalArgumentException::new);
+        spentTime = events.stream().map(Event::getSpentTime).mapToDouble(Double::doubleValue).sum();
+    }
 }

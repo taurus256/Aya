@@ -165,5 +165,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.w3c.css:sac:1.3" level="project" />
     <orderEntry type="library" name="Maven: com.isomorphic.smartgwt.lgpl:smartgwt-lgpl:12.0-p20191204" level="project" />
     <orderEntry type="library" name="Maven: com.isomorphic.smartgwt.lgpl:smartgwt-skins:12.0-p20191204" level="project" />
+    <orderEntry type="library" name="Maven: moxieapps:moxieapps-gwt:1.7.0" level="project" />
   </component>
 </module>

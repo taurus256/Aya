@@ -126,6 +126,10 @@ public class EventController extends GenericController {
                 );
                 event = eventRepository.saveAndFlush(e);
                 event.setTaskId(task.getId());
+
+                //сохранение границ интервала (startTime, endTime) в Task
+                task.recalculateFields();
+                taskRepository.save(task);
                 return new GwtResponse(0,1,1,new Event[] {event});
             }
             case "update":
@@ -177,7 +181,12 @@ public class EventController extends GenericController {
 
                 event = eventRepository.saveAndFlush(event);
                 System.out.println("Event saved");
-                return new GwtResponse(0,1,1,event.getTaskId()==null ? event : eventRepository.findAllByTaskId(event.getTaskId()));
+
+                task = event.getTask();
+                task.recalculateFields();
+                taskRepository.save(task);
+
+                return new GwtResponse(0,1,1,event.getTaskId()==null ? event : task.getEvents());
             }
             case "remove":
             {

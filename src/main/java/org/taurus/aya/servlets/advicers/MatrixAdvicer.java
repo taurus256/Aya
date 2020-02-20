@@ -2,6 +2,7 @@ package org.taurus.aya.servlets.advicers;
 
 import org.taurus.aya.server.entity.Event;
 import org.taurus.aya.server.entity.Lane;
+import org.taurus.aya.server.entity.Task;
 import org.taurus.aya.server.entity.User;
 import org.taurus.aya.servlets.AdviceException;
 import org.taurus.aya.shared.Advice;
@@ -65,6 +66,7 @@ public class MatrixAdvicer {
             Long userId,
             List<User> userList,
             List<Lane> laneList,
+            LinkedList<Task> oldTasksList,
             LinkedList<Event> oldEventsList,
             LinkedList<Event> futureEventsList
             )
@@ -82,19 +84,20 @@ public class MatrixAdvicer {
             if (b.isPresent())
                 throw new AdviceException("У задачи '" + b.get().getName() + "' некорректное время начала и окончания (" + b.get().getStartDate().toString() + " -  " + b.get().getEndDate().toString() + ")");;
 
-            initialize(userList, laneList, oldEventsList);
+            initialize(userList, laneList, oldTasksList);
 
             // расчет прогнозируемых времен выполнения потоков
             Map<String, Double> lanePrognosisMap = computeFutureLanePrognosis(futureEventsList);
 
             for (String k : lanePrognosisMap.keySet()) System.out.println("lane prognosis: " + k + " " + lanePrognosisMap.get(k));
 
-            advices.add(generateLaneAdvice(futureEventsList,lanePrognosisMap));
-
             // расчет прогнозируемых затрат времени для каждого пользователя
             Map<Long,Double> userPrognosisMap = computeFutureUserPrognosis(futureEventsList);
+            System.out.println("userPrognosisMap = " + userPrognosisMap);
             Map<Long,Double> userDayDurations = getAverageUserDayDurations(userList, oldEventsList);
 
+            // генерация советов (используют рассчитанные на предыдущем шаге времена)
+            advices.add(generateLaneAdvice(futureEventsList,lanePrognosisMap, userDayDurations));
             advices.add(generateUserAdvice(futureEventsList, userPrognosisMap, userDayDurations));
 
             // генерация совета с данными о среднем времени, затрачиваемом в день на решение задач
@@ -227,7 +230,7 @@ public class MatrixAdvicer {
             return event.getDuration_h() / velocity;
     }
 
-    public void initialize(List<User> userList, List<Lane> laneList, List<Event> eventList) throws AdviceException
+    public void initialize(List<User> userList, List<Lane> laneList, List<Task> taskList) throws AdviceException
     {
         //Заполнение ассоциативного массива пользователей
         for (User u: userList)
@@ -247,17 +250,17 @@ public class MatrixAdvicer {
             for (int j=0; j < laneList.size(); j++)
                 matrix[i][j] = new StatData();
 
-        for (Event e: eventList) {
-            int userIndex = userIds.getOrDefault(e.getExecutor().longValue(), -1);
-            int laneIndex = laneIds.getOrDefault(e.getLane(), -1);
+        for (Task task: taskList) {
+            int userIndex = userIds.getOrDefault(task.getExecutor().longValue(), -1);
+            int laneIndex = laneIds.getOrDefault(task.getLane(), -1);
 
             if (laneIndex >=0 && userIndex >=0)
-                matrix[userIndex][laneIndex].addEvent(e);
+                matrix[userIndex][laneIndex].addTask(task);
             else {
-                System.out.println("PAdvicer:initialize: Event " + e.getId() + " '" + e.getName() + "' has incorrect lane name or executor ID!" +
-                        laneIndex + " " + userIndex + "e.getExecutor = " + e.getExecutor() + "  userIds.get=" + userIds.getOrDefault(e.getExecutor().longValue(), -1));
-                throw new AdviceException("PAdvicer:initialize: Event " + e.getId() + " '" + e.getName() + "' has incorrect lane name or executor ID! " +
-                        laneIndex + " " + userIndex + "e.getExecutor = " + e.getExecutor() + "  userIds.get=" + userIds.getOrDefault(e.getExecutor().longValue(), -1));
+                System.out.println("PAdvicer:initialize: Event " + task.getId() + " '" + task.getName() + "' has incorrect lane name or executor ID!" +
+                        laneIndex + " " + userIndex + "e.getExecutor = " + task.getExecutor() + "  userIds.get=" + userIds.getOrDefault(task.getExecutor().longValue(), -1));
+                throw new AdviceException("PAdvicer:initialize: Event " + task.getId() + " '" + task.getName() + "' has incorrect lane name or executor ID! " +
+                        laneIndex + " " + userIndex + "e.getExecutor = " + task.getExecutor() + "  userIds.get=" + userIds.getOrDefault(task.getExecutor().longValue(), -1));
             }
         }
 
@@ -271,7 +274,7 @@ public class MatrixAdvicer {
         printMatrix(matrix);
     }
 
-    private Advice generateLaneAdvice(List<Event> futureTaskList, Map<String,Double> prognosis) throws AdviceException
+    private Advice generateLaneAdvice(List<Event> futureTaskList, Map<String,Double> prognosis, Map<Long,Double> userDayDurations) throws AdviceException
     {
         Date deadline = futureTaskList.stream().map(Event::getEndDate).max(Date::compareTo).orElseThrow(() -> new AdviceException("generateDeadlineAdvice: Cannot find max future date"));
         System.out.println("deadline = " + deadline);
