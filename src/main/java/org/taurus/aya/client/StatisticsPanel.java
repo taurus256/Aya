@@ -2,6 +2,7 @@ package org.taurus.aya.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Label;
@@ -13,21 +14,30 @@ import org.moxieapps.gwt.highcharts.client.Chart;
 import org.moxieapps.gwt.highcharts.client.Series;
 import org.moxieapps.gwt.highcharts.client.plotOptions.AreaPlotOptions;
 import org.moxieapps.gwt.highcharts.client.plotOptions.Marker;
+import org.taurus.aya.client.widgets.PanelHeader;
 import org.taurus.aya.shared.GraphData;
 
 public class StatisticsPanel extends VLayout {
 
+    StatisticsPanel panel = this;
     Chart chart = new Chart();
-    Label label = new Label("Статистика");
+    Label label = new Label("обновить график");
 
     public StatisticsPanel(){
         setMinWidth(300);
         setShowResizeBar(true);
-        setCanDragResize(true);
+        setResizeBarSize(5);
+        setOverflow(Overflow.HIDDEN);
+
+        PanelHeader header = new PanelHeader("Статистика", new Runnable() {
+            @Override
+            public void run() {
+                panel.setWidth(0);
+            }
+        });
 
         label.setWidth100();
         label.setHeight(30);
-        label.setBackgroundColor("#f2f2f2");
         label.setAlign(Alignment.LEFT);
         label.setValign(VerticalAlignment.CENTER);
         label.setPadding(5);
@@ -75,6 +85,7 @@ public class StatisticsPanel extends VLayout {
         chart.setMarginRight(10);
         chart.setColors("#157efb","#ababab");
 
+        this.addMember(header);
         this.addMember(label);
         this.addMember(chart);
     }
