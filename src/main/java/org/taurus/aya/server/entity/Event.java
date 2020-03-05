@@ -193,12 +193,12 @@ public class Event {
     }
 
 
-    public Integer getExecutor() {
-        return task.getExecutor().intValue();
+    public Long getExecutor() {
+        return task.getExecutor();
     }
 
-    public void setExecutor(Integer executor) {
-        task.setExecutor(executor.longValue());
+    public void setExecutor(Long executor) {
+        task.setExecutor(executor);
     }
 
 

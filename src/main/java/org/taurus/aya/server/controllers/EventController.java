@@ -172,7 +172,7 @@ public class EventController extends GenericController {
                 event.setRuser(filterIntValue(ruser));
                 event.setRgroup(filterIntValue(rgroup));
 
-                event.setExecutor(filterIntValue(executor));
+                event.setExecutor(filterLongValue(executor));
                 event.setPriority(filterIntValue(priority));
                 event.setDuration_h(filterDoubleValue(duration_h));
                 event.setIcon(icon);

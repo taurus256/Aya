@@ -6,10 +6,8 @@ import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.events.DragStartEvent;
 import com.smartgwt.client.widgets.events.DragStartHandler;
-import com.smartgwt.client.widgets.grid.GroupSortNormalizer;
-import com.smartgwt.client.widgets.grid.ListGrid;
+
 import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.events.ClickHandler;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
@@ -27,7 +25,6 @@ import java.util.Date;
 public class TaskPanel extends VLayout implements SidePanel {
 	
 	private TabSet tabset;
-	private Record selectedRecord;
 
 	
 	private class TaskGenericPanel extends GenericPanel{
@@ -85,7 +82,6 @@ public class TaskPanel extends VLayout implements SidePanel {
 	
 	public TaskPanel()
 	{
-		
 		tabset = new TabSet();
 		tabset.setWidth100();
 		tabset.setHeight100();
@@ -108,7 +104,6 @@ public class TaskPanel extends VLayout implements SidePanel {
 		imageField.setImageWidth(24);
 		imageField.setImageHeight(24);
 		ListGridField nameField = new ListGridField("name", 220);
-		nameField.setShowTitle(true);
 		panelBacklog.getTreeGrid().setFields(imageField, nameField);
 		panelBacklog.getTreeGrid().setGroupByField("lane");
 		panelBacklog.getTreeGrid().setCanGroupBy(true);

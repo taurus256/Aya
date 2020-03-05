@@ -10,7 +10,9 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.events.DragStartEvent;
 import com.smartgwt.client.widgets.events.DragStartHandler;
+import com.smartgwt.client.widgets.grid.HoverCustomizer;
 import com.smartgwt.client.widgets.grid.ListGrid;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -58,7 +60,7 @@ public class GenericPanel extends VLayout implements SidePanel{
 
 
 		treeGrid.setSelectionType(SelectionStyle.SINGLE);
-		treeGrid.setShowHeader(true);
+		treeGrid.setShowHeader(false);
 		treeGrid.setShowHeaderMenuButton(false);
 		treeGrid.setCanSort(false);
 		treeGrid.setCanEdit(false);
@@ -71,6 +73,9 @@ public class GenericPanel extends VLayout implements SidePanel{
 		
 		treeGrid.setAutoSaveEdits(false);
 		treeGrid.setAutoFetchData(true);
+
+		treeGrid.setCanHover(true);
+		treeGrid.setShowHover(true);
 		
 //		treeGrid.addDataArrivedHandler(new DataArrivedHandler(){
 //
@@ -112,6 +117,18 @@ public class GenericPanel extends VLayout implements SidePanel{
 			}});
 		
 		treeGrid.setContextMenu(createContextMenu());
+
+		treeGrid.setHoverCustomizer(new HoverCustomizer() {
+			@Override
+			public String hoverHTML(Object o, ListGridRecord listGridRecord, int i, int i1) {
+				String description = listGridRecord.getAttributeAsString("description");
+
+				if (!description.isEmpty())
+					return listGridRecord.getAttributeAsString("name") + "<br><br>" + description;
+				else
+					return listGridRecord.getAttributeAsString("name");
+			}
+		});
 
 		this.addMember(treeGrid);
 	}

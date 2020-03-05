@@ -5,6 +5,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -22,12 +23,14 @@ public class StatisticsPanel extends VLayout {
     StatisticsPanel panel = this;
     Chart chart = new Chart();
     Label label = new Label("обновить график");
+    HTMLPane pane = new HTMLPane();
 
     public StatisticsPanel(){
         setMinWidth(300);
         setShowResizeBar(true);
         setResizeBarSize(5);
         setOverflow(Overflow.HIDDEN);
+        setBorder("1px solid #ababab");
 
         PanelHeader header = new PanelHeader("Статистика", new Runnable() {
             @Override
@@ -62,6 +65,8 @@ public class StatisticsPanel extends VLayout {
                         chart.getXAxis().setCategories(data.getCaptions());
                         chart.addSeries(series);
                         chart.addSeries(seriesGroup);
+
+                        pane.setContents(data.getStatistics());
                     }
                 });
             }
@@ -83,10 +88,17 @@ public class StatisticsPanel extends VLayout {
         chart.getYAxis().setAxisTitleText("");
         chart.setMarginLeft(15);
         chart.setMarginRight(10);
-        chart.setColors("#157efb","#ababab");
+        chart.setColors("#157efb","#f2f2f2");
+
+        pane.setWidth100();
+        pane.setHeight100();
+        pane.setMargin(10);
 
         this.addMember(header);
         this.addMember(label);
         this.addMember(chart);
+        this.addMember(pane);
+
+        GlobalData.setStatisticsPanel(this);
     }
 }

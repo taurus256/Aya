@@ -39,10 +39,11 @@ public class GlobalData {
 	
 	private static NavigationArea navigationArea;
 	private static TabSet topTabSet;
-	private static ViewManager viewManager;
 	private static ApplicationMenu applicationMenu;
 	private static StatusBar statusBar;
 	private static GenericPanel currentPanel;
+
+	private static StatisticsPanel statisticsPanel;
 //	private static Connector connector;
 	
 	public static final Integer ACCESS_ALL = null;	// This records can be accessed by all users
@@ -90,16 +91,6 @@ public class GlobalData {
 		return dataSource_relation_user_group;
 	}
 
-	public static void setViewManager(ViewManager manager)
-	{
-		viewManager = manager;
-	}
-	
-	public static ViewManager getViewManager()
-	{
-		return viewManager;
-	}
-	
 	public static ScriptServiceAsync getScriptService()
 	{
 		return scriptService;
@@ -266,18 +257,20 @@ public class GlobalData {
 		GlobalData.statusBar = statusBar;
 	}
 
+	public static StatisticsPanel getStatisticsPanel() throws RuntimeException{
+		if (statisticsPanel == null)
+			throw new RuntimeException("StatisticsPanel IS NULL");
+		else
+			return statisticsPanel;
+	}
+
+	public static void setStatisticsPanel(StatisticsPanel statisticsPanel) {
+		GlobalData.statisticsPanel = statisticsPanel;
+	}
+
 	public static UserServiceAsync getUserService() {
 		return userService;
 	}
-
-
-//	public static Connector getConnector() {
-//		return connector;
-//	}
-//
-//	public static void setConnector(Connector connector_) {
-//		connector = connector_;
-//	}
 
 	private static DataSource createRestUserDS() {
 

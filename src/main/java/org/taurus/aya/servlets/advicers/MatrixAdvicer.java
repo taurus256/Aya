@@ -11,16 +11,19 @@ import org.taurus.aya.shared.AdviceState;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class MatrixAdvicer {
 
-    private HashMap<Long,Integer> userIds = new HashMap<>();
-    private HashMap<String,Integer> laneIds = new HashMap<>();
+    private HashMap<Long,Integer> userIndx = new HashMap<>();
+    private HashMap<String,Integer> laneIndx = new HashMap<>();
     private HashMap<Long,String> users= new HashMap<>();
 
     private StatData[][] matrix;
     private static final double WORKDAY_HOURS = 8.0;
+
+    private Logger logger = Logger.getLogger(MatrixAdvicer.class.getName());
 
     private class Conglomerate{
 
@@ -73,7 +76,6 @@ public class MatrixAdvicer {
     {
         List<Advice> advices = new LinkedList<>();
         try {
-
             if (futureEventsList.size() == 0) throw new AdviceException("Нет запланированных задач");
             if (oldEventsList.size() == 0) throw new AdviceException("Нет ни одной завершенной задачи за последние 60 дней");
 
@@ -97,9 +99,9 @@ public class MatrixAdvicer {
             Map<Long,Double> userDayDurations = getAverageUserDayDurations(userList, oldEventsList);
 
             // генерация советов (используют рассчитанные на предыдущем шаге времена)
-            advices.add(generateLaneAdvice(futureEventsList,lanePrognosisMap, userDayDurations));
-            advices.add(generateUserAdvice(futureEventsList, userPrognosisMap, userDayDurations));
-
+//            advices.add(generateLaneAdvice(futureEventsList,lanePrognosisMap, userDayDurations));
+//            advices.add(generateUserAdvice(futureEventsList, userPrognosisMap, userDayDurations));
+            advices.addAll(generateAdvices(userList,userDayDurations,futureEventsList));
             // генерация совета с данными о среднем времени, затрачиваемом в день на решение задач
 
             advices.add(generateAverageLoadAdvice(userId,userDayDurations));
@@ -205,11 +207,11 @@ public class MatrixAdvicer {
 
     private Double getEventTimePrognosis(Event event) throws AdviceException
     {
-        if (laneIds.get(event.getLane()) == null) {
+        if (laneIndx.get(event.getLane()) == null) {
             System.err.println("PAdvicer: Event " + event.getId() + " '" + event.getName() + "' has unexpected lane " + event.getLane());
             throw new AdviceException("PAdvicer: Event " + event.getId() + " '" + event.getName() + "' has unexpected lane " + event.getLane());
         }
-        if (userIds.get(event.getExecutor().longValue()) == null) {
+        if (userIndx.get(event.getExecutor().longValue()) == null) {
             System.err.println("PAdvicer: Event " + event.getId() + " '" + event.getName() + "' has unexpected executor " + event.getExecutor());
             throw new AdviceException("PAdvicer: Event " + event.getId() + " '" + event.getName() + "' has unexpected executor " + event.getExecutor());
         }
@@ -219,7 +221,7 @@ public class MatrixAdvicer {
             throw new AdviceException("PAdvicer: Event " + event.getId() + " '" + event.getName() + "' has null duration_h " + event.getExecutor());
         }
 
-        double velocity = matrix[userIds.get(event.getExecutor().longValue())][laneIds.get(event.getLane())].getV();
+        double velocity = matrix[userIndx.get(event.getExecutor().longValue())][laneIndx.get(event.getLane())].getV();
 
         if (velocity==0)
         {
@@ -239,10 +241,10 @@ public class MatrixAdvicer {
         // Инициализация расчетной части.
         // Инициализация списков значений Id
         int i=0;
-        for (User u: userList) userIds.put(u.getId(),i++);
+        for (User u: userList) userIndx.put(u.getId(),i++);
 
         i=0;
-        for (Lane l: laneList) laneIds.put(l.getName(),i++);
+        for (Lane l: laneList) laneIndx.put(l.getName(),i++);
 
         // Инициализация массива
         matrix = new StatData[userList.size()][laneList.size()];
@@ -251,25 +253,25 @@ public class MatrixAdvicer {
                 matrix[i][j] = new StatData();
 
         for (Task task: taskList) {
-            int userIndex = userIds.getOrDefault(task.getExecutor().longValue(), -1);
-            int laneIndex = laneIds.getOrDefault(task.getLane(), -1);
+            int userIndex = userIndx.getOrDefault(task.getExecutor().longValue(), -1);
+            int laneIndex = laneIndx.getOrDefault(task.getLane(), -1);
 
             if (laneIndex >=0 && userIndex >=0)
                 matrix[userIndex][laneIndex].addTask(task);
             else {
                 System.out.println("PAdvicer:initialize: Event " + task.getId() + " '" + task.getName() + "' has incorrect lane name or executor ID!" +
-                        laneIndex + " " + userIndex + "e.getExecutor = " + task.getExecutor() + "  userIds.get=" + userIds.getOrDefault(task.getExecutor().longValue(), -1));
+                        laneIndex + " " + userIndex + "e.getExecutor = " + task.getExecutor() + "  userIds.get=" + userIndx.getOrDefault(task.getExecutor().longValue(), -1));
                 throw new AdviceException("PAdvicer:initialize: Event " + task.getId() + " '" + task.getName() + "' has incorrect lane name or executor ID! " +
-                        laneIndex + " " + userIndex + "e.getExecutor = " + task.getExecutor() + "  userIds.get=" + userIds.getOrDefault(task.getExecutor().longValue(), -1));
+                        laneIndex + " " + userIndex + "e.getExecutor = " + task.getExecutor() + "  userIds.get=" + userIndx.getOrDefault(task.getExecutor().longValue(), -1));
             }
         }
 
         prepareMatrix();
 
         System.out.println("PAdvicer: initialize: userIds");
-        printList(userIds.keySet());
+        printList(userIndx.keySet());
         System.out.println("PAdvicer: initialize: laneIds");
-        printList(laneIds.keySet());
+        printList(laneIndx.keySet());
         System.out.println("PAdvicer: initialize: matrix");
         printMatrix(matrix);
     }
@@ -347,7 +349,7 @@ public class MatrixAdvicer {
     {
         List<Double> velocityList = new LinkedList<>(); // средняя скорость для каждого из пользователей, для которых её можно посчитать
         List<Double> dispersionList = new ArrayList<>(); // максимальная дисперсия для каждого из пользователей, для которых её можно посчитать
-        for (int i=0; i< userIds.size(); i++)
+        for (int i = 0; i< userIndx.size(); i++)
         {
             Double average = Arrays.asList(matrix[i]).stream().filter(x-> !x.getValueIsEmpty()).mapToDouble(StatData::getV).average().orElse(Double.NaN);
             Double dispersion = Arrays.asList(matrix[i]).stream().filter(x-> !x.getValueIsEmpty()).mapToDouble(StatData::getD).max().orElse(Double.NaN);
@@ -359,13 +361,28 @@ public class MatrixAdvicer {
 
         if (avgAll.equals(Double.NaN)) throw new AdviceException("У выполненных задач указано нулевое время выполнения");
 
-        for (int i=0; i< userIds.size(); i++) {
+        for (int i = 0; i< userIndx.size(); i++) {
             final Double dispersion =  dispersionList.get(i);
             Arrays.asList(matrix[i]).parallelStream().filter(StatData::getValueIsEmpty).forEach(x -> x.setV(avgAll));
             Arrays.asList(matrix[i]).parallelStream().filter(StatData::getValueIsEmpty).forEach(x -> x.setD(dispersion));
         }
     }
 
+    public StatData[] calculateUserStatustics(Long userId, List<User> userList, List<Lane> laneList, List<Task> taskList) throws AdviceException {
+        if (taskList.size() == 0) throw new AdviceException("Нет ни одной завершенной задачи за последние 60 дней");
+
+        Optional<Task> b = taskList.stream().filter(e -> e.getStartDate().getTime() >= e.getEndDate().getTime()).findFirst();
+        if (b.isPresent())
+            throw new AdviceException("У задачи '" + b.get().getName() + "' некорректное время начала и окончания (" + b.get().getStartDate().toString() + " -  " + b.get().getEndDate().toString() + ")");;
+        initialize(userList,laneList,taskList);
+        return matrix[userIndx.get(userId)];
+    }
+
+    /** Разбивка списка задач на конгломераты. Конгломерат - это совокупность нескольких задач, пересекающихся по времени
+     * Конгломерат может состоять и из одной задачи.
+     * @param eventList - список event-ов
+     * @return List<Conglomerate> - список конгломератов
+     * */
     private List<Conglomerate> getConglomerates(List<Event> eventList) throws AdviceException
     {
         Queue<Event> eventQueue = new PriorityQueue<Event>(eventList.size(), (e1, e2) -> {
@@ -393,7 +410,7 @@ public class MatrixAdvicer {
         return conglomerateList;
     }
 
-    /** Генерирует совет, выводящий среднее время, которое указанны пользователь тратит на решение задач
+    /** Генерирует совет, выводящий среднее время, которое указанный пользователь тратит на решение задач
      * @param userId идентификатор пользователя
      * @param dayDurations - ассоциативный массив, содержащий рассчитанное количество часов в день, которое пользователь тратит на задачи, для каждого пользователя
      */
@@ -460,11 +477,69 @@ public class MatrixAdvicer {
     private void printMatrix(StatData[][] m)
     {
         System.out.println("MATRIX[");
-        for (int i=0; i< userIds.keySet().size(); i++) {
+        for (int i = 0; i< userIndx.keySet().size(); i++) {
         System.out.print("[");
-            for (int j = 0; j < laneIds.keySet().size(); j++)
+            for (int j = 0; j < laneIndx.keySet().size(); j++)
                 System.out.print(m[i][j].getV() + " ");
         System.out.println("]");
         }
+    }
+
+    public List<Advice> generateAdvices(List<User> usersList, Map<Long,Double> dayDurations, List<Event> futureEventList)
+    {
+        List<Advice> advices = new LinkedList<>();
+        Date startDate = new Date();
+        Date endDate = futureEventList.stream().map(Event::getEndDate).max(Date::compareTo).orElseThrow(RuntimeException::new);
+
+        Long daysCount = Duration.between(startDate.toInstant(),endDate.toInstant()).toDays();
+        Map<Long,String> userNames = new HashMap<>(); // <id_пользователя>-<ФИО>
+
+        double[][] usersVArray = new double[usersList.size()][daysCount.intValue()];
+        double[] usersDeltaArray = new double[usersList.size()];
+
+        usersList.forEach(u -> {
+            userNames.put(u.getId(),u.getShowedName());
+            Arrays.fill(usersVArray[userIndx.get(u.getId())],0.0);
+        });
+
+        for (Event e: futureEventList)
+            if (e.getTask().getPlannedDuration() !=null && e.getTask().getPlannedDuration() !=0){
+                long taskDays = Math.round(Duration.between(e.getStartDate().toInstant(), e.getEndDate().toInstant()).toHours()/24.0);
+
+                double V = getMatrixValue(e.getExecutor(),e.getLane()).getV();
+                double D = getMatrixValue(e.getExecutor(),e.getLane()).getD();
+                double sigma = Math.sqrt(D);
+
+                double plannedDayCost = e.getTask().getPlannedDuration()/taskDays / getMatrixValue(e.getExecutor(),e.getLane()).getV();
+                System.out.println("dispersion: " + getMatrixValue(e.getExecutor(),e.getLane()).getD());
+                long offsetStart = Duration.between(startDate.toInstant(),e.getStartDate().toInstant()).toDays();
+                long offsetEnd = Duration.between(startDate.toInstant(),e.getEndDate().toInstant()).toDays();
+
+                for (int i = Long.valueOf(offsetStart).intValue(); i<offsetStart + taskDays; i++){
+                    usersVArray[userIndx.get(e.getExecutor())][i] += plannedDayCost;
+
+                    double delta =  (e.getTask().getPlannedDuration()/taskDays)*(sigma/(V*(V+sigma)));
+                    usersDeltaArray[userIndx.get(e.getExecutor())] = delta;
+
+                    if (usersVArray[userIndx.get(e.getExecutor())][i]  > dayDurations.get(e.getExecutor()))
+                    {
+                        if (usersVArray[userIndx.get(e.getExecutor())][i] - dayDurations.get(e.getExecutor()) <= delta)
+                            advices.add(new Advice(AdviceState.WARNING,"Нагрузка на пользователя <b>" + userNames.get(e.getExecutor()) + "</b> превышает среднюю на задаче <b>" + e.getTask().getName() + "</b> потока '" + e.getLane() + "'"));
+                        else
+                            advices.add(new Advice(AdviceState.CRITICAL,"Нагрузка на пользователя <b>" + userNames.get(e.getExecutor()) + "</b> выходит за допустимый интервал на задаче <b>" + e.getTask().getName() + "</b> потока '" + e.getLane() + "'"));
+                    }
+                }
+            }
+
+        logger.info("user velocities:");
+        logger.info(Arrays.deepToString(usersVArray));
+        logger.info("deltas:");
+        logger.info(Arrays.toString(usersDeltaArray));
+        return advices;
+    }
+
+    private StatData getMatrixValue(Long userId, String laneName)
+    {
+        return matrix[userIndx.get(userId)][laneIndx.get(laneName)];
     }
 }

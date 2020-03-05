@@ -155,30 +155,7 @@ public class TabManager {
 		}
 	}
 	
-	/**
-	 * Найти вкладку чата, если она открыта, и отобразить в ней сообщение
-	 * @param record Запись,содержимое которой нужно отобразить
-	 */
-	public static Tab showChatMessage(Record record)
-	{
-		SC.logWarn("TabManager: showChatMessage");
-		Tab chatTab = getTab(ResourceType.CHAT, record.getAttributeAsInt("dialog_id"));
-		if (chatTab != null) // if tab always open
-		{
-			((ChatView)chatTab.getPane()).addExternalMessage(record);
-			
-			if (chatTab != GlobalData.getTopTabSet().getSelectedTab()) // if tab is not active - mark it
-			{
-				tabset.setTabTitle(chatTab,"<span class='markedTab'>" + Canvas.imgHTML("header/chat.svg", 20, 20) + " " + chatTab.getAttribute("caption") + "</span>");
-			}
-		}
-		else
-		{
-			GlobalData.getNavigationArea().getChatPanel().addNewMessage(record);
-		}
-		return chatTab;
-	}
-	
+
 	private static int generateTabUID()
 	{
         Integer id;

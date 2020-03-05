@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /** Класс, сожержащий данные задачи. На графике задача представлена одним или несколькими объектами типа event, все они
  * ссылаются на информацию, которая хранится здесь*/
@@ -237,8 +238,10 @@ public class Task {
 
     public void recalculateFields()
     {
-        startDate = events.stream().map(Event::getStartDate).min(Date::compareTo).orElseThrow(IllegalArgumentException::new);
-        endDate = events.stream().map(Event::getEndDate).max(Date::compareTo).orElseThrow(IllegalArgumentException::new);
-        spentTime = events.stream().map(Event::getSpentTime).mapToDouble(Double::doubleValue).sum();
+        if (events.size()>0) {
+            startDate = events.stream().map(Event::getStartDate).min(Date::compareTo).orElseThrow(IllegalArgumentException::new);
+            endDate = events.stream().map(Event::getEndDate).max(Date::compareTo).orElseThrow(IllegalArgumentException::new);
+            spentTime = events.stream().map(Event::getSpentTime).mapToDouble(Double::doubleValue).sum();
+        }
     }
 }

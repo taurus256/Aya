@@ -13,6 +13,7 @@ public class StatData {
     Double V = null;
     Double D = null;
     boolean valueIsEmpty = true;
+    Double totalTime = 0.0;
 
     /** Добавление задачи в список для расчета статистики
     * @param t - entity задачи
@@ -24,6 +25,7 @@ public class StatData {
             velocityList.add(t.getPlannedDuration() / t.getSpentTime());
             n++;
         }
+        totalTime += t.getSpentTime();
     }
 
     /** Возвращает среднюю скорость выполнения задач. При первом обращении - считает её
@@ -48,13 +50,18 @@ public class StatData {
     /** Считает дисперсию средних скоростей.  При первом обращении - считает её
     * @return Значение дисперсии
     * */
-    Double getD()
+    public Double getD()
     {
         if (D == null) {
-            Double mx = getV();
+            double mx = getV();
             D = velocityList.stream().mapToDouble(x -> x * x).sum() / n - mx * mx;
         }
         return D;
+    }
+
+    public Double getTolalTime()
+    {
+        return totalTime;
     }
 
     void setD(Double D)

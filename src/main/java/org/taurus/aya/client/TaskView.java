@@ -50,12 +50,12 @@ public TaskView(Record currentRecord, int tabUID)
 		this.currentRecord = currentRecord;
 		this.tabUID = tabUID;
 		contentPane = this;
-		taskView = this; 
+		taskView = this;
 		
 		
-		timeline = new ExtendedTimeline(this, false);
+		timeline = new ExtendedTimeline(this, false,(a)->{},this::getServerAnalyseData);
 		timeline.addUpdateHandler(new UpdateHandler());
-        timeline2 = new ExtendedTimeline(this,true);
+        timeline2 = new ExtendedTimeline(this,true,(a)->{},this::getServerAnalyseData);
 		timeline2.addUpdateHandler(new UpdateHandler());
 		timeline2.hide();
 		VLayout vLayout = new VLayout();
@@ -83,6 +83,7 @@ public TaskView(Record currentRecord, int tabUID)
 		
 		//!this.setOverflow(Overflow.HIDDEN);
 	    this.setMinHeight(0);
+	    this.setBackgroundColor("#f2f2f2");
 	}
 
     HLayout createToolStripPanel()

@@ -30,25 +30,22 @@ public class Aya implements EntryPoint {
      private HLayout northLayout;
      private HLayout southLayout;
      private VLayout eastLayout;
-     private HLayout westLayout;
+     private VLayout westLayout;
      private StatusBar statusBar;
      @SuppressWarnings("static-access")
 	public void onModuleLoad() {
 
         mainLayout.resizeFonts(3);
-		 mainLayout.resizeControls(3);
+		mainLayout.resizeControls(3);
 
     	Date date = new Date();
-//    	SC.logWarn(date.toString());
     	DateUtil.setDefaultDisplayTimezone("+00:00");
-//    	SC.logWarn(date.toString());
 
-//    	DateUtil.setDefaultDisplayTimezone("+00:00");
  		DateUtil.setAdjustForDST(false);
 	   	SC.logWarn("Aya.java:: TODAY: " + date.toString());
 
 
-		 KeyIdentifier debugKey = new KeyIdentifier();
+		KeyIdentifier debugKey = new KeyIdentifier();
 		debugKey.setCtrlKey(true);
 		debugKey.setKeyName("D");
 
@@ -58,42 +55,34 @@ public class Aya implements EntryPoint {
 			}
 		});
 
-        // Настройка вывода дат
-		/*
-        DateUtil.setShortDateDisplayFormatter(new DateDisplayFormatter() {
-			@Override
-			public String format(Date date) {
-				if(date == null) return null;
-               final DateTimeFormat dateFormatter = DateTimeFormat.getFormat("dd.MM");
-               String format = dateFormatter.format(date);
-               SC.logWarn("date formatter work :" + format);
-               return format;
-			}
-        });
-        DateUtil.setNormalDateDisplayFormatter(new DateDisplayFormatter() {
-			@Override
-			public String format(Date date) {
-				if(date == null) return null;
-               final DateTimeFormat dateFormatter = DateTimeFormat.getFormat("dd.MM");
-               String format = dateFormatter.format(date);
-               SC.logWarn("normal date formatter work :" + format);
-               return format;
-			}
-        });
-        DateUtil.setNormalDateDisplayFormatter(new DateDisplayFormatter() {
-			@Override
-			public String format(Date date) {
-				if(date == null) return null;
-                final DateTimeFormat dateFormatter = DateTimeFormat.getFormat("dd.MM.yy");
-                String format = dateFormatter.format(date);
-                SC.logWarn("LONG date formatter work :" + format);
-                return format;
-			}
-         });*/
+		 KeyIdentifier showTasksKey = new KeyIdentifier();
+		 showTasksKey.setAltKey(true);
+		 showTasksKey.setKeyName("Q");
 
+		 Page.registerKey(showTasksKey, new PageKeyHandler() {
+			 public void execute(String keyName) {
+				 if (GlobalData.getNavigationArea().getWidth().equals(0))
+					GlobalData.getNavigationArea().setWidth(275);
+				 else
+					 GlobalData.getNavigationArea().setWidth(0);
+			 }
+		 });
+
+		 KeyIdentifier showStatisticsKey = new KeyIdentifier();
+		 showStatisticsKey.setAltKey(true);
+		 showStatisticsKey.setKeyName("W");
+
+		 Page.registerKey(showStatisticsKey, new PageKeyHandler() {
+			 public void execute(String keyName) {
+				 if (GlobalData.getStatisticsPanel().getWidth().equals(0))
+					 GlobalData.getStatisticsPanel().setWidth(300);
+				 else
+					 GlobalData.getStatisticsPanel().setWidth(0);
+			 }
+		 });
 
 		 Window.enableScrolling(false);
-         Window.setMargin("0px");
+		 Window.setMargin("0px");
 
 
          // Создание раскладки виджетов главного окна
@@ -183,7 +172,7 @@ public class Aya implements EntryPoint {
 										westLayout.setWidth("15%");
 										westLayout.setMinWidth(280);
 
-										eastLayout = new MainArea();
+										eastLayout = new TaskView(new Record(),1);//new MainArea();
 										eastLayout.setWidth("85%");
 
 										southLayout = new HLayout();

@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class ExtendedTimeline extends Timeline {
 	
@@ -45,6 +46,8 @@ public class ExtendedTimeline extends Timeline {
 	TaskView panel;
 	AdvancedCriteria laneSearchCriteria;
 	boolean distinctByUsers = true;
+	private Consumer<Boolean> enableButtonsCallback;
+	private Runnable generateAdvicesCallback;
 	private MenuItem dialogOpenMenu, eventPropertiesMenu;
 	private CalendarEvent selectedEvent=null;
 	private boolean thisIsFirstCall = true;
@@ -57,10 +60,12 @@ public class ExtendedTimeline extends Timeline {
     DateTimeFormat weekendFormat = DateTimeFormat.getFormat("c");
     DateTimeFormat numberFormat = DateTimeFormat.getFormat("dd.MM");
 	
-	public ExtendedTimeline(TaskView panel, final boolean distinctByUsers)
+	public ExtendedTimeline(TaskView panel, final boolean distinctByUsers, Consumer<Boolean> enableButtonsCallback, Runnable generateAdvicesCallback)
 	{
 		this.panel = panel;
 		this.distinctByUsers = distinctByUsers;
+		this.enableButtonsCallback = enableButtonsCallback;
+		this.generateAdvicesCallback = generateAdvicesCallback;
 		extendedTimeline = this;
 		
 		CalendarView calendarView = new CalendarView();
@@ -210,6 +215,7 @@ public class ExtendedTimeline extends Timeline {
 											updateTasks();
 										ResourceLifeCycleManager.resourceDeleted(ResourceType.TASK, selectedEvent);
 										selectedEvent = null;
+										generateAdvicesCallback.run();
 									}
 								});
 							}
@@ -232,11 +238,10 @@ public class ExtendedTimeline extends Timeline {
 
 			@Override
 			public void onEventChanged(CalendarEventChangedEvent event) {
-				//updateTasks();
 				SC.logWarn("EventChangedHandler task id => " + event.getEvent().getAttribute("id"));
                 SC.logWarn("EventChangedHandler date_start => " + event.getEvent().getAttribute("startDate") + " dateEnd = " + event.getEvent().getAttribute("endDate"));
-//				Connector.sendSystemMessageToAll(CommandType.UPDATE_TASK_ARRANGEMENT, TabManager.ResourceType.TASK, "Пользователь <b>" + GlobalData.getCurrentUser().getAttributeAsString("nickname") + "</b> обновил задачу <b>" + event.getEvent().getAttribute("name") + "</b>", (int)event.getEvent().getAttributeAsInt("id"));
-				//updateTimeline();
+
+				generateAdvicesCallback.run();
 		}});
 
 
@@ -341,7 +346,6 @@ public class ExtendedTimeline extends Timeline {
 									getTimelineView().scrollBodyTo(delta, 0);
 									thisIsFirstCall=false;
 									}
-
 								}
 							});
 
@@ -517,7 +521,6 @@ public class ExtendedTimeline extends Timeline {
 						getTimelineView().scrollBodyTo(delta, 0);
 					thisIsFirstCall = false;
  				}
-			
 			}
 		});
 	}

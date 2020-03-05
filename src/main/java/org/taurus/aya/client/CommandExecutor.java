@@ -25,11 +25,8 @@ public class CommandExecutor {
 			case UPDATE_TASK_ARRANGEMENT: updateTaskViews(); break;
 			case UPDATE_TASK_STATE: updateTasks(); break;
 			case UPDATE_TASK_PANEL: updateTasksPanel(); break;
-			case UPDATE_DOC_LIST: updateDocList(); break;
 			case UPDATE_SCRIPT_LIST: updateScriptList(); break;
 			case SHOW_MESSAGE: { showMessage(c.getMessage());} break;
-			case USER_CONNECT: {userConnect(c.getId());} break;
-			case USER_DISCONNECT: {userDisconnect(c.getId());} break;
 			case UPDATE_GROUP_LIST: {updateGroups();} break;
 			case OPEN_USER_CHAT: openDialog(c.getId()); break;
 			case OPEN_GROUP_CHAT: openGroupDialog(c.getId()); break;
@@ -83,12 +80,7 @@ public class CommandExecutor {
 		GlobalData.getNavigationArea().getTaskPanel().update();
 	}
 	
-	private static void updateDocList()
-	{
-		SC.logWarn("CommandExecutor: updateDocList");
-		GlobalData.getNavigationArea().getDocPanel().update();
-	}
-	
+
 	private static void updateScriptList()
 	{
 		SC.logWarn("CommandExecutor: updateScriptList");
@@ -100,20 +92,9 @@ public class CommandExecutor {
 			SC.say(message);
 	}
 	
-	private static void userConnect(Integer id)
-	{
-		SC.logWarn("CommandExecutor: userConnect:" + id);
-		if (id == null) return;
-		GlobalData.getNavigationArea().getChatPanel().userConnected(id);
-	}
+
 	
-	private static void userDisconnect(Integer id)
-	{
-		SC.logWarn("CommandExecutor: userDisconnect: " + id);
-		if (id == null) return;
-		GlobalData.getNavigationArea().getChatPanel().userDisconnected(id);
-	}
-	
+
 	private static void updateGroups()
 	{
 		Criteria criteria_group = new Criteria();

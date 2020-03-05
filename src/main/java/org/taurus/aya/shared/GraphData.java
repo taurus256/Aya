@@ -4,6 +4,7 @@ public class GraphData implements com.google.gwt.user.client.rpc.IsSerializable 
     Long[] seriesLocal;
     Long[] seriesGroup;
     String[] captions;
+    private String statistics;
 
     public GraphData(){
         seriesLocal= new Long[0];
@@ -11,10 +12,11 @@ public class GraphData implements com.google.gwt.user.client.rpc.IsSerializable 
         captions = new String[0];
     }
     
-    public GraphData(Long[] seriesLocal, Long[] seriesGroup, String[] captions) {
+    public GraphData(Long[] seriesLocal, Long[] seriesGroup, String[] captions, String statistics) {
         this.seriesLocal = seriesLocal;
         this.seriesGroup = seriesGroup;
         this.captions = captions;
+        this.statistics = statistics;
     }
 
     public Long[] getSeriesLocal() {
@@ -28,4 +30,6 @@ public class GraphData implements com.google.gwt.user.client.rpc.IsSerializable 
     public String[] getCaptions() {
         return captions;
     }
+
+    public String getStatistics() { return statistics;}
 }

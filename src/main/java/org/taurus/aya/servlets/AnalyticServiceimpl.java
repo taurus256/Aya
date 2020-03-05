@@ -2,6 +2,7 @@ package org.taurus.aya.servlets;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.taurus.aya.client.AnalyticService;
 import org.taurus.aya.client.EventState;
@@ -13,6 +14,7 @@ import org.taurus.aya.server.entity.Event;
 import org.taurus.aya.server.entity.Lane;
 import org.taurus.aya.server.entity.User;
 import org.taurus.aya.servlets.advicers.MatrixAdvicer;
+import org.taurus.aya.servlets.advicers.StatData;
 import org.taurus.aya.shared.GraphData;
 import org.taurus.aya.shared.TaskAnalyseData;
 
@@ -58,7 +60,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
     }
 
     // коэффициент, устанавливающий степень превышения значений графика группы над графиком пользователя
-    double GROUP_USER_RAISE_FACTOR = 1.5;
+    double GROUP_USER_RAISE_FACTOR = 1.0;
 
     @Override
     public TaskAnalyseData getPrognosis(Long userId) throws Exception {
@@ -278,8 +280,59 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         }
         return new GraphData(
                             Arrays.stream(daysLocal).mapToLong(r -> Double.valueOf(r).longValue()).boxed().toArray(Long[]::new),
-                            Arrays.stream(daysGroup).mapToLong(r -> Double.valueOf(r/userCount*GROUP_USER_RAISE_FACTOR).longValue()).boxed().toArray(Long[]::new),
-                            captions
+                            Arrays.stream(daysGroup).mapToLong(r -> Double.valueOf(r).longValue()).boxed().toArray(Long[]::new),
+                            captions,
+                            getStatistics(userId)
         );
     }
+
+    public String getStatistics(Long userId)
+    {
+        MatrixAdvicer matrixAdvicer = new MatrixAdvicer();
+        Instant start = Instant.now().minus(Duration.ofDays(60));
+        List<User> userList = userRepository.findAll();
+        List<Lane> laneList = laneRepository.findAll();
+        try {
+
+            StatData[] stats = matrixAdvicer.calculateUserStatustics(userId,
+                    userList,
+                    laneList,
+                    taskRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(start), new Date(), EventState.READY.ordinal()));
+
+
+            List<Pair<String,String>> pairs = new LinkedList<>();
+            for (int i=0; i<laneList.size(); i++)
+                pairs.add(Pair.of(laneList.get(i).getName(),stats[i].getTolalTime().toString()));
+
+            String totalTime = generateHTMLTable("Общее затраченное время", pairs);
+
+            pairs.clear();
+            for (int i=0; i<laneList.size(); i++)
+                pairs.add(Pair.of(laneList.get(i).getName(),stats[i].getD().toString()));
+
+            String dispertions = generateHTMLTable("Среднеквадратичное отклонение", pairs);
+
+            return totalTime + "<br>" + dispertions;
+
+        }
+        catch(AdviceException aex)
+        {
+            return aex.getMessage();
+        }
+    }
+
+    private String generateHTMLTable(String caption, List<Pair<String,String>> data)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<br><b>" + caption + "</b><br><br>");
+        sb.append("<center>");
+        sb.append("<table class=\"aya_table\" ");
+        sb.append("<tr><td>Поток</td><td>Значение</td></tr>");
+        for (Pair<String,String> d: data)
+            sb.append("<tr><td>" + d.getFirst() + "</td><td>" + d.getSecond() + "</td></tr>");
+        sb.append("</table>");
+        sb.append("</center>");
+        return sb.toString();
+    }
+
 }

@@ -2,10 +2,10 @@ package org.taurus.aya.client;
 
 public enum EventState {
     NEW("Сброс"),
-    PROCESS("Начать выполнение"),
-    READY("Задача завершена"),
+    PROCESS("Начать"),
+    READY("Готово"),
     PAUSE("Пауза"),
-    FAIL("Обратить внимание");
+    FAIL("Внимание");
 
     private String name;
 
