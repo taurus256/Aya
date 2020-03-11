@@ -57,7 +57,7 @@ public class Aya implements EntryPoint {
 
 		 KeyIdentifier showTasksKey = new KeyIdentifier();
 		 showTasksKey.setAltKey(true);
-		 showTasksKey.setKeyName("Q");
+		 showTasksKey.setKeyName("1");
 
 		 Page.registerKey(showTasksKey, new PageKeyHandler() {
 			 public void execute(String keyName) {
@@ -70,7 +70,7 @@ public class Aya implements EntryPoint {
 
 		 KeyIdentifier showStatisticsKey = new KeyIdentifier();
 		 showStatisticsKey.setAltKey(true);
-		 showStatisticsKey.setKeyName("W");
+		 showStatisticsKey.setKeyName("2");
 
 		 Page.registerKey(showStatisticsKey, new PageKeyHandler() {
 			 public void execute(String keyName) {

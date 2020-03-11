@@ -1,9 +1,11 @@
 package org.taurus.aya.server.controllers;
 
 
+import org.moxieapps.gwt.highcharts.client.plotOptions.Zone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.taurus.aya.client.EventState;
 import org.taurus.aya.server.EventRepository;
 import org.taurus.aya.server.TaskRepository;
 import org.taurus.aya.server.entity.Event;
@@ -14,6 +16,7 @@ import org.taurus.aya.shared.GwtResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
+import java.time.*;
 import java.util.Date;
 import java.util.List;
 
@@ -146,7 +149,38 @@ public class EventController extends GenericController {
                 }
 
                 if (event.getState() != null && !event.getState().equals(filterIntValue(state)))  // если состояние задачи изменилось - считаем время выполнения
+                {
                     needsCorrection = eventService.processEventStartAndSpentTime(event, filterIntValue(state));
+
+                    LocalDateTime currentDate = LocalDateTime.now();
+                    LocalDateTime lastDate = event.getTask().getEvents().stream().map(e -> e.getEndDate()).min(Date::compareTo).orElseGet(Date::new).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+                    // Модификация конечной даты для выполняющегося event-а
+                    // Выполняется, если текущее состояние - PROCESS, и последнее изменение состояния было ранее, чем сегодня
+                    if (filterIntValue(state).equals(EventState.PROCESS.ordinal()) && lastDate.getDayOfYear() != currentDate.getDayOfYear() && Duration.between(lastDate, currentDate).toDays() >= 0) {
+
+                        LocalDateTime evStart = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
+
+                        LocalDateTime evEnd = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);;
+
+                        if (Duration.between(lastDate, currentDate).toDays() > 0) {
+                            event.setState(EventState.PROCESS.ordinal());
+                            Event ev = new Event(
+                                    event.getTask(),
+                                    event.getTask().getEvents().size(),
+                                    event.getExecutor(),
+                                    Date.from(evStart.atZone(ZoneId.systemDefault()).toInstant()),
+                                    Date.from(evEnd.atZone(ZoneId.systemDefault()).toInstant()),
+                                    "s3_process",
+                                    event.getIcon(),
+                                    EventState.PROCESS.ordinal()
+                            );
+                            ev = eventRepository.saveAndFlush(ev);
+                            return new GwtResponse(0, 1, 1, new Event[]{ev});
+                        } else
+                            event.setEndDate(Date.from(evEnd.atZone(ZoneId.systemDefault()).toInstant()));
+                    }
+                }
                 else {
                     event.setSpentTime(filterDoubleValue(spentTime)); // иначе - просто пишем время выполнения с клиента
                 }
@@ -157,14 +191,11 @@ public class EventController extends GenericController {
                 event.setDescription(description);
 
                 //Block date modification where state is changed (client sends incorrect date in this case)
-                Date d = (event.getStartDate() == null || event.getState().equals(filterIntValue(state))) ? filterDateValue(startDate) : event.getStartDate();
-                event.setStartDate(d);
+                LocalDateTime  d = (event.getStartDate() == null || event.getState().equals(filterIntValue(state))) ? filterLocalDateTimeValue(startDate) : LocalDateTime.ofInstant(event.getStartDate().toInstant(),ZoneId.systemDefault());
+                event.setStartDate(Date.from(d.atZone(ZoneId.systemDefault()).toInstant()));
 
-                d = (event.getEndDate() == null || event.getState().equals(filterIntValue(state))) ? filterDateValue(endDate) : event.getEndDate();
-                d.setHours(23);
-                d.setMinutes(59);
-                d.setSeconds(59);
-                event.setEndDate(d);
+                d = (event.getEndDate() == null || event.getState().equals(filterIntValue(state))) ? filterLocalDateTimeValue(endDate) : LocalDateTime.ofInstant(event.getEndDate().toInstant(),ZoneId.systemDefault());
+                event.setEndDate(Date.from(d.withHour(23).withMinute(59).withSecond(59).atZone(ZoneId.systemDefault()).toInstant()));
 
                 event.setAuthor(filterLongValue(author));
                 event.setWuser(filterIntValue(wuser));

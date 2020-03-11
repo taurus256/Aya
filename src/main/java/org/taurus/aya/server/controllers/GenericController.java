@@ -4,6 +4,8 @@ import org.springframework.lang.Nullable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
 
@@ -42,5 +44,9 @@ public class GenericController {
 
     protected Date filterDateValue(String value) throws ParseException {
         return value == null || value.equals("null") ? null : formatter.parse(value);
+    }
+
+    protected LocalDateTime filterLocalDateTimeValue(String value) throws ParseException {
+        return value == null || value.equals("null") ? null : LocalDateTime.ofInstant(formatter.parse(value).toInstant(), ZoneId.systemDefault());
     }
 }

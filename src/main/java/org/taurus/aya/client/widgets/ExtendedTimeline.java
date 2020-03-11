@@ -38,7 +38,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ExtendedTimeline extends Timeline {
-	
+
 	private Menu menu;
 	private int blockSelectMode = 0;
 	ListGridField lgf;
@@ -59,7 +59,13 @@ public class ExtendedTimeline extends Timeline {
 
     DateTimeFormat weekendFormat = DateTimeFormat.getFormat("c");
     DateTimeFormat numberFormat = DateTimeFormat.getFormat("dd.MM");
-	
+	private MenuItem setStateProcess;
+	private MenuItem setStatePause;
+	private MenuItem setStateReady;
+	private MenuItem setStateFail;
+	private MenuItem setStateNew;
+	private boolean lastCanSwitch = false;
+
 	public ExtendedTimeline(TaskView panel, final boolean distinctByUsers, Consumer<Boolean> enableButtonsCallback, Runnable generateAdvicesCallback)
 	{
 		this.panel = panel;
@@ -94,6 +100,7 @@ public class ExtendedTimeline extends Timeline {
         setDataSource(GlobalData.getDataSource_events());
 		setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS,true));
 		setAutoFetchData(true);
+
 
         CalendarEvent indicator1 = new CalendarEvent();
 		indicator1.setStartDate(new Date());
@@ -176,7 +183,6 @@ public class ExtendedTimeline extends Timeline {
 				if (event.isAltKeyDown())
 				{
 					EditEventDialog ee = getEditEventDialog(event.getEvent());
-					SC.logWarn("ExtendedTimeline: Сейчас буду показывать диалог");
 					ee.focusInNextTabElement();
 				}
 				else {
@@ -188,6 +194,9 @@ public class ExtendedTimeline extends Timeline {
 					refreshEvent(selectedEvent);
 					redraw();
 				}
+
+				// we cannot switch from NEW to any state
+				setCanSwitchToAnyState(!event.getEvent().getAttributeAsInt("state").equals(EventState.NEW.ordinal()));
 
 				event.cancel();
 			}});
@@ -260,6 +269,7 @@ public class ExtendedTimeline extends Timeline {
 				ev.setAttribute("rgroup", GlobalData.ACCESS_ALL);
 				ev.setAttribute("wgroup", GlobalData.ACCESS_ALL);
 				ev.setAttribute("author", GlobalData.getCurrentUser().getAttributeAsInt("id"));
+				ev.setAttribute("state",EventState.NEW.ordinal());
 				//Lane lane = getLaneFromPoint(event.getX() - getTimelineView().getAbsoluteLeft(), event.getY() - getAbsoluteTop() - getTimelineView().getTop() - getTimelineView().getHeaderHeight());
 				//Lane sublane = getSublaneFromPoint(event.getX() - getTimelineView().getAbsoluteLeft(), event.getY() - getAbsoluteTop() - getTimelineView().getTop() - getTimelineView().getHeaderHeight());
 				Lane lane = getLaneFromPoint(null,null);
@@ -551,28 +561,31 @@ public class ExtendedTimeline extends Timeline {
                                           });
         menu.addItem(moveToBacklogMenu);
         menu.addItem(new com.smartgwt.client.widgets.menu.MenuItemSeparator());
-        
-        MenuItem setStateProcess = new MenuItem(EventState.PROCESS.getName());
+
+		setStateProcess = new MenuItem(EventState.PROCESS.getName());
         setStateProcess.addClickHandler(event -> { setEventState(EventState.PROCESS);});
         setStateProcess.setIcon("buttons/task_play.png");
         menu.addItem(setStateProcess);
 
-        MenuItem setStatePause = new MenuItem(EventState.PAUSE.getName());
+		setStatePause = new MenuItem(EventState.PAUSE.getName());
         setStatePause.addClickHandler(event -> { setEventState(EventState.PAUSE);});
         setStatePause.setIcon("buttons/task_pause.png");
+        setStatePause.setEnabled(false);
         menu.addItem(setStatePause);
 
-        MenuItem setStateReady = new MenuItem(EventState.READY.getName());
+		setStateReady = new MenuItem(EventState.READY.getName());
         setStateReady.addClickHandler(event -> { setEventState(EventState.READY);});
         setStateReady.setIcon("buttons/task_ready.png");
+        setStateReady.setEnabled(false);
         menu.addItem(setStateReady);
 
-        MenuItem setStateFail = new MenuItem(EventState.FAIL.getName());
+		setStateFail = new MenuItem(EventState.FAIL.getName());
         setStateFail.addClickHandler(event -> { setEventState(EventState.FAIL);});
         setStateFail.setIcon("buttons/task_fail.png");
+        setStateFail.setEnabled(false);
         menu.addItem(setStateFail);
 
-        MenuItem setStateNew = new MenuItem(EventState.NEW.getName());
+		setStateNew = new MenuItem(EventState.NEW.getName());
         setStateNew.addClickHandler(event -> { setEventState(EventState.NEW);});
         setStateNew.setIcon("buttons/task_new.png");
         menu.addItem(setStateNew);
@@ -745,4 +758,17 @@ public class ExtendedTimeline extends Timeline {
 		dialog.centerInPage();
 	}
 
+	private void  setCanSwitchToAnyState(boolean canSwitch)
+	{
+		if (lastCanSwitch != canSwitch) {
+			lastCanSwitch = !lastCanSwitch;
+			setStatePause.setEnabled(canSwitch);
+			setStateReady.setEnabled(canSwitch);
+			setStateFail.setEnabled(canSwitch);
+			menu.refreshRow(3);
+			menu.refreshRow(4);
+			menu.refreshRow(5);
+			enableButtonsCallback.accept(canSwitch);
+		}
+	}
 }

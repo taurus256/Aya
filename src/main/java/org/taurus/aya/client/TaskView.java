@@ -36,6 +36,9 @@ public class TaskView extends ContentPane {
 	VLayout pane;
 	final Menu menu = new Menu();
 	Label analyseResultLabel;
+	private ToolStripButton btnTaskPause;
+	private ToolStripButton btnTaskFail;
+	private ToolStripButton btnTaskReady;
 
 	private class UpdateHandler implements Runnable
 	{
@@ -53,7 +56,20 @@ public TaskView(Record currentRecord, int tabUID)
 		taskView = this;
 		
 		
-		timeline = new ExtendedTimeline(this, false,(a)->{},this::getServerAnalyseData);
+		timeline = new ExtendedTimeline(this, false,(a)->{
+			if (a){
+				btnTaskFail.enable();
+				btnTaskPause.enable();
+				btnTaskReady.enable();
+			}
+			else
+			{
+				btnTaskFail.disable();
+				btnTaskPause.disable();
+				btnTaskReady.disable();
+			}
+		},this::getServerAnalyseData);
+
 		timeline.addUpdateHandler(new UpdateHandler());
         timeline2 = new ExtendedTimeline(this,true,(a)->{},this::getServerAnalyseData);
 		timeline2.addUpdateHandler(new UpdateHandler());
@@ -101,23 +117,22 @@ public TaskView(Record currentRecord, int tabUID)
 		btnTaskProcess.setHeight(16);
 		btnTaskProcess.addClickHandler(event -> getCurrentTimeline().setEventState(EventState.PROCESS));
 		toolStrip.addMember(btnTaskProcess);
-		
-		ToolStripButton btnTaskPause = new ToolStripButton(EventState.PAUSE.getName());
+
+		btnTaskPause = new ToolStripButton(EventState.PAUSE.getName());
 		btnTaskPause.setIcon("buttons/task_pause.png");
 		btnTaskPause.setWidth(16);
 		btnTaskPause.setHeight(16);
 		btnTaskPause.addClickHandler(event -> getCurrentTimeline().setEventState(EventState.PAUSE));
 		toolStrip.addMember(btnTaskPause);
-		ToolStripButton btnTaskReady = new ToolStripButton(EventState.READY.getName());
 
-
+		btnTaskReady = new ToolStripButton(EventState.READY.getName());
 		btnTaskReady.setIcon("buttons/task_ready.png");
 		btnTaskReady.setWidth(16);
 		btnTaskReady.setHeight(16);
 		btnTaskReady.addClickHandler(event -> getCurrentTimeline().setEventState(EventState.READY));
 		toolStrip.addMember(btnTaskReady);
 
-		ToolStripButton btnTaskFail = new ToolStripButton(EventState.FAIL.getName());
+		btnTaskFail = new ToolStripButton(EventState.FAIL.getName());
 		btnTaskFail.setIcon("buttons/task_fail.png");
 		btnTaskFail.setWidth(16);
 		btnTaskFail.setHeight(16);

@@ -263,18 +263,18 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         for (Event e: list){
             LocalDateTime eventLocalStart = e.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDateTime eventLocalEnd = e.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-            double dayCost = e.getSpentTime()/(Duration.between(eventLocalStart, eventLocalEnd).toDays());
+            double dayCost = e.getSpentTime()/(Duration.between(eventLocalStart, eventLocalEnd).toDays() + 1);
             if (eventLocalStart.isBefore(startDate)) eventLocalStart = startDate;
             if (eventLocalEnd.isAfter(endDate)) throw new IllegalArgumentException("Для задачи '" + e.getName() + "' указано неверное время завершения");
-            long offsetStart = Duration.between(startDate,eventLocalStart).toDays();
-            long offsetEnd = Duration.between(startDate, eventLocalEnd).toDays();
+            long offsetStart = Duration.between(startDate,eventLocalStart).toDays() + 1;
+            long offsetEnd = Duration.between(startDate, eventLocalEnd).toDays() + 1;
             if (currentUserId.equals(e.getTask().getExecutor()))
-                for (int i=Long.valueOf(offsetStart).intValue(); i <=offsetEnd; i++) {
+                for (int i=Long.valueOf(offsetStart).intValue(); i < offsetEnd; i++) {
                     daysLocal[i] += dayCost;
                     daysGroup[i] += dayCost;
                 }
             else
-                for (int i=Long.valueOf(offsetStart).intValue(); i <=offsetEnd; i++)
+                for (int i=Long.valueOf(offsetStart).intValue(); i < offsetEnd; i++)
                     daysGroup[i] += dayCost;
 
         }

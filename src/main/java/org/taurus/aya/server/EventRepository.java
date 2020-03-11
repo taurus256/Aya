@@ -38,4 +38,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Modifying
     @Query("UPDATE Event e SET e.endDate=current_timestamp WHERE e.endDate<current_timestamp AND e.state=1")
     void updateEndDateForTasksInProcess();
+
+    //Метод, увеличивающий состояние FAIL для задач, время которых прошло, но они не были взяты в работу
+    @Modifying
+    @Query("UPDATE Event e SET e.state=4 WHERE e.endDate<current_timestamp AND e.state=0")
+    void updateStateForForgottenTasks();
 }

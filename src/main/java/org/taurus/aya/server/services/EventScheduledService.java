@@ -22,5 +22,6 @@ public class EventScheduledService {
     {
         System.out.println("State of running tasks changed");
         eventRepository.updateEndDateForTasksInProcess();
+        eventRepository.updateStateForForgottenTasks();
     }
 }
