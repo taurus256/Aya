@@ -302,7 +302,10 @@ public class ExtendedTimeline extends Timeline {
 			@Override
 			public String getEventHeaderHTML(CalendarEvent calendarEvent,
                                              CalendarView calendarView) {
-				return  "<b>" + calendarEvent.getAttributeAsString("name") + "</b>";
+				if (calendarEvent.getAttributeAsInt("index").equals(0))
+					return  "<b>" + calendarEvent.getAttributeAsString("name") + "</b>";
+				else
+					return  "<b>" + calendarEvent.getAttributeAsString("name") + " " + calendarEvent.getAttributeAsString("index")  +  "</b>";
 			}
         });
 

@@ -44,6 +44,7 @@ public class Event {
     private Date start;
     private Boolean isGraph;
     private Boolean userCorrectSpentTime = false;
+
     private Integer index = 0;
     @ManyToOne
     @JoinColumn(name="executor", insertable = false, updatable = false)
@@ -302,4 +303,7 @@ public class Event {
     {
         return task.getFragmented();
     }
+
+    public Integer getIndex() { return index; }
+
 }

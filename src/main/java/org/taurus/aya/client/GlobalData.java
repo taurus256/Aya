@@ -507,6 +507,7 @@ public class GlobalData {
 				id,
 				parent,
 				new DataSourceField("taskId", FieldType.INTEGER,"Задача"),
+				new DataSourceField("index", FieldType.INTEGER,"Фрагмент"),
 				lane,
 				new DataSourceField("name", FieldType.TEXT, "Название"),
 				new DataSourceField("description", FieldType.TEXT,"Описание"),
