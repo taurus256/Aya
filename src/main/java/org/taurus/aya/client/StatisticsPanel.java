@@ -26,7 +26,7 @@ public class StatisticsPanel extends VLayout {
     HTMLPane pane = new HTMLPane();
 
     public StatisticsPanel(){
-        setMinWidth(300);
+        setWidth(0);
         setShowResizeBar(true);
         setResizeBarSize(5);
         setOverflow(Overflow.HIDDEN);
@@ -46,30 +46,7 @@ public class StatisticsPanel extends VLayout {
         label.setPadding(5);
         label.addClickHandler(new ClickHandler() {
             @Override
-            public void onClick(ClickEvent clickEvent) {
-                GlobalData.getAnalyticService().getMonthGraph(GlobalData.getCurrentUser().getAttributeAsLong("id"), new AsyncCallback<GraphData>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        SC.logWarn("Ошибка при вызове удаленного сервиса");
-                    }
-
-                    @Override
-                    public void onSuccess(GraphData data) {
-                        chart.removeAllSeries();
-                        Series series = chart.createSeries()
-                                .setName("Затраты своего времени")
-                                .setPoints(data.getSeriesLocal());
-                        Series seriesGroup = chart.createSeries()
-                                .setName("Затраты времени группы")
-                                .setPoints(data.getSeriesGroup());
-                        chart.getXAxis().setCategories(data.getCaptions());
-                        chart.addSeries(series);
-                        chart.addSeries(seriesGroup);
-
-                        pane.setContents(data.getStatistics());
-                    }
-                });
-            }
+            public void onClick(ClickEvent clickEvent) {refreshData();}
         });
 
         chart.setType(Series.Type.AREA)
@@ -100,5 +77,39 @@ public class StatisticsPanel extends VLayout {
         this.addMember(pane);
 
         GlobalData.setStatisticsPanel(this);
+    }
+
+    public void refreshData(){
+        GlobalData.getAnalyticService().getMonthGraph(GlobalData.getCurrentUser().getAttributeAsLong("id"), new AsyncCallback<GraphData>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                SC.logWarn("Ошибка при вызове удаленного сервиса");
+            }
+
+            @Override
+            public void onSuccess(GraphData data) {
+                chart.removeAllSeries();
+                Series series = chart.createSeries()
+                        .setName("Затраты своего времени")
+                        .setPoints(data.getSeriesLocal());
+                Series seriesGroup = chart.createSeries()
+                        .setName("Затраты времени группы")
+                        .setPoints(data.getSeriesGroup());
+                chart.getXAxis().setCategories(data.getCaptions());
+                chart.addSeries(series);
+                chart.addSeries(seriesGroup);
+
+                pane.setContents(data.getStatistics());
+            }
+        });
+    }
+
+    public void showPanel(){
+        this.setWidth(300);
+        refreshData();
+    }
+
+    public void hidePanel(){
+        this.setWidth(0);
     }
 }

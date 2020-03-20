@@ -527,6 +527,8 @@ public class MatrixAdvicer {
                             advices.add(new Advice(AdviceState.WARNING,"Нагрузка на пользователя <b>" + userNames.get(e.getExecutor()) + "</b> превышает среднюю на задаче <b>" + e.getTask().getName() + "</b> потока '" + e.getLane() + "'"));
                         else
                             advices.add(new Advice(AdviceState.CRITICAL,"Нагрузка на пользователя <b>" + userNames.get(e.getExecutor()) + "</b> выходит за допустимый интервал на задаче <b>" + e.getTask().getName() + "</b> потока '" + e.getLane() + "'"));
+
+                        break;
                     }
                 }
             }

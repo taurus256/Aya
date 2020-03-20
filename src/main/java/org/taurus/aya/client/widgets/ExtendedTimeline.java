@@ -97,6 +97,7 @@ public class ExtendedTimeline extends Timeline {
 		setUseSublanes(false);
         setRowHeight(200);
 
+		SC.logWarn("ExtendedTimeline: set initial criterias ");
         setDataSource(GlobalData.getDataSource_events());
 		setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS,true));
 		setAutoFetchData(true);
@@ -138,7 +139,7 @@ public class ExtendedTimeline extends Timeline {
 
 //         Configure the time range
 
-		setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 28, null);
+		//setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 28, null);
 
 		startDate = new Date();
 		endDate = new Date();
@@ -156,9 +157,13 @@ public class ExtendedTimeline extends Timeline {
 		}
 		endDate = new Date(endDate.getTime() - 24 * 3600 * 1000);
 
-		setTimelineRange(startDate,endDate);
+		//setTimelineRange(startDate,endDate);
+		SC.logWarn("ExtendedTimeline: setStartDate to " + startDate.toString());
+		SC.logWarn("ExtendedTimeline: setEndDate to " + endDate.toString());
 		setStartDate(startDate);
 		setEndDate(endDate);
+		SC.logWarn("ExtendedTimeline: startDate is " + getStartDate().toString());
+		SC.logWarn("ExtendedTimeline: endDate is " + getEndDate().toString());
 
 		// Setting criteria for searching lanes
 		laneSearchCriteria = new AdvancedCriteria();
@@ -270,6 +275,9 @@ public class ExtendedTimeline extends Timeline {
 				ev.setAttribute("wgroup", GlobalData.ACCESS_ALL);
 				ev.setAttribute("author", GlobalData.getCurrentUser().getAttributeAsInt("id"));
 				ev.setAttribute("state",EventState.NEW.ordinal());
+				ev.setAttribute("eventWindowStyle", "s3_event_new");
+				ev.setAttribute("showInBacklog",false);
+
 				//Lane lane = getLaneFromPoint(event.getX() - getTimelineView().getAbsoluteLeft(), event.getY() - getAbsoluteTop() - getTimelineView().getTop() - getTimelineView().getHeaderHeight());
 				//Lane sublane = getSublaneFromPoint(event.getX() - getTimelineView().getAbsoluteLeft(), event.getY() - getAbsoluteTop() - getTimelineView().getTop() - getTimelineView().getHeaderHeight());
 				Lane lane = getLaneFromPoint(null,null);
@@ -297,15 +305,21 @@ public class ExtendedTimeline extends Timeline {
 
 
         // set customizers
+		/* Для event-ов, представляющих инликатор, возвращает пустую строку
+		* Для остальных (представляющих задачи) имя или имя + индекс
+  	    */
         setEventHeaderHTMLCustomizer(new EventHeaderHTMLCustomizer(){
 
 			@Override
 			public String getEventHeaderHTML(CalendarEvent calendarEvent,
                                              CalendarView calendarView) {
-				if (calendarEvent.getAttributeAsInt("index").equals(0))
-					return  "<b>" + calendarEvent.getAttributeAsString("name") + "</b>";
+				if (calendarEvent.getAttributeAsInt("index") != null)
+					if (calendarEvent.getAttributeAsInt("index").equals(0))
+						return  "<b>" + calendarEvent.getAttributeAsString("name") + "</b>";
+					else
+						return  "<b>" + calendarEvent.getAttributeAsString("name") + " " + calendarEvent.getAttributeAsString("index")  +  "</b>";
 				else
-					return  "<b>" + calendarEvent.getAttributeAsString("name") + " " + calendarEvent.getAttributeAsString("index")  +  "</b>";
+					return "";
 			}
         });
 
@@ -351,14 +365,10 @@ public class ExtendedTimeline extends Timeline {
 		addFetchDataHandler(new FetchDataHandler() {
 								@Override
 								public void onFilterData(FetchDataEvent event) {
-
-								if(thisIsFirstCall) {
 									int delta = new Date().getDate() * 60; //+ currentRecord.getAttributeAsDate("endDate").getMinutes()/5*150 - getTimelineView().getWidth()/2;
-
-									SC.logWarn("ExtendedTimeline: FetchDataHandler: need to scroll window to " + delta + " pixels (current day: " + new Date().getDate() + ")");
-									getTimelineView().scrollBodyTo(delta, 0);
-									thisIsFirstCall=false;
-									}
+//
+//									SC.logWarn("ExtendedTimeline: FetchDataHandler: need to scroll window to " + delta + " pixels (current day: " + new Date().getDate() + ")");
+									if (thisIsFirstCall) getTimelineView().scrollBodyTo(delta, 0);
 								}
 							});
 
@@ -419,14 +429,14 @@ public class ExtendedTimeline extends Timeline {
 		
 		DSRequest dsr = new DSRequest();
 		
-		if (!distinctByUsers) //use 'lanes' DS to create lanes 
+		if (!distinctByUsers) //use 'lanes' DS to create lanes
 		{
 			SortSpecifier sortSpecifier = new SortSpecifier("laneOrder", SortDirection.ASCENDING);
 			SortSpecifier[] sortSpecifiers = { sortSpecifier };
 			dsr.setSortBy(sortSpecifiers);
-			
+
 	        GlobalData.getDataSource_lanes().fetchData(laneSearchCriteria, new DSCallback(){
-	
+
 				@Override
 				public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest)
 				{
@@ -554,6 +564,7 @@ public class ExtendedTimeline extends Timeline {
 														  @Override
 														  public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
 														  	GlobalData.getNavigationArea().getTaskPanel().update();
+														  	thisIsFirstCall = false;
 														  	updateTasks();
 														  }
 													  }, dsr);
@@ -642,6 +653,7 @@ public class ExtendedTimeline extends Timeline {
             @Override
             public void execute(DSResponse dsResponse, Object data,
                                 DSRequest dsRequest) {
+				thisIsFirstCall=false;
                 updateTasks();
                 ResourceLifeCycleManager.resourceChanged(ResourceType.TASK, getSelectedEvent());
             }

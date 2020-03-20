@@ -6,6 +6,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -176,29 +177,12 @@ public class ApplicationMenu extends HLayout {
 			}
 		});
 
-	    final MenuItem setUpdateMode = new MenuItem("Применять обновления немедленно");
-	    setUpdateMode.setCheckIfCondition(new MenuItemIfFunction(){
-			@Override
-			public boolean execute(Canvas target, Menu menu, MenuItem item) {
-				return CommandRouter.isExecuteImmediately();
-			}});
-	    setUpdateMode.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				//setUpdateMode.setChecked(!setUpdateMode.getChecked());
-				CommandRouter.setExecuteImmediately(!CommandRouter.isExecuteImmediately());
-				if (CommandRouter.isExecuteImmediately())			
-					GlobalData.getStatusBar().indicateMessage("Изменения будут применяться немедленно");
-				else
-					GlobalData.getStatusBar().indicateMessage("Изменения будут отображаться, но не применяться сразу");
-			}
-		});
-	    
+
 	    ToolStrip toolStripRight = new ToolStrip();
 	    toolStripRight.setAlign(Alignment.RIGHT);
 	    
-	    editMenu.setData(new MenuItem[]{lanesManager,usersManager,groupsManager, new MenuItemSeparator(), setUpdateMode});
-	    editMenu.setHeight(3 *ITEM_MENU_HEIGHT - 1);
+	    editMenu.setData(lanesManager,usersManager,groupsManager);
+	    editMenu.setHeight(2 *ITEM_MENU_HEIGHT - 1);
 
 	    ToolStripMenuButton menuButton = new ToolStripMenuButton("Настройки", editMenu);
 	    toolStrip.addMenuButton(menuButton);
@@ -207,19 +191,27 @@ public class ApplicationMenu extends HLayout {
 	    /********************************************************************************************/
 	    
 	    Menu helpMenu = new Menu();
-	    
+
+	    MenuItem hotKeysItem = new MenuItem("Горячие клавиши");
+		hotKeysItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler(){
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				SC.say("Горячие клавиши","<table width=300" +
+						"<tr><td><b>Действие</b></td><td><b>Linux</b></td><td><b>Windows</b></td></tr>" +
+						"<tr><td>Показать/скрыть панель задач</td><td>Alt+1</td><td>Alt+1</td></tr>" +
+						"<tr><td>Показать/скрыть панель статистики</td><td>Alt+2</td><td>Alt+2</td></tr>" +
+						"<tr><td>Показать свойства задачи в графике</td><td>Alt+Shift+клик по задаче</td><td>Alt+клик по задаче</td></tr>" +
+						"</table>");
+			}
+
+		});
+
 	    MenuItem showConsoleItem = new MenuItem("Консоль SmartGWT");
 	    com.smartgwt.client.widgets.menu.events.ClickHandler handler = new com.smartgwt.client.widgets.menu.events.ClickHandler(){
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				SC.showConsole();
-
-//				Record R = new Record();
-//				R.setAttribute("ruser", 1);
-//				R.setAttribute("rgroup", 2);
-//				R.setAttribute("wuser", 1);
-//				AboutDialog sd = new AboutDialog();
-//				sd.show();
 			}
 		};
 	    showConsoleItem.addClickHandler(handler);
@@ -235,7 +227,8 @@ public class ApplicationMenu extends HLayout {
 			
 		});
 	    
-	    helpMenu.setData(new MenuItem[]{showConsoleItem, /*new MenuItemSeparator(),*/ aboutItem});
+	    helpMenu.setData(hotKeysItem, new MenuItemSeparator(), showConsoleItem, aboutItem);
+
 	    helpMenu.setHeight(2 *ITEM_MENU_HEIGHT);
 	    
 	    ToolStripMenuButton menuHelpButton = new ToolStripMenuButton("Помощь", helpMenu);
@@ -245,7 +238,7 @@ public class ApplicationMenu extends HLayout {
 		/* 								Current user menu (profile etc...)							*/
 	    /********************************************************************************************/
 
-		MenuItem[] userMenuArray = new MenuItem[4];
+		MenuItem[] userMenuArray = new MenuItem[3];
 
 		// Профиль пользователя
 	    MenuItem showProfile = new MenuItem("Профиль");
@@ -261,17 +254,17 @@ public class ApplicationMenu extends HLayout {
 	    userMenuArray[1] = new MenuItemSeparator();
 	    
 	    //Кнопка смены пользователя
-	    MenuItem changeUser = new MenuItem("Сменить пользователя");
-	    changeUser.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler(){
-
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				//показать диалог смены пользователя
-				UserChangeDialog d = new UserChangeDialog();
-				d.show();
-				
-			}});
-	    userMenuArray[2] = changeUser;
+//	    MenuItem changeUser = new MenuItem("Сменить пользователя");
+//	    changeUser.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler(){
+//
+//			@Override
+//			public void onClick(MenuItemClickEvent event) {
+//				//показать диалог смены пользователя
+//				UserChangeDialog d = new UserChangeDialog();
+//				d.show();
+//
+//			}});
+//	    userMenuArray[2] = changeUser;
 	   
 	    MenuItem forgetUser= new MenuItem("Выйти");
 	    forgetUser.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler(){
@@ -283,12 +276,12 @@ public class ApplicationMenu extends HLayout {
 	    			com.google.gwt.user.client.Window.Location.reload();
 				}});
 
-	    userMenuArray[3] = forgetUser;
+	    userMenuArray[2] = forgetUser;
 	     
 	    final Menu userMenu = new Menu();
 	    
 	    userMenu.setData(userMenuArray);
-	    userMenu.setHeight(3 *ITEM_MENU_HEIGHT);
+	    userMenu.setHeight(2 *ITEM_MENU_HEIGHT);
 	    
 	    final ToolStripButton userButton = new ToolStripButton();
 	    userButton.setTitle(GlobalData.getCurrentUser().getAttributeAsString("firstname") + " " + GlobalData.getCurrentUser().getAttributeAsString("surname"));

@@ -308,9 +308,9 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
 
             pairs.clear();
             for (int i=0; i<laneList.size(); i++)
-                pairs.add(Pair.of(laneList.get(i).getName(),stats[i].getD().toString()));
+                pairs.add(Pair.of(laneList.get(i).getName(),String.valueOf(stats[i].getSigma())));
 
-            String dispertions = generateHTMLTable("Среднеквадратичное отклонение", pairs);
+            String dispertions = generateHTMLTable("Среднее квадратичное отклонение", pairs);
 
             return totalTime + "<br>" + dispertions;
 

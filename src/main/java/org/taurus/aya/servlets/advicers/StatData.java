@@ -58,6 +58,13 @@ public class StatData {
         }
         return D;
     }
+    /** Возвращает среднее квадратичное отклонение
+     * @return Значение СКО
+     * */
+    public double getSigma()
+    {
+        return Math.sqrt(getD());
+    }
 
     public Double getTolalTime()
     {

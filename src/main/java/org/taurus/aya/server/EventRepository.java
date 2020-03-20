@@ -25,7 +25,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("select e from Event e inner join e.task where e.endDate > ?1 and e.endDate<?2 and e.task.state=?3")
     List<Event> findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date startDate, Date endDate, Integer state);
 
-    //Метод для выборки списка задач, завершенных в заданном интервалеtate
+    //Метод для выборки списка задач, завершенных в заданном интервале
+    @Query("select e from Event e inner join e.task where e.endDate > :intervalStart and e.endDate<:intervalEnd and e.task.state=:state")
     LinkedList<Event> findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date intervalStart, Date intervalEnd, Integer state);
 
     //Метод для выборки "будущих" задач
@@ -36,11 +37,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     //Метод, увеличивающий endDate у задач в состоянии PROCESS
     @Modifying
-    @Query("UPDATE Event e SET e.endDate=current_timestamp WHERE e.endDate<current_timestamp AND e.state=1")
+    @Query("UPDATE Event e SET e.endDate=current_timestamp WHERE e IN (select e1 from Event e1 inner join e1.task where e1.endDate < current_timestamp and e1.task.state=1)")
     void updateEndDateForTasksInProcess();
 
     //Метод, увеличивающий состояние FAIL для задач, время которых прошло, но они не были взяты в работу
     @Modifying
-    @Query("UPDATE Event e SET e.state=4 WHERE e.endDate<current_timestamp AND e.state=0")
+    @Query("UPDATE Event e SET e.state=4 WHERE e IN (select e1 from Event e1 inner join e1.task where e1.endDate < current_timestamp and e1.task.state=0)")
     void updateStateForForgottenTasks();
 }

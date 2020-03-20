@@ -75,9 +75,9 @@ public class Aya implements EntryPoint {
 		 Page.registerKey(showStatisticsKey, new PageKeyHandler() {
 			 public void execute(String keyName) {
 				 if (GlobalData.getStatisticsPanel().getWidth().equals(0))
-					 GlobalData.getStatisticsPanel().setWidth(300);
+					 GlobalData.getStatisticsPanel().showPanel();
 				 else
-					 GlobalData.getStatisticsPanel().setWidth(0);
+					 GlobalData.getStatisticsPanel().hidePanel();
 			 }
 		 });
 
@@ -173,7 +173,7 @@ public class Aya implements EntryPoint {
 										westLayout.setMinWidth(280);
 
 										eastLayout = new TaskView(new Record(),1);//new MainArea();
-										eastLayout.setWidth("85%");
+										eastLayout.setWidth("100%");
 
 										southLayout = new HLayout();
 										southLayout.setMembers(westLayout, eastLayout, new StatisticsPanel());
@@ -188,7 +188,7 @@ public class Aya implements EntryPoint {
 
 										// Инициализация служебных объектов
 										//TODO ViewManager.init();
-										TabManager.init();
+										//TabManager.init();
 
 										SC.logInfo("Initialization: user list has " + dsResponse.getData().length + " records");
 									}

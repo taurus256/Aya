@@ -41,7 +41,6 @@ public class EditEventDialog extends AbstractPropertiesDialog {
 	{
 		record = event;
 		event.setAttribute("parent", 0);
-		event.setAttribute("eventWindowStyle", "s3_event_new");
 		df.editNewRecord(event);
 	}
 

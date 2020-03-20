@@ -39,7 +39,6 @@ public class Task {
 
     private Date start = null; // время последнего переключения задачи в режим, отличный от NEW и READY. Используется для определения того, сколько времени задача провела в данном режиме.
     private Double spentTime = 0.0; //  реальное (посчитанное системой или заданное пользователем) время выполнения задачи в часах
-    private Integer pauseDays = 0; //  количество дней, в течении которых задача была неативна (в состоянии PAUSE или FAIL)
 
     private Integer state = EventState.NEW.ordinal();
 
@@ -192,14 +191,6 @@ public class Task {
 
     public Double getSpentTime() {
         return spentTime;
-    }
-
-    public Integer getPauseDays() {
-        return pauseDays;
-    }
-
-    public void setPauseDays(Integer pauseDays) {
-        this.pauseDays = pauseDays;
     }
 
     public Double getPlannedDuration() {

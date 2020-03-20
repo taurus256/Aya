@@ -69,8 +69,12 @@ public TaskView(Record currentRecord, int tabUID)
 				btnTaskReady.disable();
 			}
 		},this::getServerAnalyseData);
+		timeline.setMinWidth(775);
 
 		timeline.addUpdateHandler(new UpdateHandler());
+		timeline.setStartDate(new Date(120,3,1));
+		timeline.setEndDate(new Date(120,3,31));
+
         timeline2 = new ExtendedTimeline(this,true,(a)->{},this::getServerAnalyseData);
 		timeline2.addUpdateHandler(new UpdateHandler());
 		timeline2.hide();
