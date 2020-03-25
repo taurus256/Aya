@@ -369,7 +369,7 @@ public class MatrixAdvicer {
     }
 
     public StatData[] calculateUserStatustics(Long userId, List<User> userList, List<Lane> laneList, List<Task> taskList) throws AdviceException {
-        if (taskList.size() == 0) throw new AdviceException("Нет ни одной завершенной задачи за последние 60 дней");
+        if (taskList.size() == 0) throw new AdviceException("Нет ни одной завершенной задачи за рассматриваемый период");
 
         Optional<Task> b = taskList.stream().filter(e -> e.getStartDate().getTime() >= e.getEndDate().getTime()).findFirst();
         if (b.isPresent())

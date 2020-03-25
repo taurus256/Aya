@@ -37,7 +37,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class ExtendedTimeline extends Timeline {
+public class ExtendedTimeline extends HLayout {
 
 	private Menu menu;
 	private int blockSelectMode = 0;
@@ -53,7 +53,6 @@ public class ExtendedTimeline extends Timeline {
 	private boolean thisIsFirstCall = true;
 	private Runnable updateCallback = null;
 	
-	ExtendedTimeline extendedTimeline;
 	private  Date startDate;
 	private Date endDate;
 
@@ -65,6 +64,7 @@ public class ExtendedTimeline extends Timeline {
 	private MenuItem setStateFail;
 	private MenuItem setStateNew;
 	private boolean lastCanSwitch = false;
+	private final Timeline t;
 
 	public ExtendedTimeline(TaskView panel, final boolean distinctByUsers, Consumer<Boolean> enableButtonsCallback, Runnable generateAdvicesCallback)
 	{
@@ -72,35 +72,41 @@ public class ExtendedTimeline extends Timeline {
 		this.distinctByUsers = distinctByUsers;
 		this.enableButtonsCallback = enableButtonsCallback;
 		this.generateAdvicesCallback = generateAdvicesCallback;
-		extendedTimeline = this;
-		
+
 		CalendarView calendarView = new CalendarView();
 		calendarView.setMinHeight(0);
 		calendarView.setAutoFitHeaderHeights(true);
 		//calendarView.setHeight100();
 		setAutoChildProperties("timelineView", calendarView);
 
+		//Initialize composie object
+		t = new Timeline();
+		this.setMembers(t);
+		this.setWidth100();
+		this.setHeight100();
+
+
 		// Configure view
-		if (distinctByUsers) setLaneNameField("executor");
-		setShowLaneRollOver(false);
+		if (distinctByUsers) t.setLaneNameField("executor");
+		t.setShowLaneRollOver(false);
 		setCanAcceptDrop(true);
-		setCanResizeEvents(true);
-		setCanEditLane(true);
+		t.setCanResizeEvents(true);
+		t.setCanEditLane(true);
         setHeight100();
 		setMinHeight(0);
 		setWidth100();
 		setMargin(0);
 		setPadding(0);
-		setDisableWeekends(false);
+		t.setDisableWeekends(false);
 
-		setSublaneNameField("sublane");
-		setUseSublanes(false);
-        setRowHeight(200);
+		t.setSublaneNameField("sublane");
+		t.setUseSublanes(false);
+		t.setRowHeight(200);
 
 		SC.logWarn("ExtendedTimeline: set initial criterias ");
-        setDataSource(GlobalData.getDataSource_events());
-		setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS,true));
-		setAutoFetchData(true);
+		t.setDataSource(GlobalData.getDataSource_events());
+		t.setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS,true));
+		t.setAutoFetchData(true);
 
 
         CalendarEvent indicator1 = new CalendarEvent();
@@ -120,9 +126,9 @@ public class ExtendedTimeline extends Timeline {
         indicator2.setHeaderBackgroundColor("white");
         indicator2.setHeaderBorderColor("white");
 
-		addIndicator(indicator1);
-		addIndicator(indicator2);
-		setShowIndicators(true);
+		t.addIndicator(indicator1);
+		t.addIndicator(indicator2);
+		t.setShowIndicators(true);
 //		setShowZones(true);
 //		setShowZoneHovers(true);
 
@@ -135,11 +141,11 @@ public class ExtendedTimeline extends Timeline {
 		lgf.setWidth(200);
 
 
-		setLaneFields(new ListGridField[]{lgf});
+		t.setLaneFields(new ListGridField[]{lgf});
 
 //         Configure the time range
 
-		//setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 28, null);
+		setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 31, null);
 
 		startDate = new Date();
 		endDate = new Date();
@@ -157,13 +163,9 @@ public class ExtendedTimeline extends Timeline {
 		}
 		endDate = new Date(endDate.getTime() - 24 * 3600 * 1000);
 
-		//setTimelineRange(startDate,endDate);
-		SC.logWarn("ExtendedTimeline: setStartDate to " + startDate.toString());
-		SC.logWarn("ExtendedTimeline: setEndDate to " + endDate.toString());
-		setStartDate(startDate);
-		setEndDate(endDate);
-		SC.logWarn("ExtendedTimeline: startDate is " + getStartDate().toString());
-		SC.logWarn("ExtendedTimeline: endDate is " + getEndDate().toString());
+		t.setTimelineRange(startDate,endDate);
+		t.setStartDate(startDate);
+		t.setEndDate(endDate);
 
 		// Setting criteria for searching lanes
 		laneSearchCriteria = new AdvancedCriteria();
@@ -171,14 +173,14 @@ public class ExtendedTimeline extends Timeline {
 
 		/*					 Setting handlers				*/
 
-		addEventClickHandler(new EventClickHandler(){
+		t.addEventClickHandler(new EventClickHandler(){
 			@Override
 			public void onEventClick(CalendarEventClick event) {
 				if (selectedEvent != null)
 					{
 					selectedEvent.setHeaderBackgroundColor(selectedEvent.getBackgroundColor());
 					selectedEvent.setBorderColor("gray");
-					refreshEvent(selectedEvent);
+						t.refreshEvent(selectedEvent);
 					}
 
 				//Enable 'properties' menu for the event
@@ -196,8 +198,8 @@ public class ExtendedTimeline extends Timeline {
 					selectedEvent.setHeaderBackgroundColor("#DCDCDC");
 					selectedEvent.setBorderColor("#297ACC");
 
-					refreshEvent(selectedEvent);
-					redraw();
+					t.refreshEvent(selectedEvent);
+					t.redraw();
 				}
 
 				// we cannot switch from NEW to any state
@@ -206,7 +208,7 @@ public class ExtendedTimeline extends Timeline {
 				event.cancel();
 			}});
 
-        addEventRemoveClickHandler(new EventRemoveClickHandler(){
+		t.addEventRemoveClickHandler(new EventRemoveClickHandler(){
 
 			@Override
 			public void onEventRemoveClick(CalendarEventRemoveClick event) {
@@ -248,7 +250,7 @@ public class ExtendedTimeline extends Timeline {
 //			SC.logWarn("ExtendedTimeline: event resize startDate: " + event.getNewEvent().getStartDate() + " endDate: " + event.getNewEvent().getEndDate());
 //        });
 
-        addEventChangedHandler(new EventChangedHandler(){
+		t.addEventChangedHandler(new EventChangedHandler(){
 
 			@Override
 			public void onEventChanged(CalendarEventChangedEvent event) {
@@ -259,7 +261,7 @@ public class ExtendedTimeline extends Timeline {
 		}});
 
 
-        addBackgroundMouseUpHandler(new BackgroundMouseUpHandler(){
+		t.addBackgroundMouseUpHandler(new BackgroundMouseUpHandler(){
 
 			@Override
 			public void onBackgroundMouseUp(BackgroundMouseUpEvent event) {
@@ -280,8 +282,8 @@ public class ExtendedTimeline extends Timeline {
 
 				//Lane lane = getLaneFromPoint(event.getX() - getTimelineView().getAbsoluteLeft(), event.getY() - getAbsoluteTop() - getTimelineView().getTop() - getTimelineView().getHeaderHeight());
 				//Lane sublane = getSublaneFromPoint(event.getX() - getTimelineView().getAbsoluteLeft(), event.getY() - getAbsoluteTop() - getTimelineView().getTop() - getTimelineView().getHeaderHeight());
-				Lane lane = getLaneFromPoint(null,null);
-				Lane sublane = getSublaneFromPoint(null,null);
+				Lane lane = t.getLaneFromPoint(null,null);
+				Lane sublane = t.getSublaneFromPoint(null,null);
 
 				if (distinctByUsers)
 				{
@@ -299,7 +301,7 @@ public class ExtendedTimeline extends Timeline {
 				}
 
 				EditEventDialog ee = getEditEventDialog(ev);
-				ee.setNewEvent(extendedTimeline, ev);
+				ee.setNewEvent(ev);
 				event.cancel();
 			}});
 
@@ -308,7 +310,7 @@ public class ExtendedTimeline extends Timeline {
 		/* Для event-ов, представляющих инликатор, возвращает пустую строку
 		* Для остальных (представляющих задачи) имя или имя + индекс
   	    */
-        setEventHeaderHTMLCustomizer(new EventHeaderHTMLCustomizer(){
+		t.setEventHeaderHTMLCustomizer(new EventHeaderHTMLCustomizer(){
 
 			@Override
 			public String getEventHeaderHTML(CalendarEvent calendarEvent,
@@ -325,7 +327,7 @@ public class ExtendedTimeline extends Timeline {
 
 
 
-        setEventBodyHTMLCustomizer(new EventBodyHTMLCustomizer(){
+		t.setEventBodyHTMLCustomizer(new EventBodyHTMLCustomizer(){
 
 			@Override
 			public String getEventBodyHTML(CalendarEvent calendarEvent,
@@ -362,19 +364,28 @@ public class ExtendedTimeline extends Timeline {
                            }
                        });
 
-		addFetchDataHandler(new FetchDataHandler() {
+		t.addFetchDataHandler(new FetchDataHandler() {
 								@Override
 								public void onFilterData(FetchDataEvent event) {
 									int delta = new Date().getDate() * 60; //+ currentRecord.getAttributeAsDate("endDate").getMinutes()/5*150 - getTimelineView().getWidth()/2;
 //
 //									SC.logWarn("ExtendedTimeline: FetchDataHandler: need to scroll window to " + delta + " pixels (current day: " + new Date().getDate() + ")");
-									if (thisIsFirstCall) getTimelineView().scrollBodyTo(delta, 0);
+									if (thisIsFirstCall) t.getTimelineView().scrollBodyTo(delta, 0);
 								}
 							});
 
-		//  set menu and load the data
+		t.addDateChangedHandler(new DateChangedHandler() {
+								  @Override
+								  public void onDateChanged(DateChangedEvent dateChangedEvent) {
+									  StatisticsPanel statisticsPanel = GlobalData.getStatisticsPanel();
+									  if (statisticsPanel !=null)
+										statisticsPanel.updateDates(t.getStartDate(), t.getEndDate());
+								  }
+							  });
 
-		setContextMenu(getContextMenu());
+				//  set menu and load the data
+
+				setContextMenu(getContextMenu());
 
 		updateTimeline();
 	}
@@ -413,22 +424,22 @@ public class ExtendedTimeline extends Timeline {
 			}});
 		headerLevels = new HeaderLevel[]{hl};
 
-    	setResolution(headerLevels, rangeUnit, columnCount);
+		t.setResolution(headerLevels, rangeUnit, columnCount);
     }
-	
+
 	public void updateTimeline()
 	{
 		SC.logWarn("TaskView: updateTimeline");
-		
+
 		// clear Timeline
-		if (getLanes().length > 0 )
-			for (Lane l:getLanes())
-				removeLane(l);
-		
+		if (t.getLanes().length > 0 )
+			for (Lane l:t.getLanes())
+				t.removeLane(l);
+
 //		// Загрузка списка потоков
-		
+
 		DSRequest dsr = new DSRequest();
-		
+
 		if (!distinctByUsers) //use 'lanes' DS to create lanes
 		{
 			SortSpecifier sortSpecifier = new SortSpecifier("laneOrder", SortDirection.ASCENDING);
@@ -450,7 +461,7 @@ public class ExtendedTimeline extends Timeline {
 
 							lane.setHeight(100);
 
-						addLane(lane);
+						t.addLane(lane);
 					}
 				}},dsr);
 		}
@@ -461,13 +472,13 @@ public class ExtendedTimeline extends Timeline {
 			{
 				Lane lane = new Lane(GlobalData.getUsers()[i].getAttribute("id"),GlobalData.getUsers()[i].getAttribute("showedName"));
 				lane.setHeight(200);
-				addLane(lane);
+				t.addLane(lane);
 			}
 
 			updateTasks();
 		}
 	}
-	
+
 	private String generateLaneTitle(String laneName, ArrayList<Lane> sublanes)
 	{
 		String st = "";
@@ -486,24 +497,24 @@ public class ExtendedTimeline extends Timeline {
 			st = laneName;
 		return st;
 	}
-	
+
 	public void updateTasks()
 	{
-		invalidateCache();
-		
+		t.invalidateCache();
+
 		//Обновляем Timeline
-    	fetchData(new AdvancedCriteria("isGraph", OperatorId.EQUALS,true), new DSCallback() {
-			
+		t.fetchData(new AdvancedCriteria("isGraph", OperatorId.EQUALS,true), new DSCallback() {
+
 			@Override
 			public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest) {
-				
+
 				SC.logWarn("updateTasks(): Task list size is " + dsResponse.getData().length);
-				
+
 				if (currentRecord != null) {
 
 					Scheduler.get().scheduleDeferred(new com.google.gwt.user.client.Command() {
 						public void execute() {
-							selectRecord(currentRecord);
+							t.selectRecord(currentRecord);
 						}
 					});
 				}
@@ -533,17 +544,17 @@ public class ExtendedTimeline extends Timeline {
 					panel.setBrowserIconToRunning(false, "Aya");
 
 				GlobalData.getStatusBar().stopIndicateProcess();
-				
-				// Scroll feature availible only in DAY granuality 
-				if (getTimelineGranularity() == TimeUnit.DAY && thisIsFirstCall)
-				{
-					Date d = new Date();
-					int delta = d.getDay() *60; //+ currentRecord.getAttributeAsDate("endDate").getMinutes()/5*150 - getTimelineView().getWidth()/2;
-					SC.logWarn("ExtendedTimeline: need to scroll window to " + delta + " pixels (granuality: " + getTimelineGranularity().toString() + ")");
-					if ( delta > 0)
-						getTimelineView().scrollBodyTo(delta, 0);
-					thisIsFirstCall = false;
- 				}
+
+				// Scroll feature availible only in DAY granuality
+//				if (t.getTimelineGranularity() == TimeUnit.DAY && thisIsFirstCall)
+//				{
+//					Date d = new Date();
+//					int delta = d.getDay() *60; //+ currentRecord.getAttributeAsDate("endDate").getMinutes()/5*150 - getTimelineView().getWidth()/2;
+//					SC.logWarn("ExtendedTimeline: need to scroll window to " + delta + " pixels (granuality: " + t.getTimelineGranularity().toString() + ")");
+//					if ( delta > 0)
+//						t.getTimelineView().scrollBodyTo(delta, 0);
+//					thisIsFirstCall = false;
+// 				}
 			}
 		});
 	}
@@ -612,14 +623,14 @@ public class ExtendedTimeline extends Timeline {
         menu.addItem(eventPropertiesMenu);
         menu.setHeight(menu.getItems().length*ApplicationMenu.ITEM_MENU_HEIGHT - (menu.getItems().length-2));
 
-        return menu;  
-    } 
-    
+        return menu;
+    }
+
 	private EditEventDialog getEditEventDialog(Record event)
 	{
 		return new EditEventDialog(event);
 	}
-	
+
 	public void addUpdateHandler(Runnable callback)
 	{
 		updateCallback = callback;

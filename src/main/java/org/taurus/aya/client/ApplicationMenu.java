@@ -136,7 +136,7 @@ public class ApplicationMenu extends HLayout {
 	    
 	    operationsMenu = new Menu();
 
-	    ToolStripMenuButton menuOperationsButton = new ToolStripMenuButton("Операции", operationsMenu);
+	    ToolStripMenuButton menuOperationsButton = new ToolStripMenuButton("Вид", operationsMenu);
 	    toolStrip.addMenuButton(menuOperationsButton);
 	    
 	    /* 										Administration menu									*/

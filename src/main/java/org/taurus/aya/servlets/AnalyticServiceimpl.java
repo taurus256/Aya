@@ -238,16 +238,22 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         return workingDays;
     }
 
-    public GraphData getMonthGraph(Long userId) throws IllegalArgumentException
+    public GraphData getMonthGraph(Long userId)
+    {
+
+        return getMonthGraph(userId, new Date(120, 2,1), new Date(120,3,1));
+    }
+
+    public GraphData getMonthGraph(Long userId, Date startDate, Date endDate) throws IllegalArgumentException
     {
         //getting current user ID and amount of users
         Long currentUserId = userRepository.getOne(userId).getId();
         long userCount = userRepository.count();
 
-        LocalDateTime startDate = LocalDateTime.now().minusMonths(1);
-        LocalDateTime endDate = LocalDateTime.now();
-        List<Event> list = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(java.sql.Date.valueOf(startDate.toLocalDate()), java.sql.Date.valueOf(endDate.toLocalDate()), EventState.READY.ordinal());
-        Duration d = Duration.between(startDate,endDate);
+        LocalDateTime startDateTime = LocalDateTime.ofInstant(startDate.toInstant(),ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime endDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0);
+        List<Event> list = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(startDate, endDate, EventState.READY.ordinal());
+        Duration d = Duration.between(startDateTime,endDateTime);
         double[] daysLocal = new double[Long.valueOf(d.toDays()).intValue()];
         Arrays.setAll(daysLocal,(a) -> {return 0.0;});
 
@@ -257,24 +263,24 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         //setting the captions array
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd.MM");
         String[] captions =new String[Long.valueOf(d.toDays()).intValue()];
-        Arrays.setAll(captions,i -> {return startDate.plus(i, ChronoUnit.DAYS).format(df);});
+        Arrays.setAll(captions,i -> {return startDateTime.plus(i, ChronoUnit.DAYS).format(df);});
 
 
         for (Event e: list){
             LocalDateTime eventLocalStart = e.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDateTime eventLocalEnd = e.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             double dayCost = e.getSpentTime()/(Duration.between(eventLocalStart, eventLocalEnd).toDays() + 1);
-            if (eventLocalStart.isBefore(startDate)) eventLocalStart = startDate;
-            if (eventLocalEnd.isAfter(endDate)) throw new IllegalArgumentException("Для задачи '" + e.getName() + "' указано неверное время завершения");
-            long offsetStart = Duration.between(startDate,eventLocalStart).toDays() + 1;
-            long offsetEnd = Duration.between(startDate, eventLocalEnd).toDays() + 1;
+            if (eventLocalStart.isBefore(startDateTime)) eventLocalStart = startDateTime;
+            if (eventLocalEnd.isAfter(endDateTime)) throw new IllegalArgumentException("Для задачи '" + e.getName() + "' указано неверное время завершения");
+            long offsetStart = Duration.between(startDateTime,eventLocalStart).toDays();
+            long offsetEnd = Duration.between(startDateTime, eventLocalEnd).toDays();
             if (currentUserId.equals(e.getTask().getExecutor()))
-                for (int i=Long.valueOf(offsetStart).intValue(); i < offsetEnd; i++) {
+                for (int i=Long.valueOf(offsetStart).intValue(); i <= offsetEnd; i++) {
                     daysLocal[i] += dayCost;
                     daysGroup[i] += dayCost;
                 }
             else
-                for (int i=Long.valueOf(offsetStart).intValue(); i < offsetEnd; i++)
+                for (int i=Long.valueOf(offsetStart).intValue(); i <= offsetEnd; i++)
                     daysGroup[i] += dayCost;
 
         }
@@ -282,14 +288,14 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
                             Arrays.stream(daysLocal).mapToLong(r -> Double.valueOf(r).longValue()).boxed().toArray(Long[]::new),
                             Arrays.stream(daysGroup).mapToLong(r -> Double.valueOf(r).longValue()).boxed().toArray(Long[]::new),
                             captions,
-                            getStatistics(userId)
+                            getStatistics(userId, startDate, endDate)
         );
     }
 
-    public String getStatistics(Long userId)
+    public String getStatistics(Long userId, Date startDate, Date endDate)
     {
         MatrixAdvicer matrixAdvicer = new MatrixAdvicer();
-        Instant start = Instant.now().minus(Duration.ofDays(60));
+        Instant start = LocalDateTime.now().minusMonths(1).toInstant(ZoneOffset.UTC); //используется смещение по умолчанию (UTC)
         List<User> userList = userRepository.findAll();
         List<Lane> laneList = laneRepository.findAll();
         try {
@@ -297,18 +303,18 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
             StatData[] stats = matrixAdvicer.calculateUserStatustics(userId,
                     userList,
                     laneList,
-                    taskRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(start), new Date(), EventState.READY.ordinal()));
+                    taskRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(startDate, endDate, EventState.READY.ordinal()));
 
 
             List<Pair<String,String>> pairs = new LinkedList<>();
             for (int i=0; i<laneList.size(); i++)
-                pairs.add(Pair.of(laneList.get(i).getName(),stats[i].getTolalTime().toString()));
+                pairs.add(Pair.of(laneList.get(i).getName(),String.format("%4.2f",stats[i].getTolalTime())));
 
             String totalTime = generateHTMLTable("Общее затраченное время", pairs);
 
             pairs.clear();
             for (int i=0; i<laneList.size(); i++)
-                pairs.add(Pair.of(laneList.get(i).getName(),String.valueOf(stats[i].getSigma())));
+                pairs.add(Pair.of(laneList.get(i).getName(),String.valueOf(String.format("%4.2f",stats[i].getSigma()))));
 
             String dispertions = generateHTMLTable("Среднее квадратичное отклонение", pairs);
 

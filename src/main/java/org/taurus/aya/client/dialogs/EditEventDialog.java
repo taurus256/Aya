@@ -9,7 +9,6 @@ import com.smartgwt.client.widgets.form.fields.*;
 import org.taurus.aya.client.GlobalData;
 import org.taurus.aya.client.TabManager;
 import org.taurus.aya.client.generic.AbstractPropertiesDialog;
-import org.taurus.aya.client.widgets.ExtendedTimeline;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -37,7 +36,7 @@ public class EditEventDialog extends AbstractPropertiesDialog {
 		//if (record.getAttributeAsInt("id") != null) tagListGrid.fetchData(new Criteria(getColumnName(), record.getAttributeAsString("id")));
 	}
 	
-	public void setNewEvent(ExtendedTimeline tv, Record event)
+	public void setNewEvent(Record event)
 	{
 		record = event;
 		event.setAttribute("parent", 0);
