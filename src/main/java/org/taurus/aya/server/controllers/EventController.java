@@ -153,7 +153,7 @@ public class EventController extends GenericController {
                     needsCorrection = eventService.processEventStartAndSpentTime(event, filterIntValue(state));
 
                     LocalDateTime currentDate = LocalDateTime.now();
-                    LocalDateTime lastDate = event.getTask().getEvents().stream().map(e -> e.getEndDate()).min(Date::compareTo).orElseGet(Date::new).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    LocalDateTime lastDate = event.getTask().getEvents().stream().map(e -> e.getEndDate()).max(Date::compareTo).orElseGet(Date::new).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
                     // Модификация конечной даты для выполняющегося event-а
                     // Выполняется, если текущее состояние - PROCESS, и последнее изменение состояния было ранее, чем сегодня
@@ -163,6 +163,7 @@ public class EventController extends GenericController {
 
                         LocalDateTime evEnd = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);;
 
+                        //Нужно ли выполнять "разделение" задачи (создание нового event-а)?
                         if (Duration.between(lastDate, currentDate).toDays() > 0) {
                             event.setState(EventState.PROCESS.ordinal());
                             Event ev = new Event(

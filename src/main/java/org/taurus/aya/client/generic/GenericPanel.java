@@ -258,7 +258,6 @@ public class GenericPanel extends VLayout implements SidePanel{
 						if (selected == null) return;
 						if (value)
 						{
-							TabManager.removeTab(TabManager.getTab(resourceType, selected.getAttributeAsInt("id")),resourceType, selected);
 							dataSource.removeData(selected, new DSCallback(){
 
 								@Override

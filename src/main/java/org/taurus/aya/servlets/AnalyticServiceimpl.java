@@ -23,7 +23,9 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 @WebServlet(urlPatterns = "/app/aya/analytic", loadOnStartup = 1)
@@ -72,22 +74,26 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         List<User> userList = userRepository.findAll();
         List<Lane> laneList = laneRepository.findAll();
 
-            LinkedList<Event> futureEventsList = eventRepository.findAllByStartDateGreaterThanAndIsGraphIsTrue(new Date());
+            //Ищем "будущие" задачи на графике: имеющие статус NEW и дату завершения сегодня или в будущем
+            LinkedList<Event> futureEventsList = eventRepository.findAllByStartDateGreaterThanAndIsState(
+                    Date.from(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).toInstant(ZoneOffset.UTC))
+            );
+
             System.out.println("eventRepository futureEventsList() = " + futureEventsList.size());
 
-            Date deadline = eventRepository.findAllByStartDateGreaterThanAndIsGraphIsTrue(new Date()).stream().map(e -> e.getEndDate()).max(Date::compareTo).orElse(new Date());
+            Date deadline = eventRepository.findAllByStartDateGreaterThanAndIsState(new Date()).stream().map(e -> e.getEndDate()).max(Date::compareTo).orElse(new Date());
             System.out.println("AnalyticServiceimpl deadline = " + deadline);
 
             // Получаем количество задач, выполненное в прошлом за время, равное горизонту планирования
             Duration interval = Duration.between(Instant.now(), deadline.toInstant());
-            Instant start = Instant.now().minus(interval);
-            Integer executedTaskCount = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date.from(start), new Date(), EventState.READY.ordinal()).size();
+            Instant start = Instant.now().minus(Duration.ofDays(60));
+            Instant today = LocalDateTime.now().plus(1, ChronoUnit.DAYS).withHour(0).withMinute(0).withSecond(0).toInstant(ZoneOffset.UTC);
+            Integer executedTaskCount = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date.from(start), Date.from(today), EventState.READY.ordinal()).size();
             System.out.println("AnalyticServiceimpl executedTaskCount = " + executedTaskCount);
 
             //Получаем список задач, выполненных за последний месяц
-            start = Instant.now().minus(Duration.ofDays(60));
             LinkedList oldEventsList = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date.from(start), new Date(), EventState.READY.ordinal());
-            LinkedList oldTasksList = taskRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(start), new Date(), EventState.READY.ordinal());
+            LinkedList oldTasksList = taskRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(start), Date.from(today), EventState.READY.ordinal());
             System.out.println("AnalyticServiceimpl oldEventList.size = " + oldEventsList.size());
             System.out.println("AnalyticServiceimpl oldTasksList.size = " + oldTasksList.size());
 

@@ -10,6 +10,8 @@ import org.taurus.aya.shared.AdviceState;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -488,10 +490,13 @@ public class MatrixAdvicer {
     public List<Advice> generateAdvices(List<User> usersList, Map<Long,Double> dayDurations, List<Event> futureEventList)
     {
         List<Advice> advices = new LinkedList<>();
-        Date startDate = new Date();
-        Date endDate = futureEventList.stream().map(Event::getEndDate).max(Date::compareTo).orElseThrow(RuntimeException::new);
+        //Даты начала и конца периода, для которого производится расчет трудоемкости задач
+        Date periodStartDate = Date.from(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).toInstant(ZoneOffset.UTC));
+        Date periodEndDate = futureEventList.stream().map(Event::getEndDate).max(Date::compareTo).orElseThrow(RuntimeException::new);
 
-        Long daysCount = Duration.between(startDate.toInstant(),endDate.toInstant()).toDays();
+        //Рассчитанное количество дней меньше на 1, поскольку день начинается в 00:00:00, а задачи кончаются в 23:59:59,
+        // т.е задача на "сегодня" будет иметь длительность менее 1 дня
+        Long daysCount = Duration.between(periodStartDate.toInstant(),periodEndDate.toInstant()).toDays() + 1;
         Map<Long,String> userNames = new HashMap<>(); // <id_пользователя>-<ФИО>
 
         double[][] usersVArray = new double[usersList.size()][daysCount.intValue()];
@@ -504,6 +509,9 @@ public class MatrixAdvicer {
 
         for (Event e: futureEventList)
             if (e.getTask().getPlannedDuration() !=null && e.getTask().getPlannedDuration() !=0){
+
+                if (e.getStartDate().before(periodStartDate)) e.setStartDate(periodStartDate); //если задача не была взята в работу
+
                 long taskDays = Math.round(Duration.between(e.getStartDate().toInstant(), e.getEndDate().toInstant()).toHours()/24.0);
 
                 double V = getMatrixValue(e.getExecutor(),e.getLane()).getV();
@@ -512,8 +520,7 @@ public class MatrixAdvicer {
 
                 double plannedDayCost = e.getTask().getPlannedDuration()/taskDays / getMatrixValue(e.getExecutor(),e.getLane()).getV();
                 System.out.println("dispersion: " + getMatrixValue(e.getExecutor(),e.getLane()).getD());
-                long offsetStart = Duration.between(startDate.toInstant(),e.getStartDate().toInstant()).toDays();
-                long offsetEnd = Duration.between(startDate.toInstant(),e.getEndDate().toInstant()).toDays();
+                long offsetStart = Duration.between(periodStartDate.toInstant(),e.getStartDate().toInstant()).toDays();
 
                 for (int i = Long.valueOf(offsetStart).intValue(); i<offsetStart + taskDays; i++){
                     usersVArray[userIndx.get(e.getExecutor())][i] += plannedDayCost;
