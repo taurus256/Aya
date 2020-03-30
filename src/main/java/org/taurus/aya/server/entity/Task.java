@@ -8,7 +8,6 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 /** Класс, сожержащий данные задачи. На графике задача представлена одним или несколькими объектами типа event, все они
  * ссылаются на информацию, которая хранится здесь*/
@@ -27,7 +26,7 @@ public class Task {
 
     private Integer priority;
 
-    private Double plannedDuration;
+    private Double plannedDuration=0.0;
 
     private Integer wuser;
     private Integer wgroup;
@@ -48,6 +47,10 @@ public class Task {
     @org.hibernate.annotations.LazyCollection(LazyCollectionOption.EXTRA)
     private List<Event> events;
 
+    @ManyToOne
+    @JoinColumn(name="executor", insertable = false, updatable = false)
+    User user;
+
     public Task(){}
 
     public Task(String name,
@@ -60,9 +63,8 @@ public class Task {
                 Integer wgroup,
                 Integer ruser,
                 Integer rgroup,
-
-                Double plannedDuration
-                ) {
+                Double plannedDuration,
+                Boolean showInBacklog) {
         this.name = name;
         this.description = description;
         this.lane = lane;
@@ -74,6 +76,7 @@ public class Task {
         this.ruser = ruser;
         this.rgroup = rgroup;
         this.plannedDuration = plannedDuration;
+        this.showInBacklog = showInBacklog;
         events =  new LinkedList<>();
        }
 
@@ -226,6 +229,11 @@ public class Task {
 
     @JsonIgnore
     public List<Event> getEvents() { return events; }
+
+    public String getExecutorName()
+    {
+        return user.getShowedName();
+    }
 
     public void recalculateFields()
     {

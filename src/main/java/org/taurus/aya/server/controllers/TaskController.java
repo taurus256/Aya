@@ -4,17 +4,13 @@ package org.taurus.aya.server.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.taurus.aya.server.EventRepository;
 import org.taurus.aya.server.TaskRepository;
-import org.taurus.aya.server.entity.Event;
 import org.taurus.aya.server.entity.Task;
-import org.taurus.aya.server.services.EventService;
 import org.taurus.aya.server.services.TaskService;
 import org.taurus.aya.shared.GwtResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -80,7 +76,8 @@ public class TaskController extends GenericController {
                     filterIntValue(wgroup),
                     filterIntValue(ruser),
                     filterIntValue(rgroup),
-                    filterDoubleValue(plannedDuration)
+                    filterDoubleValue(plannedDuration),
+                    true // эту задачу нужно показывать в бэклоге
                 );
                 task = taskRepository.saveAndFlush(task);
 

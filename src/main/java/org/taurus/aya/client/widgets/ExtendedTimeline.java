@@ -65,6 +65,7 @@ public class ExtendedTimeline extends Timeline {
 	private MenuItem setStateFail;
 	private MenuItem setStateNew;
 	private boolean lastCanSwitch = false;
+	private final CalendarEvent indicator1;
 
 	public ExtendedTimeline(TaskView panel, final boolean distinctByUsers, Consumer<Boolean> enableButtonsCallback, Runnable generateAdvicesCallback)
 	{
@@ -104,25 +105,25 @@ public class ExtendedTimeline extends Timeline {
 		setAutoFetchData(true);
 
 
-//        CalendarEvent indicator1 = new CalendarEvent();
-//		indicator1.setStartDate(new Date());
-//		Date d = new Date();
-//		//d.setTime(d.getTime() + 24*3600*1000);
-//		indicator1.setEndDate(d);
-//		indicator1.setCanDrag(false);
-//        indicator1.setHeaderBackgroundColor("white");
-//        indicator1.setHeaderBorderColor("white");
-//
-//		CalendarEvent indicator2 = new CalendarEvent();
-//		indicator2.setStartDate(d);
-//		indicator2.setCanEdit(false);
-//		indicator2.setName("");
-//        indicator2.setHeaderBackgroundColor("white");
-//        indicator2.setHeaderBorderColor("white");
-//
-//		addIndicator(indicator1);
-////		addIndicator(indicator2);
-//		setShowIndicators(true);
+		indicator1 = new CalendarEvent();
+		indicator1.setStartDate(new Date());
+		Date d = new Date();
+		indicator1.setEndDate(d);
+		indicator1.setCanDrag(false);
+        indicator1.setHeaderBackgroundColor("white");
+        indicator1.setHeaderBorderColor("white");
+
+		CalendarEvent indicator2 = new CalendarEvent();
+		d.setTime(d.getTime() + 24*3600*1000);
+		indicator2.setStartDate(d);
+		indicator2.setCanEdit(false);
+		indicator2.setName("");
+        indicator2.setHeaderBackgroundColor("white");
+        indicator2.setHeaderBorderColor("white");
+
+		addIndicator(indicator1);
+		addIndicator(indicator2);
+		setShowIndicators(true);
 //		setShowZones(true);
 //		setShowZoneHovers(true);
 

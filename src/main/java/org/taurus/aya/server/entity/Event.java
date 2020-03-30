@@ -16,9 +16,6 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    private String lane;
-//    private String name;
-//    private String description;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "startdate")
     private Date startDate;
@@ -31,24 +28,15 @@ public class Event {
     private Long rgroup;
     @Column(name = "eventwindowstyle")
     private String eventWindowStyle;
-//    private Long executor;
-//    private Integer priority;
 
     private Double spentTime = 0.0; // реальное (посчитанное системой или заданное пользователем) время выполнения задачи в часах
-//    @Column(name="duration_h")
-//    private Double duration_h; // планируемое пользователем время выполения задачи в часах
+
     private String icon;
     private Integer state;
-//    private Long author;
-//    private Date start;
     private Boolean isGraph;
     private Boolean userCorrectSpentTime = false;
 
     private Integer index = 0;
-
-    @ManyToOne
-    @JoinColumn(name="executor", insertable = false, updatable = false)
-    User user;
 
     @Column(insertable = false, updatable = false)
     private Long taskId;
@@ -242,8 +230,8 @@ public class Event {
 
 
     public String getExecutorName() {
-        if (user != null)
-            return user.getShowedName();
+        if (task.getExecutorName() != null)
+            return task.getExecutorName();
         else return "";
     }
 

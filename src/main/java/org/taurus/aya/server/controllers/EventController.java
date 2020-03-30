@@ -1,7 +1,6 @@
 package org.taurus.aya.server.controllers;
 
 
-import org.moxieapps.gwt.highcharts.client.plotOptions.Zone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -105,7 +104,8 @@ public class EventController extends GenericController {
                         filterIntValue(wgroup),
                         filterIntValue(ruser),
                         filterIntValue(rgroup),
-                        filterDoubleValue(duration_h)
+                        filterDoubleValue(duration_h),
+                        false // эту задачу не нужно показывать в бэклоге
                     );
                     task = taskRepository.saveAndFlush(task);
                 }
