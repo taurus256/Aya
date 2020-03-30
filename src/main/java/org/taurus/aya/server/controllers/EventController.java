@@ -150,6 +150,7 @@ public class EventController extends GenericController {
 
                 if (event.getState() != null && !event.getState().equals(filterIntValue(state)))  // если состояние задачи изменилось - считаем время выполнения
                 {
+                    // Установка времени выполнения задачи
                     needsCorrection = eventService.processEventStartAndSpentTime(event, filterIntValue(state));
 
                     LocalDateTime currentDate = LocalDateTime.now();

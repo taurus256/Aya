@@ -43,7 +43,7 @@ public class Task {
 
     private Boolean showInBacklog = true;
 
-    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true, mappedBy = "task")
+    @OneToMany(cascade = {CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "task")
     @org.hibernate.annotations.LazyCollection(LazyCollectionOption.EXTRA)
     private List<Event> events;
 
@@ -232,7 +232,7 @@ public class Task {
 
     public String getExecutorName()
     {
-        return user.getShowedName();
+        return user!=null? user.getShowedName() : "";
     }
 
     public void recalculateFields()

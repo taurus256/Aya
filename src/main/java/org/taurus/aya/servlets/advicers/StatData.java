@@ -20,7 +20,6 @@ public class StatData {
     * */
     void addTask(Task t)
     {
-        System.out.println("StatData.addEvent");
         if (t.getPlannedDuration()!=null && t.getSpentTime()!=null && t.getSpentTime()!=0) {
             velocityList.add(t.getPlannedDuration() / t.getSpentTime());
             n++;

@@ -2,6 +2,7 @@ package org.taurus.aya.server.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.taurus.aya.client.EventState;
 
@@ -251,6 +252,11 @@ public class Event {
     public void setSpentTime(Double spent_time) {
 
         spentTime = (spent_time==null)? 0.0 : spent_time;
+    }
+
+    @JsonGetter("spentTime")
+    public double getSpentTimeJson(){
+        return Math.round(spentTime*10.0)/10.0;
     }
 
 

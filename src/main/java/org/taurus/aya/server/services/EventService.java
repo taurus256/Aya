@@ -48,11 +48,6 @@ public class EventService {
                 formatter.parse(criteriaMap.getOrDefault("endDate","2050-01-01"))
             );
 
-        // Перевод в целый вид для вывода в интерфейсе
-        eventList.stream().forEach(e -> e.setSpentTime(
-                new Long(Math.round(e.getSpentTime())).doubleValue()
-        ));
-
         return eventList;
     }
 
@@ -96,7 +91,10 @@ public class EventService {
     public boolean processEventStartAndSpentTime(Event event, Integer newEventState)
     {
         boolean needUserCorrection = false;
-        if (event.getIsGraph())
+
+        //Считаем только, если задача на графике и было переключение либо в PROCESS, либо из него
+        //Переключения типа PAUSE->FAIL не учитываются
+        if (event.getIsGraph() && (event.getState()==EventState.PROCESS.ordinal() || newEventState==EventState.PROCESS.ordinal()))
             if (!newEventState.equals(EventState.PROCESS.ordinal())) //это переключение ИЗ режима process в какой-то другой
             {
                 if (event.getStart() == null ) throw new RuntimeException("setEventSpentTime: event state was changed to (NEW/READY/PAUSE/FAIL) but start timestamp is NULL ");
@@ -113,6 +111,7 @@ public class EventService {
                 //если это переключение в режим process - запоминаем время
                 event.setStart(new Date());
             }
+
         return needUserCorrection;
     }
 }
