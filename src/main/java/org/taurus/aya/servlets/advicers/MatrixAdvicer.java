@@ -91,9 +91,9 @@ public class MatrixAdvicer {
             initialize(userList, laneList, oldTasksList);
 
             // расчет прогнозируемых времен выполнения потоков
-            Map<String, Double> lanePrognosisMap = computeFutureLanePrognosis(futureEventsList);
-
-            for (String k : lanePrognosisMap.keySet()) System.out.println("lane prognosis: " + k + " " + lanePrognosisMap.get(k));
+//            Map<String, Double> lanePrognosisMap = computeFutureLanePrognosis(futureEventsList);
+//
+//            for (String k : lanePrognosisMap.keySet()) System.out.println("lane prognosis: " + k + " " + lanePrognosisMap.get(k));
 
             // расчет прогнозируемых затрат времени для каждого пользователя
             Map<Long,Double> userPrognosisMap = computeFutureUserPrognosis(futureEventsList);
@@ -490,8 +490,8 @@ public class MatrixAdvicer {
     public List<Advice> generateAdvices(List<User> usersList, Map<Long,Double> dayDurations, List<Event> futureEventList)
     {
         List<Advice> advices = new LinkedList<>();
-        //Даты начала и конца периода, для которого производится расчет трудоемкости задач
-        Date periodStartDate = Date.from(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).toInstant(ZoneOffset.UTC));
+        //Даты начала и конца периода, для которого производится расчет трудоемкости задач (от 00:00 сегодня до макс. времени конца задачи)
+        Date periodStartDate = Date.from(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0).toInstant(ZoneOffset.UTC));
         Date periodEndDate = futureEventList.stream().map(Event::getEndDate).max(Date::compareTo).orElseThrow(RuntimeException::new);
 
         //Рассчитанное количество дней меньше на 1, поскольку день начинается в 00:00:00, а задачи кончаются в 23:59:59,
