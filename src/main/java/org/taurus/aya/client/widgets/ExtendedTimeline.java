@@ -104,7 +104,6 @@ public class ExtendedTimeline extends Timeline {
 		setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS,true));
 		setAutoFetchData(true);
 
-
 		indicator1 = new CalendarEvent();
 		indicator1.setStartDate(new Date());
 		Date d = new Date();

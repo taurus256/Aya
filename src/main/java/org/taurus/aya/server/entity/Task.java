@@ -43,7 +43,7 @@ public class Task {
 
     private Boolean showInBacklog = true;
 
-    @OneToMany(cascade = {CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "task")
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "task")
     @org.hibernate.annotations.LazyCollection(LazyCollectionOption.EXTRA)
     private List<Event> events;
 
@@ -223,7 +223,9 @@ public class Task {
 
     public Boolean getShowInBacklog() {return showInBacklog;}
 
-    public void setShowInBacklog(Boolean showInBacklog) { this.showInBacklog = showInBacklog; }
+    public void setShowInBacklog(Boolean showInBacklog) {
+        System.out.println("showInBacklog(setter) = " + showInBacklog);
+        this.showInBacklog = showInBacklog; }
 
     public String getIcon() { return "tree/task0.png";}
 

@@ -3,7 +3,9 @@ package org.taurus.aya.server.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.taurus.aya.server.EventRepository;
 import org.taurus.aya.server.TaskRepository;
+import org.taurus.aya.server.entity.Event;
 import org.taurus.aya.server.entity.Task;
 
 import java.text.ParseException;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 public class TaskService {
 
     private TaskRepository taskRepository;
+    private EventRepository eventRepository;
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -36,16 +39,8 @@ public class TaskService {
 
         taskList = taskRepository.findAll();
 
-        //System.out.println(criteriaMap);
-
         if (Boolean.valueOf(criteriaMap.getOrDefault("showInBacklog","true")))
                  taskList = taskRepository.findAllByShowInBacklogIsTrue();
-
-        // Перевод в целый вид для вывода в интерфейсе
-        //TODO:: delete this after testing!
-//        taskList.stream().forEach(e -> e.setSpentTime(
-//                new Long(Math.round(e.getSpentTime())).doubleValue()
-//        ));
 
         return taskList;
     }

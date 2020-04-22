@@ -2,6 +2,7 @@ package org.taurus.aya.server.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.taurus.aya.client.EventState;
@@ -53,6 +54,7 @@ public class EventController extends GenericController {
 
     @PostMapping("/modify")
     @ResponseBody
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public GwtResponse executePost(
         @RequestParam String _operationType,
         @RequestParam (required = false) String id,          //integer,
@@ -107,7 +109,7 @@ public class EventController extends GenericController {
                         filterDoubleValue(duration_h),
                         false // эту задачу не нужно показывать в бэклоге
                     );
-                    task = taskRepository.saveAndFlush(task);
+                    task = taskRepository.save(task);
                 }
                 else
                     task = taskRepository.findById(idTask).orElseThrow(IllegalArgumentException::new );
@@ -127,11 +129,12 @@ public class EventController extends GenericController {
                         icon,
                         filterIntValue(state)
                 );
-                event = eventRepository.saveAndFlush(e);
+                event = eventRepository.save(e);
                 event.setTaskId(task.getId());
-
+                System.out.println("Event created");
                 //сохранение границ интервала (startTime, endTime) в Task
-                task.recalculateFields();
+                //TODO:: delete this after testing
+//                task.recalculateFields();
                 taskRepository.save(task);
                 return new GwtResponse(0,1,1,new Event[] {event});
             }
@@ -177,7 +180,7 @@ public class EventController extends GenericController {
                                     event.getIcon(),
                                     EventState.PROCESS.ordinal()
                             );
-                            ev = eventRepository.saveAndFlush(ev);
+                            ev = eventRepository.save(ev);
                             return new GwtResponse(0, 1, 1, new Event[]{ev});
                         } else
                             event.setEndDate(Date.from(evEnd.atZone(ZoneId.systemDefault()).toInstant()));
@@ -212,7 +215,7 @@ public class EventController extends GenericController {
                 event.setState(filterIntValue(state));
                 event.setIsGraph(filterBooleanValue(isGraph));
 
-                event = eventRepository.saveAndFlush(event);
+                event = eventRepository.save(event);
                 System.out.println("Event saved");
 
                 task = event.getTask();
@@ -232,6 +235,7 @@ public class EventController extends GenericController {
 
     @PostMapping("/moveToBacklog")
     @ResponseBody
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public GwtResponse moveToBacklog(@RequestParam String taskId)
     {
         taskService.moveToBacklog(filterLongValue(taskId));

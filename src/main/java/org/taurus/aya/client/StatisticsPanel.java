@@ -67,7 +67,7 @@ public class StatisticsPanel extends VLayout {
         chart.getYAxis().setAxisTitleText("");
         chart.setMarginLeft(15);
         chart.setMarginRight(10);
-        chart.setColors("#157efb","#f2f2f2");
+        chart.setColors("#f2f2f2","#157efb");
 
         pane.setWidth100();
         pane.setHeight100();
@@ -92,15 +92,15 @@ public class StatisticsPanel extends VLayout {
             @Override
             public void onSuccess(GraphData data) {
                 chart.removeAllSeries();
-                Series series = chart.createSeries()
-                        .setName("Затраты своего времени")
-                        .setPoints(data.getSeriesLocal());
                 Series seriesGroup = chart.createSeries()
                         .setName("Затраты времени группы")
                         .setPoints(data.getSeriesGroup());
+                Series series = chart.createSeries()
+                        .setName("Затраты своего времени")
+                        .setPoints(data.getSeriesLocal());
                 chart.getXAxis().setCategories(data.getCaptions());
-                chart.addSeries(series);
                 chart.addSeries(seriesGroup);
+                chart.addSeries(series);
 
                 pane.setContents(data.getStatistics());
             }

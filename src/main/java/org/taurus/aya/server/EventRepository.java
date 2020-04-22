@@ -17,7 +17,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAll();
 
     //Метод для запроса данных боковой панели
-    @Query("SELECT e FROM Event e WHERE (e.startDate > :startDate OR e.startDate = NULL) AND (e.endDate < :endDate OR e.endDate = NULL) AND e.isGraph = false")
+    @Query("SELECT e FROM Event e inner join e.task WHERE (e.startDate > :startDate OR e.startDate IS NULL) AND (e.endDate < :endDate OR e.endDate IS NULL) AND e.task.showInBacklog = true")
     List<Event> findAllByStartDateGreaterThanAndEndDateLessThanAndIsGraphIsFalse(Date startDate, Date endDate);
     //Метод для запроса данных графиков (используется инверсный выбор дат)
     List<Event> findAllByStartDateLessThanAndEndDateGreaterThanAndIsGraphIsTrue(Date startdate, Date enddate);

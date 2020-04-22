@@ -536,58 +536,6 @@ public class GlobalData {
 		return createEventDS(dsName,fields);
 	}
 
-	private static DataSource createDS(String name, DataSourceField[] fields)
-	{
-		DataSource dataSource =
-				new RestDataSource() {
-					protected Object transformRequest(DSRequest dsRequest) {
-						return super.transformRequest(dsRequest);
-					}
-
-					protected void transformResponse(DSResponse response, DSRequest request, Object data) {
-						super.transformResponse(response, request, data);
-					}
-				};
-
-		dataSource.setID(name);
-		dataSource.setDataFormat(DSDataFormat.JSON);
-		dataSource.setDataProtocol(DSProtocol.GETPARAMS);
-		dataSource.setJsonPrefix("");
-		dataSource.setJsonSuffix("");
-
-		//set up FETCH to use POST requests
-		OperationBinding fetch = new OperationBinding();
-		fetch.setDataURL(name + "/fetch");
-		fetch.setOperationType(DSOperationType.FETCH);
-		fetch.setDataProtocol(DSProtocol.POSTPARAMS);
-
-		//set up ADD to use POST requests~`
-		OperationBinding add = new OperationBinding();
-		add.setDataURL(name + "/modify");
-		add.setOperationType(DSOperationType.ADD);
-		add.setDataProtocol(DSProtocol.POSTPARAMS);
-
-		//set up UPDATE to use POST
-		OperationBinding update = new OperationBinding();
-		update.setOperationType(DSOperationType.UPDATE);
-		update.setDataURL(name + "/modify");
-		update.setDataProtocol(DSProtocol.POSTPARAMS);
-
-		//set up REMOVE to use DELETE
-		OperationBinding remove = new OperationBinding();
-		remove.setOperationType(DSOperationType.REMOVE);
-		remove.setDataURL(name + "/modify");
-		remove.setDataProtocol(DSProtocol.POSTPARAMS);
-
-		dataSource.setOperationBindings(fetch, add, update, remove);
-
-		dataSource.setDataURL(name);
-		dataSource.setFields(fields);
-
-		/* finally set data source */
-		return dataSource;
-	}
-
 	private static DataSource createEventDS(String name, DataSourceField[] fields)
 	{
 		DataSource dataSource =
@@ -641,6 +589,61 @@ public class GlobalData {
 
 		dataSource.setDataURL(name);
 		dataSource.setFields(fields);
+
+		/* finally set data source */
+		return dataSource;
+	}
+
+	private static DataSource createDS(String name, DataSourceField[] fields)
+	{
+		DataSource dataSource =
+				new RestDataSource() {
+					protected Object transformRequest(DSRequest dsRequest) {
+						return super.transformRequest(dsRequest);
+					}
+
+					protected void transformResponse(DSResponse response, DSRequest request, Object data) {
+						super.transformResponse(response, request, data);
+					}
+				};
+
+		dataSource.setID(name);
+		dataSource.setDataFormat(DSDataFormat.JSON);
+		dataSource.setDataProtocol(DSProtocol.GETPARAMS);
+		dataSource.setJsonPrefix("");
+		dataSource.setJsonSuffix("");
+
+		//set up FETCH to use POST requests
+		OperationBinding fetch = new OperationBinding();
+		fetch.setDataURL(name + "/fetch");
+		fetch.setOperationType(DSOperationType.FETCH);
+		fetch.setDataProtocol(DSProtocol.POSTPARAMS);
+
+		//set up ADD to use POST requests~`
+		OperationBinding add = new OperationBinding();
+		add.setDataURL(name + "/modify");
+		add.setOperationType(DSOperationType.ADD);
+		add.setDataProtocol(DSProtocol.POSTPARAMS);
+
+		//set up UPDATE to use POST
+		OperationBinding update = new OperationBinding();
+		update.setOperationType(DSOperationType.UPDATE);
+		update.setDataURL(name + "/modify");
+		update.setDataProtocol(DSProtocol.POSTPARAMS);
+
+		//set up REMOVE to use DELETE
+		OperationBinding remove = new OperationBinding();
+		remove.setOperationType(DSOperationType.REMOVE);
+		remove.setDataURL(name + "/modify");
+		remove.setDataProtocol(DSProtocol.POSTPARAMS);
+
+		dataSource.setOperationBindings(fetch, add, update, remove);
+
+		dataSource.setDataURL(name);
+		dataSource.setFields(fields);
+//		dataSource.setPreventHTTPCaching(true);
+//		dataSource.setCacheAllData(false);
+//		dataSource.setCacheAcrossOperationIds(false);
 
 		/* finally set data source */
 		return dataSource;

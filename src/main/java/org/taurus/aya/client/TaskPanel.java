@@ -137,6 +137,8 @@ public class TaskPanel extends VLayout implements SidePanel {
 					Record r = createEventRecord(taskRecord);;
 					GlobalData.getDataSource_events().addData(r);
 					taskRecord.setAttribute("showInBacklog",false);
+					taskRecord.setAttribute("startDate",new Date());
+					taskRecord.setAttribute("endDate",new Date(new Date().getTime()+1000*3600*24*2));
 					taskRecord.setAttribute("executor",GlobalData.getCurrentUser().getAttribute("id"));
 					GlobalData.getDataSource_tasks().updateData(taskRecord, new DSCallback() {
 						@Override

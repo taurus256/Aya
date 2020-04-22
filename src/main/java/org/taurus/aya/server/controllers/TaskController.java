@@ -2,6 +2,7 @@ package org.taurus.aya.server.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.taurus.aya.server.TaskRepository;
@@ -41,6 +42,7 @@ public class TaskController extends GenericController {
 
     @PostMapping("/modify")
     @ResponseBody
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public GwtResponse executePost(
         @RequestParam String _operationType,
         @RequestParam (required = false) String id,              //integer,
@@ -79,7 +81,7 @@ public class TaskController extends GenericController {
                     filterDoubleValue(plannedDuration),
                     true // эту задачу нужно показывать в бэклоге
                 );
-                task = taskRepository.saveAndFlush(task);
+                task = taskRepository.save(task);
 
                 return new GwtResponse(0,1,1,new Task[] {task});
             }
@@ -105,9 +107,7 @@ public class TaskController extends GenericController {
                 task.setState(filterIntValue(state));
                 task.setPlannedDuration(filterDoubleValue(plannedDuration));
                 task.setShowInBacklog(filterBooleanValue(showInBacklog));
-
                 task = taskRepository.save(task);
-                System.out.println("Task saved");
                 return new GwtResponse(0,1,1,new Task[] {task});
             }
             case "remove":
