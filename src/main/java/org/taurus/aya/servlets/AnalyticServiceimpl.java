@@ -291,8 +291,8 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
 
         }
         return new GraphData(
-                            Arrays.stream(daysLocal).mapToLong(r -> Double.valueOf(r).longValue()).boxed().toArray(Long[]::new),
-                            Arrays.stream(daysGroup).mapToLong(r -> Double.valueOf(r).longValue()).boxed().toArray(Long[]::new),
+                            Arrays.stream(daysLocal).mapToLong(Math::round).boxed().toArray(Long[]::new),
+                            Arrays.stream(daysGroup).mapToLong(Math::round).boxed().toArray(Long[]::new),
                             captions,
                             getStatistics(userId, startDate, endDate)
         );

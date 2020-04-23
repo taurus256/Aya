@@ -641,9 +641,9 @@ public class GlobalData {
 
 		dataSource.setDataURL(name);
 		dataSource.setFields(fields);
-//		dataSource.setPreventHTTPCaching(true);
-//		dataSource.setCacheAllData(false);
-//		dataSource.setCacheAcrossOperationIds(false);
+		dataSource.setPreventHTTPCaching(true);
+		dataSource.setCacheAllData(false);
+		dataSource.setCacheAcrossOperationIds(false);
 
 		/* finally set data source */
 		return dataSource;
