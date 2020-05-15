@@ -15,12 +15,12 @@ import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import org.taurus.aya.client.TabManager.ResourceType;
+import org.taurus.aya.client.widgets.DateControlWidget;
 import org.taurus.aya.client.widgets.ExtendedTimeline;
 import org.taurus.aya.shared.Advice;
 import org.taurus.aya.shared.AdviceState;
 import org.taurus.aya.shared.TaskAnalyseData;
 import java.util.List;
-import java.util.Date;
 
 public class TaskView extends ContentPane {
 	
@@ -39,6 +39,7 @@ public class TaskView extends ContentPane {
 	private ToolStripButton btnTaskPause;
 	private ToolStripButton btnTaskFail;
 	private ToolStripButton btnTaskReady;
+	private DateControlWidget dateControlWidget;
 
 	private class UpdateHandler implements Runnable
 	{
@@ -48,13 +49,13 @@ public class TaskView extends ContentPane {
 		}
 	}
 
-public TaskView(Record currentRecord, int tabUID)
+	public TaskView(Record currentRecord, int tabUID)
 	{
 		this.currentRecord = currentRecord;
 		this.tabUID = tabUID;
 		contentPane = this;
 		taskView = this;
-		
+		GlobalData.setTaskView(this);
 		
 		timeline = new ExtendedTimeline(this, false,(a)->{
 			if (a){
@@ -81,6 +82,10 @@ public TaskView(Record currentRecord, int tabUID)
 		vLayout.setHeight100();
 		vLayout.setMinHeight(100);
 		vLayout.setMargin(0);
+
+		dateControlWidget = new DateControlWidget(this);
+		vLayout.addMember(dateControlWidget);
+
 		hLayout = new HLayout();
 		hLayout.setMinHeight(0);
 		hLayout.setWidth100();
@@ -329,6 +334,13 @@ public TaskView(Record currentRecord, int tabUID)
 		commandItem.setEnabled(false);
 		menu.setItems(closeItem, commandItem);
 		return menu;
+	}
+
+	public void setWeekMode(boolean weekMode){
+		if (weekMode)
+			dateControlWidget.setWeekRange();
+		else
+			dateControlWidget.setMonthRange();
 	}
 
 	public native void setBrowserIconToRunning(boolean setPlay, String title)

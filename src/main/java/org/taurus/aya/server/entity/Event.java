@@ -23,10 +23,7 @@ public class Event {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "enddate")
     private Date endDate;
-    private Long wuser;
-    private Long wgroup;
-    private Long ruser;
-    private Long rgroup;
+
     @Column(name = "eventwindowstyle")
     private String eventWindowStyle;
 
@@ -129,38 +126,38 @@ public class Event {
     }
 
 
-    public Integer getWuser() {
+    public Long getWuser() {
         return task.getWuser();
     }
 
-    public void setWuser(Integer wuser) {
+    public void setWuser(Long wuser) {
         task.setWuser(wuser);
     }
 
 
-    public Integer getWgroup() {
+    public Long getWgroup() {
         return task.getWgroup();
     }
 
-    public void setWgroup(Integer wgroup) {
+    public void setWgroup(Long wgroup) {
         task.setWgroup(wgroup);
     }
 
 
-    public Integer getRuser() {
+    public Long getRuser() {
         return task.getRuser();
     }
 
-    public void setRuser(Integer ruser) {
+    public void setRuser(Long ruser) {
         task.setRuser(ruser);
     }
 
 
-    public Integer getRgroup() {
+    public Long getRgroup() {
         return task.getRgroup();
     }
 
-    public void setRgroup(Integer rgroup) {
+    public void setRgroup(Long rgroup) {
         task.setRgroup(rgroup);
     }
 

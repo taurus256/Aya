@@ -38,6 +38,8 @@ public class GlobalData {
 	private final static UserServiceAsync userService = GWT.create( UserService.class );
 	
 	private static NavigationArea navigationArea;
+
+	private static TaskView taskView;
 	private static TabSet topTabSet;
 	private static ApplicationMenu applicationMenu;
 	private static StatusBar statusBar;
@@ -266,6 +268,14 @@ public class GlobalData {
 
 	public static void setStatisticsPanel(StatisticsPanel statisticsPanel) {
 		GlobalData.statisticsPanel = statisticsPanel;
+	}
+
+	public static TaskView getTaskView() {
+		return taskView;
+	}
+
+	public static void setTaskView(TaskView taskView) {
+		GlobalData.taskView = taskView;
 	}
 
 	public static UserServiceAsync getUserService() {

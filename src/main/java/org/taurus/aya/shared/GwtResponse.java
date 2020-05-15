@@ -8,9 +8,12 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GwtResponse  {
 
+    private Object data;
+
     public GwtResponse(Integer startRow, Integer endRow, Integer totalRows, Object data)
     {
-        response = new ResponseContainer(startRow, endRow, totalRows, data);
+        this.data = data;
+        response = new ResponseContainer(startRow, endRow, totalRows, this.data);
     }
 
     public ResponseContainer getResponse() {
@@ -22,4 +25,12 @@ public class GwtResponse  {
     }
 
     private ResponseContainer response;
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
 }

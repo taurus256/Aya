@@ -28,10 +28,10 @@ public class Task {
 
     private Double plannedDuration=0.0;
 
-    private Integer wuser;
-    private Integer wgroup;
-    private Integer ruser;
-    private Integer rgroup;
+    private Long wuser;
+    private Long wgroup;
+    private Long ruser;
+    private Long rgroup;
 
     private Date startDate;
     private Date endDate;
@@ -59,10 +59,10 @@ public class Task {
                 Long author,
                 Long executor,
                 Integer priority,
-                Integer wuser,
-                Integer wgroup,
-                Integer ruser,
-                Integer rgroup,
+                Long wuser,
+                Long wgroup,
+                Long ruser,
+                Long rgroup,
                 Double plannedDuration,
                 Boolean showInBacklog) {
         this.name = name;
@@ -136,35 +136,35 @@ public class Task {
         this.priority = priority;
     }
 
-    public Integer getWuser() {
+    public Long getWuser() {
         return wuser;
     }
 
-    public void setWuser(Integer wuser) {
+    public void setWuser(Long wuser) {
         this.wuser = wuser;
     }
 
-    public Integer getWgroup() {
+    public Long getWgroup() {
         return wgroup;
     }
 
-    public void setWgroup(Integer wgroup) {
+    public void setWgroup(Long wgroup) {
         this.wgroup = wgroup;
     }
 
-    public Integer getRuser() {
+    public Long getRuser() {
         return ruser;
     }
 
-    public void setRuser(Integer ruser) {
+    public void setRuser(Long ruser) {
         this.ruser = ruser;
     }
 
-    public Integer getRgroup() {
+    public Long getRgroup() {
         return rgroup;
     }
 
-    public void setRgroup(Integer rgroup) {
+    public void setRgroup(Long rgroup) {
         this.rgroup = rgroup;
     }
 

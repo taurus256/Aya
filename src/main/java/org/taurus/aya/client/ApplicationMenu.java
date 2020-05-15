@@ -3,16 +3,12 @@ package org.taurus.aya.client;
 import com.google.gwt.user.client.Cookies;
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
-import com.smartgwt.client.widgets.menu.MenuItemIfFunction;
 import com.smartgwt.client.widgets.menu.MenuItemSeparator;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
@@ -24,7 +20,6 @@ import org.taurus.aya.client.generic.GenericPropertiesDialog;
 import org.taurus.aya.shared.Command;
 import org.taurus.aya.shared.Command.CommandType;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class ApplicationMenu extends HLayout {
@@ -36,7 +31,7 @@ public class ApplicationMenu extends HLayout {
     
     Menu createResourceMenu = null;
     Menu userMenu = null;
-    Menu operationsMenu = null;
+    Menu viewMenu = null;
     MenuItem createLink;
  
     static TabManager.ResourceType resourceEnumValues[] = TabManager.ResourceType.values();
@@ -131,15 +126,24 @@ public class ApplicationMenu extends HLayout {
 	    ToolStripMenuButton menuCreateButton = new ToolStripMenuButton("Создать", createResourceMenu);
 	    toolStrip.addMenuButton(menuCreateButton);
 	    
-	    /* 										Operations menu										*/
+	    /* 										View menu										*/
 	    /********************************************************************************************/
 	    
-	    operationsMenu = new Menu();
+	    viewMenu = new Menu();
 
-	    ToolStripMenuButton menuOperationsButton = new ToolStripMenuButton("Вид", operationsMenu);
-	    toolStrip.addMenuButton(menuOperationsButton);
-	    
-	    /* 										Administration menu									*/
+		MenuItem setWeekMode = new MenuItem("Недельный обзор");
+		setWeekMode.addClickHandler(event -> GlobalData.getTaskView().setWeekMode(true));
+
+		MenuItem setMonthMode = new MenuItem("Месячный обзор");
+		setMonthMode.addClickHandler(event -> GlobalData.getTaskView().setWeekMode(false));
+
+		viewMenu.setData(setWeekMode,setMonthMode,new MenuItemSeparator());
+		viewMenu.setHeight(3 *ITEM_MENU_HEIGHT - 2);
+
+		ToolStripMenuButton viewMenuButton = new ToolStripMenuButton("Вид", viewMenu);
+		toolStrip.addMenuButton(viewMenuButton);
+
+		/* 										Administration menu									*/
 	    /********************************************************************************************/
 	    
 	    Menu editMenu = new Menu();
@@ -180,7 +184,6 @@ public class ApplicationMenu extends HLayout {
 
 	    ToolStrip toolStripRight = new ToolStrip();
 	    toolStripRight.setAlign(Alignment.RIGHT);
-	    
 	    editMenu.setData(lanesManager,usersManager,groupsManager);
 	    editMenu.setHeight(2 *ITEM_MENU_HEIGHT - 1);
 

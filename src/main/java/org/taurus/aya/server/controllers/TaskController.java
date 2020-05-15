@@ -74,10 +74,10 @@ public class TaskController extends GenericController {
                     filterLongValue(author),
                     filterLongValue(executor),
                     filterIntValue(priority),
-                    filterIntValue(wuser),
-                    filterIntValue(wgroup),
-                    filterIntValue(ruser),
-                    filterIntValue(rgroup),
+                    filterLongValue(wuser),
+                    filterLongValue(wgroup),
+                    filterLongValue(ruser),
+                    filterLongValue(rgroup),
                     filterDoubleValue(plannedDuration),
                     true // эту задачу нужно показывать в бэклоге
                 );
@@ -97,10 +97,10 @@ public class TaskController extends GenericController {
 
 
                 task.setAuthor(filterLongValue(author));
-                task.setWuser(filterIntValue(wuser));
-                task.setWgroup(filterIntValue(wgroup));
-                task.setRuser(filterIntValue(ruser));
-                task.setRgroup(filterIntValue(rgroup));
+                task.setWuser(filterLongValue(wuser));
+                task.setWgroup(filterLongValue(wgroup));
+                task.setRuser(filterLongValue(ruser));
+                task.setRgroup(filterLongValue(rgroup));
 
                 task.setExecutor(filterLongValue(executor));
                 task.setPriority(filterIntValue(priority));

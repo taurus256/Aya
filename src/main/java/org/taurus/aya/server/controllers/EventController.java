@@ -41,8 +41,7 @@ public class EventController extends GenericController {
 
     @ResponseBody
     @PostMapping("/fetch")
-    @Transactional
-    public GwtResponse execute(HttpServletRequest request, @RequestParam String _operationType, @RequestParam (required=false) String[] criteria) throws RuntimeException, ParseException
+    public GwtResponse getEvents(HttpServletRequest request, @RequestParam String _operationType, @RequestParam (required=false) String[] criteria) throws RuntimeException, ParseException
     {
 
         System.out.println("Operation_type=" + _operationType);
@@ -102,10 +101,10 @@ public class EventController extends GenericController {
                         filterLongValue(author),
                         filterLongValue(executor),
                         filterIntValue(priority),
-                        filterIntValue(wuser),
-                        filterIntValue(wgroup),
-                        filterIntValue(ruser),
-                        filterIntValue(rgroup),
+                        filterLongValue(wuser),
+                        filterLongValue(wgroup),
+                        filterLongValue(ruser),
+                        filterLongValue(rgroup),
                         filterDoubleValue(duration_h),
                         false // эту задачу не нужно показывать в бэклоге
                     );
@@ -203,10 +202,10 @@ public class EventController extends GenericController {
                 event.setEndDate(Date.from(d.withHour(23).withMinute(59).withSecond(59).atZone(ZoneId.systemDefault()).toInstant()));
 
                 event.setAuthor(filterLongValue(author));
-                event.setWuser(filterIntValue(wuser));
-                event.setWgroup(filterIntValue(wgroup));
-                event.setRuser(filterIntValue(ruser));
-                event.setRgroup(filterIntValue(rgroup));
+                event.setWuser(filterLongValue(wuser));
+                event.setWgroup(filterLongValue(wgroup));
+                event.setRuser(filterLongValue(ruser));
+                event.setRgroup(filterLongValue(rgroup));
 
                 event.setExecutor(filterLongValue(executor));
                 event.setPriority(filterIntValue(priority));

@@ -45,6 +45,7 @@ public class EditEventDialog extends AbstractPropertiesDialog {
 
 	protected Widget createFormLayout()
 	{
+		SC.logWarn("Event spentTime (1) = " + record.getAttributeAsString("spentTime"));
 		DateItem startDate = new DateTimeItem("startDate");
 		DateItem endDate = new DateTimeItem("endDate");
 
@@ -80,7 +81,7 @@ public class EditEventDialog extends AbstractPropertiesDialog {
 			TextAreaItem description = new TextAreaItem("description");
 			description.setWidth(300);
 			description.setHeight(200);
-
+			SC.logWarn("Event spentTime (2) = " + record.getAttributeAsString("spentTime"));
 			FloatItem spentTime = new FloatItem("spentTime");
 
 			df.setFields(lane, name, startDate, endDate, description, executor, priority, durationH, spentTime);
@@ -94,6 +95,7 @@ public class EditEventDialog extends AbstractPropertiesDialog {
 				df.disable();
 
 			show();
+			SC.logWarn("Event spentTime (3) = " + record.getAttributeAsString("spentTime"));
 		});
 
 		return df;

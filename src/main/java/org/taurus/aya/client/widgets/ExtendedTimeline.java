@@ -1,6 +1,5 @@
 package org.taurus.aya.client.widgets;
 
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.*;
@@ -42,7 +41,6 @@ public class ExtendedTimeline extends Timeline {
 	private Menu menu;
 	private int blockSelectMode = 0;
 	ListGridField lgf;
-	Record currentRecord;
 	TaskView panel;
 	AdvancedCriteria laneSearchCriteria;
 	boolean distinctByUsers = true;
@@ -80,6 +78,7 @@ public class ExtendedTimeline extends Timeline {
 		calendarView.setAutoFitHeaderHeights(true);
 		//calendarView.setHeight100();
 		setAutoChildProperties("timelineView", calendarView);
+		setShowControlsBar(false);
 
 		// Configure view
 		if (distinctByUsers) setLaneNameField("executor");
@@ -139,7 +138,7 @@ public class ExtendedTimeline extends Timeline {
 
 //         Configure the time range
 
-		setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 31, null);
+		setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 7, 150);
 
 		startDate = new Date();
 		endDate = new Date();
@@ -319,7 +318,13 @@ public class ExtendedTimeline extends Timeline {
 			}
         });
 
-
+		addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+			@Override
+			public void onClick(ClickEvent clickEvent) {
+				Record r = getSelectedEvent();
+				SC.logWarn("R. spentTime=" + r.getAttribute("spentTime"));
+			}
+		});
 
         setEventBodyHTMLCustomizer(new EventBodyHTMLCustomizer(){
 
@@ -372,6 +377,7 @@ public class ExtendedTimeline extends Timeline {
 								  @Override
 								  public void onDateChanged(DateChangedEvent dateChangedEvent) {
 									  StatisticsPanel statisticsPanel = GlobalData.getStatisticsPanel();
+
 									  if (statisticsPanel !=null)
 										statisticsPanel.updateDates(extendedTimeline.getStartDate(), extendedTimeline.getEndDate());
 								  }
@@ -401,7 +407,7 @@ public class ExtendedTimeline extends Timeline {
 			newEvent.setEndDate(end);
 	}
 
-    private void setTimeResolution(TimeUnit headerUnit, TimeUnit rangeUnit, int columnCount, Integer minutesPerColumn)
+    public void setTimeResolution(TimeUnit headerUnit, TimeUnit rangeUnit, int columnCount, int headerWidth)
     {
     	HeaderLevel[] headerLevels = {};
 
@@ -416,6 +422,7 @@ public class ExtendedTimeline extends Timeline {
 					else
 						return numberFormat.format(startDate);
 			}});
+		hl.setHeaderWidth(headerWidth);
 		headerLevels = new HeaderLevel[]{hl};
 
     	setResolution(headerLevels, rangeUnit, columnCount);
@@ -501,18 +508,9 @@ public class ExtendedTimeline extends Timeline {
 			
 			@Override
 			public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest) {
-				
+
 				SC.logWarn("updateTasks(): Task list size is " + dsResponse.getData().length);
 				
-				if (currentRecord != null) {
-
-					Scheduler.get().scheduleDeferred(new com.google.gwt.user.client.Command() {
-						public void execute() {
-							selectRecord(currentRecord);
-						}
-					});
-				}
-
 				if (updateCallback != null) updateCallback.run();
 
 				// Поиск задачи с установленным флагом запроса корректировки времени
@@ -648,17 +646,22 @@ public class ExtendedTimeline extends Timeline {
     }
 
     private void setEventState(String s3_event_pause, String s, String s2) {
-        final CalendarEvent selectedEvent = getSelectedEvent();
-        if (selectedEvent == null) return;
-        selectedEvent.setAttribute("eventWindowStyle", s3_event_pause);
-        selectedEvent.setAttribute("state", s);
-        selectedEvent.setAttribute("icon", s2);
+        final CalendarEvent changedEvent = getSelectedEvent();
+        if (changedEvent == null) return;
+        changedEvent.setAttribute("eventWindowStyle", s3_event_pause);
+        changedEvent.setAttribute("state", s);
+        changedEvent.setAttribute("icon", s2);
 
-        GlobalData.getDataSource_events().updateData(selectedEvent, new DSCallback() {
+        GlobalData.getDataSource_events().updateData(changedEvent, new DSCallback() {
             @Override
             public void execute(DSResponse dsResponse, Object data,
                                 DSRequest dsRequest) {
 				thisIsFirstCall=false;
+				//проверка на то, что резуольтат всего один
+				if (dsResponse.getData().length<1) {SC.logWarn("setEventState: server changes 0 tasks! Stop refreshing"); return;}
+				if (dsResponse.getData().length>1) {SC.logWarn("setEventState: server changes more 1 tasks! Stop refreshing"); return;}
+				//копирование в selectedEvent атрибутов, которые могли измениться на сервере
+				Record.copyAttributesInto(selectedEvent,dsResponse.getData()[0],"spentTime");
                 updateTasks();
                 ResourceLifeCycleManager.resourceChanged(ResourceType.TASK, getSelectedEvent());
             }
