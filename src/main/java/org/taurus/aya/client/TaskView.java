@@ -343,6 +343,11 @@ public class TaskView extends ContentPane {
 			dateControlWidget.setMonthRange();
 	}
 
+	public void setViewMyTasksMode(boolean viewMyTasks)
+	{
+		getCurrentTimeline().setViewMyTasksMode(viewMyTasks);
+	}
+
 	public native void setBrowserIconToRunning(boolean setPlay, String title)
 	/*-{
     	console.log("setPlay=" + setPlay);

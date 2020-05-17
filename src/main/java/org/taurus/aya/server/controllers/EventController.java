@@ -15,6 +15,7 @@ import org.taurus.aya.server.services.TaskService;
 import org.taurus.aya.shared.GwtResponse;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.text.ParseException;
 import java.time.*;
 import java.util.Date;
@@ -41,11 +42,12 @@ public class EventController extends GenericController {
 
     @ResponseBody
     @PostMapping("/fetch")
-    public GwtResponse getEvents(HttpServletRequest request, @RequestParam String _operationType, @RequestParam (required=false) String[] criteria) throws RuntimeException, ParseException
+    public GwtResponse getEvents(HttpServletRequest request, @RequestParam String _operationType, @RequestParam (required=false) String[] criteria) throws RuntimeException, ParseException, IOException
     {
 
         System.out.println("Operation_type=" + _operationType);
         System.out.println("request body is:" + _operationType);
+        System.out.println("criteria length is:" + criteria.length);
 
         List<Event> events = eventService.getData(criteria);
         return new GwtResponse(0,events.size(),events.size(), events);

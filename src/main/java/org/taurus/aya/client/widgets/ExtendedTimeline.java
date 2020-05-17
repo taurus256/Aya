@@ -100,7 +100,12 @@ public class ExtendedTimeline extends Timeline {
 
 		SC.logWarn("ExtendedTimeline: set initial criterias ");
         setDataSource(GlobalData.getDataSource_events());
-		setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS,true));
+		//setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS, true));
+		setImplicitCriteria(new AdvancedCriteria(OperatorId.AND, new Criterion[]{
+				new Criterion("executor", OperatorId.EQUALS, GlobalData.getCurrentUser().getAttributeAsString("id")),
+				new Criterion("isGraph", OperatorId.EQUALS, true),
+		}));
+
 		setAutoFetchData(true);
 
 		indicator1 = new CalendarEvent();
@@ -318,14 +323,6 @@ public class ExtendedTimeline extends Timeline {
 			}
         });
 
-		addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-			@Override
-			public void onClick(ClickEvent clickEvent) {
-				Record r = getSelectedEvent();
-				SC.logWarn("R. spentTime=" + r.getAttribute("spentTime"));
-			}
-		});
-
         setEventBodyHTMLCustomizer(new EventBodyHTMLCustomizer(){
 
 			@Override
@@ -504,7 +501,8 @@ public class ExtendedTimeline extends Timeline {
 		invalidateCache();
 		
 		//Обновляем Timeline
-    	fetchData(new AdvancedCriteria("isGraph", OperatorId.EQUALS,true), new DSCallback() {
+
+    	fetchData(getImplicitCriteria(), new DSCallback() {
 			
 			@Override
 			public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest) {
@@ -627,7 +625,6 @@ public class ExtendedTimeline extends Timeline {
 	{
 		updateCallback = callback;
 	}
-
 
 	public CalendarEvent getSelectedEvent()
 	{
@@ -779,6 +776,28 @@ public class ExtendedTimeline extends Timeline {
 
 		dialog.draw();
 		dialog.centerInPage();
+	}
+
+	private Criterion getComposedCriteria(){
+
+		Criterion crt1 = new Criterion();
+		crt1.addCriteria(getImplicitCriteria());
+		Criterion crt2 = new Criterion();
+		crt2.addCriteria(getInitialCriteria());
+		Criterion composedCriteria = new Criterion(OperatorId.AND, new Criterion[]{crt1,crt2});
+		return composedCriteria;
+	}
+
+	public void setViewMyTasksMode(boolean viewMyTasks){
+		if (viewMyTasks)
+			setImplicitCriteria(new AdvancedCriteria(OperatorId.AND, new Criterion[]{
+					new Criterion("executor", OperatorId.EQUALS, GlobalData.getCurrentUser().getAttributeAsString("id")),
+					new Criterion("isGraph", OperatorId.EQUALS, true),
+			}));
+		else
+			setImplicitCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS, true));
+
+		updateTasks();
 	}
 
 	private void  setCanSwitchToAnyState(boolean canSwitch)

@@ -120,7 +120,7 @@ public class ApplicationMenu extends HLayout {
 			}});
 	    createLink.setEnabled(false);
 	    
-	    createResourceMenu.setData(new MenuItem[]{createTask,createDocument,createScript,createTag,new MenuItemSeparator(),createLink});
+	    createResourceMenu.setData(createTask,createDocument,createScript,createTag,new MenuItemSeparator(),createLink);
 	    createResourceMenu.setHeight(6 *ITEM_MENU_HEIGHT - 2);
 	    
 	    ToolStripMenuButton menuCreateButton = new ToolStripMenuButton("Создать", createResourceMenu);
@@ -131,14 +131,20 @@ public class ApplicationMenu extends HLayout {
 	    
 	    viewMenu = new Menu();
 
-		MenuItem setWeekMode = new MenuItem("Недельный обзор");
-		setWeekMode.addClickHandler(event -> GlobalData.getTaskView().setWeekMode(true));
+		final MenuItem setWeekMode = new MenuItem("Недельный график");
+		final MenuItem setMonthMode = new MenuItem("Месячный график");
+		final MenuItem setViewMyTasks = new MenuItem("Показывать только мои задачи");
+		final MenuItem setViewAllTasks = new MenuItem("Показывать задачи всех пользователей");
+		setWeekMode.setChecked(true);
+		setViewMyTasks.setChecked(true);
 
-		MenuItem setMonthMode = new MenuItem("Месячный обзор");
-		setMonthMode.addClickHandler(event -> GlobalData.getTaskView().setWeekMode(false));
+		setWeekMode.addClickHandler(event -> { GlobalData.getTaskView().setWeekMode(true); setWeekMode.setChecked(true); setMonthMode.setChecked(false); viewMenu.refreshRow(0); viewMenu.refreshRow(1);});
+		setMonthMode.addClickHandler(event -> { GlobalData.getTaskView().setWeekMode(false); setWeekMode.setChecked(false); setMonthMode.setChecked(true); viewMenu.refreshRow(0); viewMenu.refreshRow(1);});
+		setViewMyTasks.addClickHandler(event -> { GlobalData.getTaskView().setViewMyTasksMode(true); setViewMyTasks.setChecked(true); setViewAllTasks.setChecked(false); viewMenu.refreshRow(3); viewMenu.refreshRow(4);});
+		setViewAllTasks.addClickHandler(event -> { GlobalData.getTaskView().setViewMyTasksMode(false); setViewMyTasks.setChecked(false); setViewAllTasks.setChecked(true); viewMenu.refreshRow(3); viewMenu.refreshRow(4);});
 
-		viewMenu.setData(setWeekMode,setMonthMode,new MenuItemSeparator());
-		viewMenu.setHeight(3 *ITEM_MENU_HEIGHT - 2);
+		viewMenu.setData(setWeekMode,setMonthMode,new MenuItemSeparator(), setViewMyTasks, setViewAllTasks);
+		viewMenu.setHeight(5 *ITEM_MENU_HEIGHT - 2);
 
 		ToolStripMenuButton viewMenuButton = new ToolStripMenuButton("Вид", viewMenu);
 		toolStrip.addMenuButton(viewMenuButton);
