@@ -25,7 +25,6 @@
 	left: 0;
 	right: 0;
 	margin: auto;
-
 }
 
 .user
@@ -39,10 +38,12 @@
 	color:#005cb8;
 	font-size:10pt;
 }
+
 .stamp
 {
 	color:gray;
 }
+
 .content
 {
 	font-size:13px;
@@ -53,6 +54,7 @@
 	background-color:#3cbcfb;
 	border:1px solid gray;
 }
+
 .s3_normal
 {
 
@@ -69,7 +71,6 @@
 
 .s3_event_ready
 {
-	/*background-color:#D3F8E2;*/
 	background-color:#D1F0D1;
 	border:1px solid gray;
 }
@@ -82,24 +83,48 @@
 
 .s3_event_pause
 {
-	/*background-color:#E4C1F9;*/
 	background-color:#C4E1E1;
 	border:1px solid gray;
 }
 
 .s3_event_process
 {
-	/*background-color:#FFFACF;*/
 	background-color:#FFEDDE;
 	border:1px solid gray;
 }
 
 .s3_event_fail
 {
-	/*background-color:#F694C1;*/
 	background-color:#FFDEDE;
 	border:1px solid gray;
 }
+
+/**/
+.s3_event_readyHeader
+{
+	overflow: hidden;
+}
+
+.s3_event_newHeader
+{
+	overflow: hidden;
+}
+
+.s3_event_pauseHeader
+{
+	overflow: hidden;
+}
+
+.s3_event_processHeader
+{
+	overflow: hidden;
+}
+
+.s3_event_failHeader
+{
+	overflow: hidden;
+}
+
 
 .s3_status
 {

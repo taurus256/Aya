@@ -275,7 +275,6 @@ public class GenericPanel extends VLayout implements SidePanel{
 		MenuItemSeparator separator = new MenuItemSeparator();
 		
 		menuCreateLink = new MenuItem("Получить ссылку");
-		menuCreateLink.setIcon("menu/link.png");
 		menuCreateLink.setEnabled(false);
 		
 		menuCreateLink.addClickHandler(new ClickHandler(){

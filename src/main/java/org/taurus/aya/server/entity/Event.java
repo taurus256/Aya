@@ -206,16 +206,21 @@ public class Event {
         task.setPlannedDuration(duration_h==null ? 0 : duration_h);
     }
 
-
+    //TODO:: delete this method and 'icon' property
     public String getIcon() {
-        return icon;
+        switch (task.getPriority())
+        {
+            case 2: return "task_high.png"; //high priority
+            case 0: return "tree/task0.png"; // low priority
+            default: return "tree/task_normal.png";
+        }
     }
 
     public void setIcon(String icon) {
         if (icon != null)
             this.icon = icon;
         else
-            this.icon = "tree/task0.png";
+            this.icon = "tree/task_normal.png";
     }
 
     public Integer getState() {

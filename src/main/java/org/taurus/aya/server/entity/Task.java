@@ -227,7 +227,14 @@ public class Task {
         System.out.println("showInBacklog(setter) = " + showInBacklog);
         this.showInBacklog = showInBacklog; }
 
-    public String getIcon() { return "tree/task0.png";}
+    public String getIcon() {
+        switch (priority)
+        {
+            case 2: return "tree/task_high.png"; //high priority
+            case 0: return "tree/task0.png"; // low priority
+            default: return "tree/task_normal.png";
+        }
+    }
 
     @JsonIgnore
     public List<Event> getEvents() { return events; }

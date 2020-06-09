@@ -16,7 +16,6 @@ import org.taurus.aya.client.generic.GenericPropertiesDialog;
 
 import java.util.LinkedList;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class LaneCreationDialog extends Dialog {
 	
@@ -96,7 +95,7 @@ public class LaneCreationDialog extends Dialog {
 		});
 
         lanes_list.addRecordDoubleClickHandler(event -> {
-			editSelectedEvent(event.getRecord());
+			editSelectedLane(event.getRecord());
 			event.cancel();
         });
 		
@@ -134,7 +133,7 @@ public class LaneCreationDialog extends Dialog {
 		});
 
 		buttonEditLane = new IButton("Редактировать");
-		buttonEditLane.addClickHandler(event -> editSelectedEvent(lanes_list.getSelectedRecord()));
+		buttonEditLane.addClickHandler(event -> editSelectedLane(lanes_list.getSelectedRecord()));
 		buttonEditLane.disable();
 		
 		buttonDeleteLane = new IButton("Удалить");
@@ -215,7 +214,7 @@ public class LaneCreationDialog extends Dialog {
 		return bottomButtons;
 	}
 
-	private void editSelectedEvent(Record record) {
+	private void editSelectedLane(Record record) {
 		Consumer<Void> c = Void -> {
 				SC.logWarn("Call resourceChanged");
 				ResourceLifeCycleManager.resourceChanged(ResourceType.LANE, record);

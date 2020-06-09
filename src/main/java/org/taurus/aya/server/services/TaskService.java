@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.taurus.aya.server.EventRepository;
 import org.taurus.aya.server.TaskRepository;
-import org.taurus.aya.server.entity.Event;
 import org.taurus.aya.server.entity.Task;
 
 import java.text.ParseException;
@@ -40,7 +39,7 @@ public class TaskService {
         taskList = taskRepository.findAll();
 
         if (Boolean.valueOf(criteriaMap.getOrDefault("showInBacklog","true")))
-                 taskList = taskRepository.findAllByShowInBacklogIsTrue();
+                 taskList = taskRepository.findAllByShowInBacklogIsTrueOrderByPriorityDesc();
 
         return taskList;
     }

@@ -31,9 +31,11 @@ public class DateControlWidget extends HLayout {
         setHeight(30);
 
         leftMonth = new IButton("<<");
+        leftMonth.setTooltip("Предыдущий месяц");
         leftMonth.setWidth(100);
         leftMonth.addClickHandler(leftMonthHandler);
         leftWeek = new IButton("<");
+        leftWeek.setTooltip("Предыдущая неделя");
         leftWeek.setWidth(100);
         leftWeek.addClickHandler(leftWeekHandler);
 
@@ -45,9 +47,11 @@ public class DateControlWidget extends HLayout {
 //        endDate.setWidth(100);
 
         rightWeek = new IButton(">");
+        rightWeek.setTooltip("Следующая неделя");
         rightWeek.setWidth(100);
         rightWeek.addClickHandler(rightWeekHandler);
         rightMonth = new IButton(">>");
+        rightWeek.setTooltip("Следующий месяц");
         rightMonth.setWidth(100);
         rightMonth.addClickHandler(rightMonthHandler);
 

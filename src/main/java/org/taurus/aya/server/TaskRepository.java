@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task,Long> {
-    List<Task> findAllByShowInBacklogIsTrue();
+    List<Task> findAllByShowInBacklogIsTrueOrderByPriorityDesc();
 
     LinkedList<Task> findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date from, Date end, Integer state);
 }

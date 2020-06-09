@@ -177,6 +177,7 @@ public class ExtendedTimeline extends Timeline {
 				if (selectedEvent != null)
 					{
 					selectedEvent.setHeaderBackgroundColor(selectedEvent.getBackgroundColor());
+					selectedEvent.setHeaderTextColor(selectedEvent.getTextColor());
 					selectedEvent.setBorderColor("gray");
 					refreshEvent(selectedEvent);
 					}
@@ -193,7 +194,8 @@ public class ExtendedTimeline extends Timeline {
 				else {
 					// Setting the selected event and its style
 					selectedEvent = event.getEvent();
-					selectedEvent.setHeaderBackgroundColor("#DCDCDC");
+					selectedEvent.setHeaderBackgroundColor("#3764a3");//#DCDCDC
+					selectedEvent.setHeaderTextColor("#FFFFFF");
 					selectedEvent.setBorderColor("#297ACC");
 
 					refreshEvent(selectedEvent);
@@ -656,7 +658,7 @@ public class ExtendedTimeline extends Timeline {
 				thisIsFirstCall=false;
 				//проверка на то, что резуольтат всего один
 				if (dsResponse.getData().length<1) {SC.logWarn("setEventState: server changes 0 tasks! Stop refreshing"); return;}
-				if (dsResponse.getData().length>1) {SC.logWarn("setEventState: server changes more 1 tasks! Stop refreshing"); return;}
+
 				//копирование в selectedEvent атрибутов, которые могли измениться на сервере
 				Record.copyAttributesInto(selectedEvent,dsResponse.getData()[0],"spentTime");
                 updateTasks();

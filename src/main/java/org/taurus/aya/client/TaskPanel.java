@@ -7,7 +7,10 @@ import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.events.DragStartEvent;
 import com.smartgwt.client.widgets.events.DragStartHandler;
 
+import com.smartgwt.client.widgets.grid.GroupSortNormalizer;
+import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.events.ClickHandler;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
@@ -105,9 +108,11 @@ public class TaskPanel extends VLayout implements SidePanel {
 		imageField.setImageHeight(24);
 		ListGridField nameField = new ListGridField("name", 220);
 		panelBacklog.getTreeGrid().setFields(imageField, nameField);
-		panelBacklog.getTreeGrid().setGroupByField("lane");
-		panelBacklog.getTreeGrid().setCanGroupBy(true);
-		panelBacklog.getTreeGrid().setSortByGroupFirst(true);
+		//panelBacklog.getTreeGrid().setGroupByField("lane"); //TODO:: delete
+
+
+		panelBacklog.getTreeGrid().setSortField("priority");
+		panelBacklog.getTreeGrid().setCanSort(true);
 //		panelBacklog.getTreeGrid().setGroupSortNormalizer(new GroupSortNormalizer(){
 //															  @Override
 //															  public Object normalize(ListGridRecord record, String fieldName, ListGrid context) {
@@ -120,6 +125,8 @@ public class TaskPanel extends VLayout implements SidePanel {
 //																  return -1;
 //															  }
 //														  });
+		panelBacklog.getTreeGrid().setSortByGroupFirst(true);
+		panelBacklog.getTreeGrid().setCanGroupBy(true);
 		panelBacklog.getTreeGrid().groupBy("lane");
 
 		panelBacklog.getTreeGrid().setMinWidth(250);
