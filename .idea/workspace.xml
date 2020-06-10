@@ -11,16 +11,6 @@
   <component name="ChangeListManager">
     <list default="true" id="9db01848-e3cb-4582-923d-3115d9d4d86a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/TaskPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/TaskPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/dialogs/LaneCreationDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/dialogs/LaneCreationDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/generic/GenericPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/generic/GenericPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/widgets/DateControlWidget.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/widgets/DateControlWidget.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/widgets/ExtendedTimeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/widgets/ExtendedTimeline.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/TaskRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/TaskRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/Event.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/Task.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/services/TaskService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/services/TaskService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/aya.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/aya.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -410,7 +400,8 @@
       <workItem from="1589704349006" duration="7731000" />
       <workItem from="1591461082723" duration="9000" />
       <workItem from="1591531715075" duration="4103000" />
-      <workItem from="1591733658061" duration="6188000" />
+      <workItem from="1591733658061" duration="7120000" />
+      <workItem from="1591770913305" duration="9000" />
     </task>
     <task id="LOCAL-00001" summary="Initial project commit">
       <created>1564302873095</created>
@@ -685,7 +676,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589714122601</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="feature:icons for priority levels">
+      <created>1591739874927</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1591739874927</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -717,7 +715,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Fixed: re-appearing task in the backlog&#10;Added: users view works" />
     <MESSAGE value="Added: interface for displaying advices&#10;Fixed: Bug with event re-creation in the backlog,&#10;bug when event state changed" />
     <MESSAGE value="Changed pom.xml for to allow building &quot;fat&quot; executable JAR&#10;Fixed: setting isGraph to null when creating backlog task" />
     <MESSAGE value="fix: changing lane name in the events when lane name changes" />
@@ -742,7 +739,8 @@
     <MESSAGE value="fix: added transactions to controller methods" />
     <MESSAGE value="feature: new date switcher in the timeline; week view" />
     <MESSAGE value="feature: task filtering: (all tasks / only my tasks)" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: task filtering: (all tasks / only my tasks)" />
+    <MESSAGE value="feature:icons for priority levels" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature:icons for priority levels" />
   </component>
   <component name="WindowStateProjectService">
     <state x="794" y="378" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1585329399304">
@@ -757,10 +755,10 @@
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="764" y="213" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1589571153239" />
-    <state x="482" y="119" width="891" height="833" key="CommitChangelistDialog2" timestamp="1589714121941">
+    <state x="482" y="119" width="891" height="833" key="CommitChangelistDialog2" timestamp="1591739874581">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state x="482" y="119" width="891" height="833" key="CommitChangelistDialog2/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1589714121941" />
+    <state x="482" y="119" width="891" height="833" key="CommitChangelistDialog2/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591739874581" />
     <state x="112" y="91" width="1536" height="835" key="DiffContextDialog" timestamp="1587636917337">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
@@ -769,38 +767,38 @@
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="698" y="293" key="EnvironmentVariablesDialog/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1587475685416" />
-    <state width="1172" height="249" key="GridCell.Tab.0.bottom" timestamp="1591739037874">
+    <state width="1172" height="249" key="GridCell.Tab.0.bottom" timestamp="1591740574177">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.0.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591739037874" />
-    <state width="1172" height="249" key="GridCell.Tab.0.center" timestamp="1591739037874">
+    <state width="1172" height="249" key="GridCell.Tab.0.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591740574177" />
+    <state width="1172" height="249" key="GridCell.Tab.0.center" timestamp="1591740574177">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.0.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591739037874" />
-    <state width="1172" height="249" key="GridCell.Tab.0.left" timestamp="1591739037874">
+    <state width="1172" height="249" key="GridCell.Tab.0.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591740574177" />
+    <state width="1172" height="249" key="GridCell.Tab.0.left" timestamp="1591740574177">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.0.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591739037874" />
-    <state width="1172" height="249" key="GridCell.Tab.0.right" timestamp="1591739037874">
+    <state width="1172" height="249" key="GridCell.Tab.0.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591740574177" />
+    <state width="1172" height="249" key="GridCell.Tab.0.right" timestamp="1591740574177">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.0.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591739037874" />
-    <state width="1172" height="249" key="GridCell.Tab.1.bottom" timestamp="1591739037875">
+    <state width="1172" height="249" key="GridCell.Tab.0.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591740574177" />
+    <state width="1172" height="249" key="GridCell.Tab.1.bottom" timestamp="1591740574178">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.1.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591739037875" />
-    <state width="1172" height="249" key="GridCell.Tab.1.center" timestamp="1591739037874">
+    <state width="1172" height="249" key="GridCell.Tab.1.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591740574178" />
+    <state width="1172" height="249" key="GridCell.Tab.1.center" timestamp="1591740574177">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.1.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591739037874" />
-    <state width="1172" height="249" key="GridCell.Tab.1.left" timestamp="1591739037874">
+    <state width="1172" height="249" key="GridCell.Tab.1.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591740574177" />
+    <state width="1172" height="249" key="GridCell.Tab.1.left" timestamp="1591740574177">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.1.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591739037874" />
-    <state width="1172" height="249" key="GridCell.Tab.1.right" timestamp="1591739037875">
+    <state width="1172" height="249" key="GridCell.Tab.1.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591740574177" />
+    <state width="1172" height="249" key="GridCell.Tab.1.right" timestamp="1591740574177">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.1.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591739037875" />
+    <state width="1172" height="249" key="GridCell.Tab.1.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591740574177" />
     <state width="1575" height="315" key="GridCell.Tab.2.bottom" timestamp="1589667461209">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
@@ -837,10 +835,10 @@
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="501" y="89" width="1032" height="847" key="SettingsEditor/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1589388462329" />
-    <state x="559" y="259" width="808" height="527" key="Vcs.Push.Dialog.v2" timestamp="1589714125380">
+    <state x="559" y="259" width="808" height="527" key="Vcs.Push.Dialog.v2" timestamp="1591739877959">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state x="559" y="259" width="808" height="527" key="Vcs.Push.Dialog.v2/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1589714125380" />
+    <state x="559" y="259" width="808" height="527" key="Vcs.Push.Dialog.v2/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591739877959" />
     <state x="842" y="405" width="340" height="239" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1587653871489">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
@@ -893,10 +891,10 @@
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="623" y="239" width="672" height="677" key="run.anything.popup/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1587652153888" />
-    <state x="664" y="242" width="672" height="678" key="search.everywhere.popup" timestamp="1591736003067">
+    <state x="664" y="242" width="672" height="678" key="search.everywhere.popup" timestamp="1591775703407">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state x="664" y="242" width="672" height="678" key="search.everywhere.popup/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591736003067" />
+    <state x="664" y="242" width="672" height="678" key="search.everywhere.popup/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591775703407" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
