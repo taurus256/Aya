@@ -37,8 +37,6 @@ import java.util.LinkedHashMap;
 
 public class GenericPropertiesDialog extends AbstractPropertiesDialog {
 
-	java.util.function.Consumer<Void> func = null;
-
 	public GenericPropertiesDialog(Record r, String imgName, ResourceType resType, DataSource ds, String suff)
 	{
 		super(r,imgName,resType,ds,suff);
@@ -48,12 +46,11 @@ public class GenericPropertiesDialog extends AbstractPropertiesDialog {
 
 	public GenericPropertiesDialog(Record r, String imgName, ResourceType resType, DataSource ds, String suff, java.util.function.Consumer<Void> f)
 	{
-		super(r,imgName,resType,ds,suff);
-		func = f;
-
+		super(r,imgName,resType,ds,suff, f);
+		df.show();
 		show();
 	}
-	
+
 	protected void constructInterface()
 	{
 		this.addItem(createFormLayout());
@@ -66,11 +63,5 @@ public class GenericPropertiesDialog extends AbstractPropertiesDialog {
 
 		this.addItem(createSecurityLayout());
 		this.addItem(createButtonsLayout());
-	}
-
-	protected void saveDialogData()
-	{
-		super.saveDialogData();
-		func.accept(null);
 	}
 }

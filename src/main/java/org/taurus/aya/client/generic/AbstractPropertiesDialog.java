@@ -68,6 +68,8 @@ abstract public class AbstractPropertiesDialog extends Window {
 	final ResourceType resourceType;
 	protected boolean canWriteToThisResource;
 
+	java.util.function.Consumer<Void> func = null;
+
 	public AbstractPropertiesDialog(Record r, String imgName, ResourceType resType, DataSource ds, String suff)
 	{
 		hide();
@@ -118,6 +120,12 @@ abstract public class AbstractPropertiesDialog extends Window {
 			}});
 		hide();
 		SC.logWarn("Конструктор AbstractPropertiesDialog отработал");
+	}
+
+	public AbstractPropertiesDialog(Record r, String imgName, ResourceType resType, DataSource ds, String suff, java.util.function.Consumer<Void> f)
+	{
+		this(r,imgName,resType,ds,suff);
+		func = f;
 	}
 
 	abstract protected void constructInterface();
@@ -715,27 +723,7 @@ abstract public class AbstractPropertiesDialog extends Window {
 					@Override
 					public void execute(DSResponse dsResponse, Object data,
                                         DSRequest dsRequest) {
-//						SC.logWarn("GPD: Предудущее rgroup:" + previousRecord.getAttributeAsString("rgroup") + " текущее:" + record.getAttributeAsString("rgroup"));
-//
-//						if (previousRecord.getAttributeAsInt("rgroup") == GlobalData.ACCESS_ALL )
-//						{
-//							ResourceLifeCycleManager.resourceChanged(resourceType, previousRecord);
-//							return;
-//						}
-//
-//						if (record.getAttributeAsInt("rgroup") == GlobalData.ACCESS_ALL )
-//						{
-//							ResourceLifeCycleManager.resourceChanged(resourceType, record);
-//							return;
-//						}
-//
-//						if (previousRecord.getAttributeAsInt("rgroup").equals(record.getAttributeAsInt("rgroup")))
-//							ResourceLifeCycleManager.resourceChanged(resourceType, record);
-//						else
-//						{
-//							ResourceLifeCycleManager.resourceChanged(resourceType, record);
-//							ResourceLifeCycleManager.resourceChanged(resourceType, previousRecord);
-//						}
+						if (func!=null) func.accept(null);
 					}});
 			}
 			else
@@ -755,7 +743,6 @@ abstract public class AbstractPropertiesDialog extends Window {
 					@Override
 					public void execute(DSResponse dsResponse, Object data,
                                         DSRequest dsRequest) {
-						//ResourceLifeCycleManager.resourceCreated(resourceType, dsResponse.getData()[0]);
 						SC.logWarn("Задача добавлена");
 					}});
 			}

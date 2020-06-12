@@ -13,6 +13,7 @@ import org.taurus.aya.client.generic.AbstractPropertiesDialog;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class BacklogTaskDialog extends AbstractPropertiesDialog {
 	public BacklogTaskDialog(Record r)
@@ -21,6 +22,13 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
 		setWidth(520);
         SC.logWarn("Конструктор BacklogTaskDialog отработал");
 	}
+
+    public BacklogTaskDialog(Record r, Consumer<Void> f)
+    {
+        super(r, "task.png", ResourceType.TASK, GlobalData.getDataSource_tasks(), "задачи", f);
+        setWidth(520);
+        SC.logWarn("Конструктор BacklogTaskDialog отработал");
+    }
 
 	@Override
 	protected void constructInterface()

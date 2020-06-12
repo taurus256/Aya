@@ -211,7 +211,7 @@ public class Event {
         switch (task.getPriority())
         {
             case 2: return "task_high.png"; //high priority
-            case 0: return "tree/task0.png"; // low priority
+            case 0: return "tree/task_low.png"; // low priority
             default: return "tree/task_normal.png";
         }
     }

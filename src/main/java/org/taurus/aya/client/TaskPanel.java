@@ -7,10 +7,7 @@ import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.events.DragStartEvent;
 import com.smartgwt.client.widgets.events.DragStartHandler;
 
-import com.smartgwt.client.widgets.grid.GroupSortNormalizer;
-import com.smartgwt.client.widgets.grid.ListGrid;
-import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.*;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.events.ClickHandler;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
@@ -24,6 +21,7 @@ import org.taurus.aya.client.widgets.FilterWidget;
 import org.taurus.aya.shared.Command;
 
 import java.util.Date;
+import java.util.function.Consumer;
 
 public class TaskPanel extends VLayout implements SidePanel {
 	
@@ -74,7 +72,12 @@ public class TaskPanel extends VLayout implements SidePanel {
 
 				@Override
 				public void onClick(MenuItemClickEvent event) {
-					new BacklogTaskDialog(treeGrid.getSelectedRecord());
+					new BacklogTaskDialog(treeGrid.getSelectedRecord(), new Consumer<Void>(){
+						@Override
+						public void accept(Void aVoid) {
+							panelBacklog.getTreeGrid().sort("priority");
+						}
+					});
 				}});
 
 		}
@@ -95,10 +98,7 @@ public class TaskPanel extends VLayout implements SidePanel {
 		panelBacklog = new BacklogPanel(GlobalData.getDataSource_tasks(), "task.png", ResourceType.TASK, "Новая задача", "задачи");
 		//найти все задачи бэклога, к которым у пользователя есть доступ
 		AdvancedCriteria backlogCriteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{GlobalData.createSearchCriteria(),new AdvancedCriteria("showInBacklog", OperatorId.EQUALS,"true")});
-//
-//		panelBacklog.setBaseCriteria(backlogCriteria);
 
-//		panelBacklog.getTreeGrid().setCriteria(backlogCriteria);
 		panelBacklog.getTreeGrid().setInitialCriteria(backlogCriteria);
 		panelBacklog.getTreeGrid().setCriteria(backlogCriteria);
 		ListGridField imageField = new ListGridField("icon",32);
@@ -107,24 +107,26 @@ public class TaskPanel extends VLayout implements SidePanel {
 		imageField.setImageWidth(24);
 		imageField.setImageHeight(24);
 		ListGridField nameField = new ListGridField("name", 220);
-		panelBacklog.getTreeGrid().setFields(imageField, nameField);
-		//panelBacklog.getTreeGrid().setGroupByField("lane"); //TODO:: delete
-
+		ListGridField priorityField = new ListGridField("priority",32);
+		priorityField.setType(ListGridFieldType.INTEGER);
+		priorityField.setCanSort(true);
+		priorityField.setSortNormalizer(new SortNormalizer(){
+			@Override
+			public Object normalize(ListGridRecord listGridRecord, String s) {
+				switch (listGridRecord.getAttribute("priority"))
+				{
+					case GlobalData.LOW_PRIORITY: return 2;
+					case GlobalData.NORMAL_PRIORITY: return 1;
+					case GlobalData.HIGH_PRIORITY: return 0;
+				}
+				return -1;
+			}
+		});
+		priorityField.setHidden(true);
+		panelBacklog.getTreeGrid().setFields(imageField, nameField, priorityField);
 
 		panelBacklog.getTreeGrid().setSortField("priority");
 		panelBacklog.getTreeGrid().setCanSort(true);
-//		panelBacklog.getTreeGrid().setGroupSortNormalizer(new GroupSortNormalizer(){
-//															  @Override
-//															  public Object normalize(ListGridRecord record, String fieldName, ListGrid context) {
-//																  switch (record.getAttribute("priority"))
-//																  {
-//																	  case GlobalData.LOW_PRIORITY: return 2;
-//																	  case GlobalData.NORMAL_PRIORITY: return 1;
-//																	  case GlobalData.HIGH_PRIORITY: return 0;
-//																  }
-//																  return -1;
-//															  }
-//														  });
 		panelBacklog.getTreeGrid().setSortByGroupFirst(true);
 		panelBacklog.getTreeGrid().setCanGroupBy(true);
 		panelBacklog.getTreeGrid().groupBy("lane");
