@@ -29,9 +29,11 @@ public class LaneCreationDialog extends Dialog {
 
 	private Record record;
 	private boolean canWriteToThisResource;
+	Consumer<Void> func;
 
-	public LaneCreationDialog(DataSource ds)
+	public LaneCreationDialog(DataSource ds, Consumer<Void> func)
 	{
+		this.func = func;
 		setCanDragReposition(true);  
 		setCanDragResize(false);
 		setSize("450px", "180px");
@@ -137,7 +139,7 @@ public class LaneCreationDialog extends Dialog {
 		buttonEditLane.disable();
 		
 		buttonDeleteLane = new IButton("Удалить");
-		buttonDeleteLane.addClickHandler(event -> SC.ask("Вы уверены, что хотите удалить выделенный поток?\nЭто не приведет к удалению входящих в него задач", new BooleanCallback(){
+		buttonDeleteLane.addClickHandler(event -> SC.ask("Вы уверены, что хотите удалить выделенный поток?\nЭто приведет к удалению входящих в него задач. Вы можете скрыть поток, если информация по задачам должна быть сохранена", new BooleanCallback(){
 			@Override
 			public void execute(Boolean value) {
 				if (value)
@@ -176,7 +178,8 @@ public class LaneCreationDialog extends Dialog {
 					public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
 						Record r = new Record();
 						r.setAttribute("id",-1);
-						ResourceLifeCycleManager.resourceChanged(ResourceType.LANE, r);
+						//ResourceLifeCycleManager.resourceChanged(ResourceType.LANE, r);
+						func.accept(null);
 					}
 				});
 	}
@@ -199,7 +202,8 @@ public class LaneCreationDialog extends Dialog {
 					// ссылка на конкретную запись не нужна - для потоков всё равно обновляем все ресурсы
 					Record r = new Record();
 					r.setAttribute("id",-1);
-					ResourceLifeCycleManager.resourceChanged(ResourceType.LANE, r);
+					//ResourceLifeCycleManager.resourceChanged(ResourceType.LANE, r); //TODO:: delete this
+					func.accept(null);
 				}
 			}
 			hide();
@@ -217,7 +221,8 @@ public class LaneCreationDialog extends Dialog {
 	private void editSelectedLane(Record record) {
 		Consumer<Void> c = Void -> {
 				SC.logWarn("Call resourceChanged");
-				ResourceLifeCycleManager.resourceChanged(ResourceType.LANE, record);
+				//ResourceLifeCycleManager.resourceChanged(ResourceType.LANE, record);
+				func.accept(null);
 		};
 		new GenericPropertiesDialog(
 				record,

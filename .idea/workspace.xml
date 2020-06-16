@@ -11,11 +11,11 @@
   <component name="ChangeListManager">
     <list default="true" id="9db01848-e3cb-4582-923d-3115d9d4d86a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/TaskPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/TaskPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/dialogs/BacklogTaskDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/dialogs/BacklogTaskDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/generic/AbstractPropertiesDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/generic/AbstractPropertiesDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/generic/GenericPropertiesDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/generic/GenericPropertiesDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/Event.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/ApplicationMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/ApplicationMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/dialogs/LaneCreationDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/dialogs/LaneCreationDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/LaneRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/LaneRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/LaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/LaneController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/Lane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/Lane.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,6 +72,16 @@
         <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
         <item name="public: schema" type="983ebcf7:PgImplModel$Schema" />
         <item name="tables" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="aya@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="aya: database" type="162271b6:PgImplModel$Database" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="public: schema" type="983ebcf7:PgImplModel$Schema" />
+        <item name="tables" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="task: table" type="69fad909:PgImplModel$LocalTable" />
       </path>
     </expand>
     <select />
@@ -161,12 +171,11 @@
     <property name="settings.editor.selected.configurable" value="preferences.general" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/main/resources/static" />
-      <recent name="C:\aya\src\main\resources\static\images\header" />
-      <recent name="C:\aya\src\main\resources\META-INF" />
-      <recent name="C:\aya\src\main\resources" />
-      <recent name="C:\aya\target\aya-0.0.1-SNAPSHOT\aya" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\aya\lib" />
+      <recent name="C:\aya\src\main\resources\static\aya" />
+      <recent name="C:\aya\src\main\webapp" />
+      <recent name="C:\aya\src\main\resources\static" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="org.taurus.aya.server.services" />
@@ -175,11 +184,12 @@
       <recent name="org.taurus.aya.services" />
       <recent name="org.taurus.aya.controllers" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\aya\lib" />
-      <recent name="C:\aya\src\main\resources\static\aya" />
-      <recent name="C:\aya\src\main\webapp" />
-      <recent name="C:\aya\src\main\resources\static" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/static" />
+      <recent name="C:\aya\src\main\resources\static\images\header" />
+      <recent name="C:\aya\src\main\resources\META-INF" />
+      <recent name="C:\aya\src\main\resources" />
+      <recent name="C:\aya\target\aya-0.0.1-SNAPSHOT\aya" />
     </key>
   </component>
   <component name="RestClientSettings">
@@ -450,6 +460,9 @@
       <workItem from="1591775646299" duration="522000" />
       <workItem from="1591779197992" duration="251000" />
       <workItem from="1591979426613" duration="5062000" />
+      <workItem from="1592035021069" duration="2553000" />
+      <workItem from="1592236381274" duration="8789000" />
+      <workItem from="1592299123543" duration="1946000" />
     </task>
     <task id="LOCAL-00001" summary="Initial project commit">
       <created>1564302873095</created>
@@ -806,14 +819,14 @@
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="419" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1587475746997" />
-    <state x="764" y="213" key="#com.intellij.ide.util.MemberChooser" timestamp="1591983171370">
+    <state x="764" y="213" key="#com.intellij.ide.util.MemberChooser" timestamp="1592244657464">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state x="764" y="213" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591983171370" />
-    <state x="482" y="119" width="891" height="833" key="CommitChangelistDialog2" timestamp="1591775798274">
+    <state x="764" y="213" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592244657464" />
+    <state x="482" y="119" width="891" height="833" key="CommitChangelistDialog2" timestamp="1591985255075">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state x="482" y="119" width="891" height="833" key="CommitChangelistDialog2/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591775798274" />
+    <state x="482" y="119" width="891" height="833" key="CommitChangelistDialog2/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591985255075" />
     <state x="112" y="91" width="1536" height="835" key="DiffContextDialog" timestamp="1587636917337">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
@@ -822,58 +835,54 @@
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="698" y="293" key="EnvironmentVariablesDialog/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1587475685416" />
-    <state width="1172" height="249" key="GridCell.Tab.0.bottom" timestamp="1591983701509">
+    <state width="1874" height="315" key="GridCell.Tab.0.bottom" timestamp="1592247530190">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.0.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591983701509" />
-    <state width="1172" height="249" key="GridCell.Tab.0.center" timestamp="1591983701506">
+    <state width="1874" height="315" key="GridCell.Tab.0.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592247530190" />
+    <state width="1874" height="315" key="GridCell.Tab.0.center" timestamp="1592247530190">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.0.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591983701506" />
-    <state width="1172" height="249" key="GridCell.Tab.0.left" timestamp="1591983701506">
+    <state width="1874" height="315" key="GridCell.Tab.0.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592247530189" />
+    <state width="1874" height="315" key="GridCell.Tab.0.left" timestamp="1592247530189">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.0.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591983701506" />
-    <state width="1172" height="249" key="GridCell.Tab.0.right" timestamp="1591983701506">
+    <state width="1874" height="315" key="GridCell.Tab.0.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592247530189" />
+    <state width="1874" height="315" key="GridCell.Tab.0.right" timestamp="1592247530190">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.0.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591983701506" />
-    <state width="1172" height="249" key="GridCell.Tab.1.bottom" timestamp="1591983701509">
+    <state width="1874" height="315" key="GridCell.Tab.0.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592247530190" />
+    <state width="1874" height="315" key="GridCell.Tab.1.bottom" timestamp="1592247530190">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.1.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591983701509" />
-    <state width="1172" height="249" key="GridCell.Tab.1.center" timestamp="1591983701509">
+    <state width="1874" height="315" key="GridCell.Tab.1.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592247530190" />
+    <state width="1874" height="315" key="GridCell.Tab.1.center" timestamp="1592247530190">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.1.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591983701509" />
-    <state width="1172" height="249" key="GridCell.Tab.1.left" timestamp="1591983701509">
+    <state width="1874" height="315" key="GridCell.Tab.1.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592247530190" />
+    <state width="1874" height="315" key="GridCell.Tab.1.left" timestamp="1592247530190">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.1.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591983701509" />
-    <state width="1172" height="249" key="GridCell.Tab.1.right" timestamp="1591983701509">
+    <state width="1874" height="315" key="GridCell.Tab.1.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592247530190" />
+    <state width="1874" height="315" key="GridCell.Tab.1.right" timestamp="1592247530190">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1172" height="249" key="GridCell.Tab.1.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591983701509" />
-    <state width="1575" height="315" key="GridCell.Tab.2.bottom" timestamp="1589667461209">
+    <state width="1874" height="315" key="GridCell.Tab.1.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592247530190" />
+    <state width="1874" height="315" key="GridCell.Tab.2.bottom" timestamp="1592247530190">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1575" height="315" key="GridCell.Tab.2.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1589667461209" />
-    <state width="1575" height="315" key="GridCell.Tab.2.center" timestamp="1589667461209">
+    <state width="1874" height="315" key="GridCell.Tab.2.bottom/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592247530190" />
+    <state width="1874" height="315" key="GridCell.Tab.2.center" timestamp="1592247530190">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1575" height="315" key="GridCell.Tab.2.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1589667461209" />
-    <state width="1575" height="315" key="GridCell.Tab.2.left" timestamp="1589667461209">
+    <state width="1874" height="315" key="GridCell.Tab.2.center/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592247530190" />
+    <state width="1874" height="315" key="GridCell.Tab.2.left" timestamp="1592247530190">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1575" height="315" key="GridCell.Tab.2.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1589667461209" />
-    <state width="1575" height="315" key="GridCell.Tab.2.right" timestamp="1589667461209">
+    <state width="1874" height="315" key="GridCell.Tab.2.left/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592247530190" />
+    <state width="1874" height="315" key="GridCell.Tab.2.right" timestamp="1592247530190">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state width="1575" height="315" key="GridCell.Tab.2.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1589667461209" />
-    <state x="547" y="269" key="IDE.errors.dialog" timestamp="1583433543983">
-      <screen x="0" y="0" width="1920" height="1044" />
-    </state>
-    <state x="547" y="269" key="IDE.errors.dialog/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1583433543983" />
+    <state width="1874" height="315" key="GridCell.Tab.2.right/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592247530190" />
     <state x="672" y="236" key="MultipleFileMergeDialog" timestamp="1585155605863">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
@@ -890,10 +899,10 @@
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="501" y="89" width="1032" height="847" key="SettingsEditor/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1589388462329" />
-    <state x="559" y="259" width="808" height="527" key="Vcs.Push.Dialog.v2" timestamp="1591775802413">
+    <state x="559" y="259" width="808" height="527" key="Vcs.Push.Dialog.v2" timestamp="1591985261886">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state x="559" y="259" width="808" height="527" key="Vcs.Push.Dialog.v2/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591775802413" />
+    <state x="559" y="259" width="808" height="527" key="Vcs.Push.Dialog.v2/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591985261886" />
     <state x="842" y="405" width="340" height="239" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1587653871489">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
@@ -926,10 +935,10 @@
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="694" y="278" key="extract.method.dialog/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1587383718659" />
-    <state x="637" y="259" width="645" height="536" key="find.popup" timestamp="1591739821959">
+    <state x="637" y="259" width="645" height="536" key="find.popup" timestamp="1592245339694">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state x="637" y="259" width="645" height="536" key="find.popup/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591739821959" />
+    <state x="637" y="259" width="645" height="536" key="find.popup/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592245339694" />
     <state x="649" y="245" key="git4idea.branch.GitBranchIsNotFullyMergedDialog" timestamp="1587637088729">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
@@ -946,10 +955,10 @@
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="623" y="239" width="672" height="677" key="run.anything.popup/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1587652153888" />
-    <state x="664" y="242" width="672" height="678" key="search.everywhere.popup" timestamp="1591981782349">
+    <state x="608" y="218" width="672" height="678" key="search.everywhere.popup" timestamp="1592332090580">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state x="664" y="242" width="672" height="678" key="search.everywhere.popup/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1591981782349" />
+    <state x="608" y="218" width="672" height="678" key="search.everywhere.popup/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592332090580" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
@@ -957,6 +966,7 @@
         <watch expression="c.indexOf(&quot;]&quot;)" language="JAVA" />
         <watch expression="c" language="JAVA" />
         <watch expression="c.substring(c.indexOf(&quot;[&quot;) + 1, c.lastIndexOf(&quot;]&quot;) - 1).split(&quot;\\},\\{&quot;)" language="JAVA" />
+        <watch expression="lane.getName()" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

@@ -21,6 +21,7 @@ import org.taurus.aya.shared.Command;
 import org.taurus.aya.shared.Command.CommandType;
 
 import java.util.Date;
+import java.util.function.Consumer;
 
 public class ApplicationMenu extends HLayout {
 	
@@ -161,7 +162,12 @@ public class ApplicationMenu extends HLayout {
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				LaneCreationDialog ld = new LaneCreationDialog(GlobalData.getDataSource_lanes());
+				LaneCreationDialog ld = new LaneCreationDialog(GlobalData.getDataSource_lanes(), new Consumer(){
+					@Override
+					public void accept(Object o) {
+						GlobalData.getTaskView().updateTimeline();
+					}
+				});
 				ld.show();
 			}
 		});

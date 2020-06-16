@@ -124,6 +124,8 @@ public class LaneController extends GenericController {
             } break;
             case "remove":
             {
+                laneRepository.deleteEventsForGivenLane(lane.getName());
+                laneRepository.deleteTasksForGivenLane(lane.getName());
                 laneRepository.delete(lane);
             }
         }

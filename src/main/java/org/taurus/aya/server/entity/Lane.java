@@ -56,6 +56,7 @@ public class Lane {
   }
 
   public void setDescription(String description) {
+    if (description == null || description.equals("null")) description = "";
     this.description = description;
   }
 
