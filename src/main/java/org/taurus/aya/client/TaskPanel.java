@@ -72,12 +72,7 @@ public class TaskPanel extends VLayout implements SidePanel {
 
 				@Override
 				public void onClick(MenuItemClickEvent event) {
-					new BacklogTaskDialog(treeGrid.getSelectedRecord(), new Consumer<Void>(){
-						@Override
-						public void accept(Void aVoid) {
-							panelBacklog.getTreeGrid().sort("priority");
-						}
-					});
+					new BacklogTaskDialog(treeGrid.getSelectedRecord(), aVoid -> panelBacklog.getTreeGrid().sort("priority"));
 				}});
 
 		}

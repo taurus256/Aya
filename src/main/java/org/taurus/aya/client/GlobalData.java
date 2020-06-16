@@ -439,7 +439,7 @@ public class GlobalData {
 		valueMapPriority.put(2,HIGH_PRIORITY);
 		priority.setValueMap(valueMapPriority);
 
-		DataSourceField plannedDuration = new DataSourceField("duration_h", FieldType.FLOAT, "Планируемое время исполнения (часов)");
+		DataSourceField plannedDuration = new DataSourceField("plannedDuration", FieldType.FLOAT, "Планируемое время");
 		plannedDuration.setDecimalPrecision(1);
 
 		DataSourceField[] fields = {
@@ -452,7 +452,6 @@ public class GlobalData {
 				new DataSourceField("endDate", FieldType.DATETIME, "Дата завершения"),
 				new DataSourceField("executor", FieldType.INTEGER, "Исполнитель"),
 				priority,
-				new DataSourceField("duration_d", FieldType.INTEGER, "Время исполнения (дней)"),
 				plannedDuration,
 				icon,
 				state,

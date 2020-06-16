@@ -3,10 +3,7 @@ package org.taurus.aya.client.dialogs;
 import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.form.fields.DateItem;
-import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.TextAreaItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.*;
 import org.taurus.aya.client.*;
 import org.taurus.aya.client.TabManager.ResourceType;
 import org.taurus.aya.client.generic.AbstractPropertiesDialog;
@@ -53,19 +50,7 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
         executor.setValueMap(usersMap);
 
         //Estimation field
-        // setting selectItem values for estimation
-        LinkedHashMap<Integer,String> valueMap = new LinkedHashMap<>();
-        valueMap.put(0,"Время не указано");
-        valueMap.put(1,"1 час");
-        valueMap.put(3,"3 часа");
-        valueMap.put(5,"5 часов");
-        valueMap.put(8,"1 день");
-        valueMap.put(16,"2 дня");
-        valueMap.put(24,"3 дня");
-        valueMap.put(56,"5 дней");
-
-        SelectItem plannedDuration = new SelectItem("planned");
-        plannedDuration.setValueMap(valueMap);
+        FloatItem plannedDuration = new FloatItem("plannedDuration");
 
         //Priority field
         SelectItem priority = new SelectItem("priority");
