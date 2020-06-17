@@ -12,6 +12,9 @@ import java.util.List;
 @Repository
 public interface LaneRepository extends JpaRepository<Lane, Long> {
 
+    @Query("SELECT l FROM Lane l ORDER BY l.laneOrder")
+    List<Lane> findAll();
+
     /*Обновить имя потока в задачах*/
     @Modifying
     @Transactional

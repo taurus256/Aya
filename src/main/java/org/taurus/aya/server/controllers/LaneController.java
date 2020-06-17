@@ -2,6 +2,8 @@ package org.taurus.aya.server.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.taurus.aya.server.LaneRepository;
 import org.taurus.aya.server.entity.Lane;
@@ -25,6 +27,7 @@ public class LaneController extends GenericController {
 
     @ResponseBody
     @GetMapping
+    @Transactional(isolation= Isolation.READ_COMMITTED)
     public GwtResponse execute(HttpServletRequest request, @RequestParam String _operationType, String _operationId) throws RuntimeException
     {
 
@@ -47,7 +50,7 @@ public class LaneController extends GenericController {
                         System.out.print(index + " ");
                     }
                     System.out.println("]");
-
+                    laneRepository.flush();
                 }; break;
             }
 

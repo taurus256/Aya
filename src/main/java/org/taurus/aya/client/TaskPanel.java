@@ -126,14 +126,14 @@ public class TaskPanel extends VLayout implements SidePanel {
 				return -1;
 			}
 		});
-		priorityField.setHidden(false);
+		priorityField.setHidden(true);
 		panelBacklog.getTreeGrid().setFields(imageField, nameField, priorityField);
 
 		panelBacklog.getTreeGrid().setSortField("priority");
-//		panelBacklog.getTreeGrid().setCanSort(true);
-//		panelBacklog.getTreeGrid().setSortByGroupFirst(true);
-//		panelBacklog.getTreeGrid().setCanGroupBy(true);
-//		panelBacklog.getTreeGrid().groupBy("lane");
+		panelBacklog.getTreeGrid().setCanSort(true);
+		panelBacklog.getTreeGrid().setSortByGroupFirst(true);
+		panelBacklog.getTreeGrid().setCanGroupBy(true);
+		panelBacklog.getTreeGrid().groupBy("lane");
 
 		panelBacklog.getTreeGrid().setMinWidth(250);
 		panelBacklog.getTreeGrid().setGroupStartOpen(GroupStartOpen.ALL);

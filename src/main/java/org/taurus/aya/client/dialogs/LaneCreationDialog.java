@@ -176,8 +176,8 @@ public class LaneCreationDialog extends Dialog {
 		GlobalData.getDataSource_lanes().performCustomOperation("updateLaneOrder", transport, new DSCallback() {
 					@Override
 					public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
-						Record r = new Record();
-						r.setAttribute("id",-1);
+//						Record r = new Record();
+//						r.setAttribute("id",-1);
 						//ResourceLifeCycleManager.resourceChanged(ResourceType.LANE, r);
 						func.accept(null);
 					}
