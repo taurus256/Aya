@@ -176,9 +176,6 @@ public class LaneCreationDialog extends Dialog {
 		GlobalData.getDataSource_lanes().performCustomOperation("updateLaneOrder", transport, new DSCallback() {
 					@Override
 					public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
-//						Record r = new Record();
-//						r.setAttribute("id",-1);
-						//ResourceLifeCycleManager.resourceChanged(ResourceType.LANE, r);
 						func.accept(null);
 					}
 				});
@@ -198,11 +195,6 @@ public class LaneCreationDialog extends Dialog {
 					setNewLaneOrder(); // обновить порядок потоков, записать в БД и разослать уведомления
 				else
 				{
-					// разослать уведомления
-					// ссылка на конкретную запись не нужна - для потоков всё равно обновляем все ресурсы
-					Record r = new Record();
-					r.setAttribute("id",-1);
-					//ResourceLifeCycleManager.resourceChanged(ResourceType.LANE, r); //TODO:: delete this
 					func.accept(null);
 				}
 			}

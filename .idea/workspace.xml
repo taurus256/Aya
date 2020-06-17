@@ -9,12 +9,9 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9db01848-e3cb-4582-923d-3115d9d4d86a" name="Default Changelist" comment="fix: backlog task sorting after changing properties">
+    <list default="true" id="9db01848-e3cb-4582-923d-3115d9d4d86a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/TaskPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/TaskPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/dialogs/LaneCreationDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/dialogs/LaneCreationDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/LaneRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/LaneRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/LaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/LaneController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -462,7 +459,7 @@
       <workItem from="1592035021069" duration="2553000" />
       <workItem from="1592236381274" duration="8789000" />
       <workItem from="1592299123543" duration="6655000" />
-      <workItem from="1592382470995" duration="9219000" />
+      <workItem from="1592382470995" duration="9320000" />
     </task>
     <task id="LOCAL-00001" summary="Initial project commit">
       <created>1564302873095</created>
@@ -772,7 +769,14 @@
       <option name="project" value="LOCAL" />
       <updated>1592387616682</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="fix: lane sort &amp; order">
+      <created>1592391753823</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1592391753823</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -804,7 +808,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="web.xml added" />
     <MESSAGE value="feature: calculating conglomerate data for completed tasks" />
     <MESSAGE value="fix: event properties dialog creation" />
     <MESSAGE value="feature: prompt for spended time when user finished the task" />
@@ -829,7 +832,8 @@
     <MESSAGE value="fix: corrected work with events when lane is editing/removing" />
     <MESSAGE value="fix: lose task duration when moving to graph" />
     <MESSAGE value="fix: backlog task sorting after changing properties" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: backlog task sorting after changing properties" />
+    <MESSAGE value="fix: lane sort &amp; order" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: lane sort &amp; order" />
   </component>
   <component name="WindowStateProjectService">
     <state x="794" y="378" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1585329399304">
@@ -844,10 +848,10 @@
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="764" y="213" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592244657464" />
-    <state x="482" y="119" width="891" height="833" key="CommitChangelistDialog2" timestamp="1592389146352">
+    <state x="482" y="119" width="891" height="833" key="CommitChangelistDialog2" timestamp="1592391753591">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state x="482" y="119" key="CommitChangelistDialog2/0.0.1920.1044/1920.0.1920.1080@0.0.1920.1044" timestamp="1592389146352" />
+    <state x="482" y="119" key="CommitChangelistDialog2/0.0.1920.1044/1920.0.1920.1080@0.0.1920.1044" timestamp="1592391753591" />
     <state x="482" y="119" width="891" height="833" key="CommitChangelistDialog2/0.0.1920.1044/1920.180.1600.900@0.0.1920.1044" timestamp="1592336207398" />
     <state x="112" y="91" width="1536" height="835" key="DiffContextDialog" timestamp="1587636917337">
       <screen x="0" y="0" width="1920" height="1044" />
