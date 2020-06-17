@@ -2,6 +2,7 @@ package org.taurus.aya.client;
 
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.*;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.events.DragStartEvent;
@@ -72,7 +73,14 @@ public class TaskPanel extends VLayout implements SidePanel {
 
 				@Override
 				public void onClick(MenuItemClickEvent event) {
-					new BacklogTaskDialog(treeGrid.getSelectedRecord(), aVoid -> panelBacklog.getTreeGrid().sort("priority"));
+					new BacklogTaskDialog(treeGrid.getSelectedRecord(), new Consumer<Void>(){
+						@Override
+						public void accept(Void aVoid) {
+
+							panelBacklog.getTreeGrid().sort("priority");
+							panelBacklog.getTreeGrid().refreshData();
+						}
+					});
 				}});
 
 		}
@@ -103,11 +111,12 @@ public class TaskPanel extends VLayout implements SidePanel {
 		imageField.setImageHeight(24);
 		ListGridField nameField = new ListGridField("name", 220);
 		ListGridField priorityField = new ListGridField("priority",32);
-		priorityField.setType(ListGridFieldType.INTEGER);
+		//priorityField.setType(ListGridFieldType.INTEGER);
 		priorityField.setCanSort(true);
 		priorityField.setSortNormalizer(new SortNormalizer(){
 			@Override
 			public Object normalize(ListGridRecord listGridRecord, String s) {
+				SC.logWarn("Normalizer:" + listGridRecord.getAttribute("priority"));
 				switch (listGridRecord.getAttribute("priority"))
 				{
 					case GlobalData.LOW_PRIORITY: return 2;
@@ -117,14 +126,14 @@ public class TaskPanel extends VLayout implements SidePanel {
 				return -1;
 			}
 		});
-		priorityField.setHidden(true);
+		priorityField.setHidden(false);
 		panelBacklog.getTreeGrid().setFields(imageField, nameField, priorityField);
 
 		panelBacklog.getTreeGrid().setSortField("priority");
-		panelBacklog.getTreeGrid().setCanSort(true);
-		panelBacklog.getTreeGrid().setSortByGroupFirst(true);
-		panelBacklog.getTreeGrid().setCanGroupBy(true);
-		panelBacklog.getTreeGrid().groupBy("lane");
+//		panelBacklog.getTreeGrid().setCanSort(true);
+//		panelBacklog.getTreeGrid().setSortByGroupFirst(true);
+//		panelBacklog.getTreeGrid().setCanGroupBy(true);
+//		panelBacklog.getTreeGrid().groupBy("lane");
 
 		panelBacklog.getTreeGrid().setMinWidth(250);
 		panelBacklog.getTreeGrid().setGroupStartOpen(GroupStartOpen.ALL);
