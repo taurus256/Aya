@@ -1,8 +1,11 @@
 package org.taurus.aya.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.smartgwt.client.core.KeyIdentifier;
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.util.Page;
+import com.smartgwt.client.util.PageKeyHandler;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
@@ -107,6 +110,12 @@ public class TaskView extends ContentPane {
 		//!this.setOverflow(Overflow.HIDDEN);
 	    this.setMinHeight(0);
 	    this.setBackgroundColor("#f2f2f2");
+
+	    //setting hotkeys
+		setSwitchStateHotKey(EventState.PROCESS, "A");
+		setSwitchStateHotKey(EventState.PAUSE, "S");
+		setSwitchStateHotKey(EventState.READY, "D");
+		setSwitchStateHotKey(EventState.FAIL, "F");
 	}
 
     HLayout createToolStripPanel()
@@ -359,4 +368,16 @@ public class TaskView extends ContentPane {
 		window.top.document.getElementsByTagName('head')[0].appendChild(link);
 		window.top.document.title = title;
 	}-*/;
+
+	private void setSwitchStateHotKey(EventState state, String key){
+		KeyIdentifier setProcessStateKey = new KeyIdentifier();
+		setProcessStateKey.setAltKey(true);
+		setProcessStateKey.setKeyName(key);
+
+		Page.registerKey(setProcessStateKey, new PageKeyHandler() {
+			public void execute(String keyName) {
+				getCurrentTimeline().setEventState(state);
+			}
+		});
+	}
 }

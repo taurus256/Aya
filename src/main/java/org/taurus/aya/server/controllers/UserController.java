@@ -2,6 +2,9 @@ package org.taurus.aya.server.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.taurus.aya.server.UserRepository;
 import org.taurus.aya.server.entity.User;
@@ -56,37 +59,57 @@ public class UserController extends GenericController {
         return new GwtResponse(0,0,0,users);
     }
 
-    @PostMapping
+    @PostMapping("/fetch")
     @ResponseBody
+    public GwtResponse getUsers(HttpServletRequest request, @RequestParam String _operationType, @RequestParam (required=false) String[] criteria){
+        List<User> users = userRepository.findAll(Sort.by("nickname"));
+        return new GwtResponse(0, users.size() -1, users.size(), users);
+    }
+
+    @PostMapping("/modify")
+    @ResponseBody
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public GwtResponse executePost(
             @RequestParam String _operationType,
-        @RequestParam Long id,
-        @RequestParam String firstname,
-        @RequestParam String surname,
-        @RequestParam String patronymic,
-        @RequestParam String nickname,
-        @RequestParam String workphone,
-        @RequestParam String mobphone,
-        @RequestParam String usid,
-        @RequestParam String passwordHash,
-        @RequestParam String showedName
+        @RequestParam (required = false)  Long id,
+        @RequestParam (required = false) String firstname,
+        @RequestParam (required = false)  String surname,
+        @RequestParam (required = false)  String patronymic,
+        @RequestParam (required = false)  String nickname,
+        @RequestParam (required = false)  String workphone,
+        @RequestParam (required = false)  String mobphone,
+        @RequestParam (required = false)  String usid,
+        @RequestParam (required = false)  String passwordHash
     )
     {
-        User user = userService.getUser(id);
-        if (_operationType.equals("update"))
+        User user;
+        if (id==null)
+            user = new User();
+        else
+            user = userService.getUser(id);
+
+        switch (_operationType)
         {
-            user.setFirstname(firstname);
-            user.setSurname(surname);
-            user.setPatronymic(patronymic);
-            user.setNickname(nickname);
-            user.setWorkphone(filterStringValue(workphone));
-            user.setMobphone(filterStringValue(mobphone));
-            user.setUsid(usid);
-            user.setPasswordHash(passwordHash);
-            userRepository.save(user);
-            System.out.println("User saved");
+            case "add":
+            case "update":{
+                user.setFirstname(firstname);
+                user.setSurname(surname);
+                user.setPatronymic(patronymic);
+                user.setNickname(nickname);
+                user.setWorkphone(filterStringValue(workphone));
+                user.setMobphone(filterStringValue(mobphone));
+                user.setUsid(usid);
+                user.setPasswordHash(passwordHash);
+                userRepository.save(user);
+                System.out.println("User saved");
+                User[] users = {user};
+                return new GwtResponse(0,1,1,users);
+            }
+            case "remove":{
+                userRepository.delete(user);
+                return new GwtResponse(0,0,0,new User[]{} );
+            }
+            default: return new GwtResponse(0,0,0,new User[]{} );
         }
-        User[] users = {user};
-        return new GwtResponse(0,1,1,users);
     }
 }

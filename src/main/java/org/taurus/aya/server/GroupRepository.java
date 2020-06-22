@@ -8,6 +8,5 @@ import org.taurus.aya.server.entity.Group;
 import java.util.List;
 
 @Repository
-public interface GroupRepository extends JpaRepository<Group, Integer > {
-
+public interface GroupRepository extends JpaRepository<Group, Long > {
 }

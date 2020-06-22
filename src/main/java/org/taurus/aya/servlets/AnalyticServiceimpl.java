@@ -258,7 +258,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
 
         LocalDateTime startDateTime = LocalDateTime.ofInstant(startDate.toInstant(),ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0);//начало расчетного периода
         LocalDateTime endDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()).plusDays(1).withHour(0).withMinute(0).withSecond(0); // конец расчетного периода - день, следующий за последним запрашиваемым
-        List<Event> list = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(startDate, endDate, EventState.READY.ordinal());
+        List<Event> list = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(startDateTime.toInstant(ZoneOffset.UTC)), Date.from(endDateTime.toInstant(ZoneOffset.UTC)), EventState.READY.ordinal());
         Duration d = Duration.between(startDateTime,endDateTime);
         double[] daysLocal = new double[Long.valueOf(d.toDays()).intValue()];
         Arrays.setAll(daysLocal,(a) -> {return 0.0;});

@@ -22,8 +22,8 @@ public class GlobalData {
 	private static DataSource dataSource_tags = DataSource.get("tags");
 	private static DataSource dataSource_links = DataSource.get("links");
 	private static DataSource dataSource_user = createRestUserDS();
-	private static DataSource dataSource_group = DataSource.get("group");
-	private static DataSource dataSource_relation_user_group = createRestGroupDS();
+	private static DataSource dataSource_group = createRestGroupDS();
+	private static DataSource dataSource_relation_user_group = createRestUserGroupDS();
 	private static DataSource dataSource_dialogs = DataSource.get("dialogs");
 	private static DataSource dataSource_dialog_statistics = DataSource.get("dialog_statistics");
 	private static DataSource dataSource_messages = DataSource.get("messages");
@@ -289,6 +289,7 @@ public class GlobalData {
 
 		/* Request fields */
 		DataSourceField id = new DataSourceField("id", FieldType.INTEGER);
+		id.setPrimaryKey(true);
 		id.setHidden(true);
 		DataSourceField usid = new DataSourceField("usid", FieldType.TEXT);
 		usid.setHidden(true);
@@ -322,30 +323,31 @@ public class GlobalData {
 									showedName
 									};
 
-		DataSource dataSource =
-				new RestDataSource() {
-
-					protected Object transformRequest(DSRequest dsRequest) {
-						//dsRequest.setParams(getRequestParams());
-						return super.transformRequest(dsRequest);
-					}
-
-					protected void transformResponse(DSResponse response, DSRequest request, Object data) {
-						super.transformResponse(response, request, data);
-					}
-				};
-
-		dataSource.setDataFormat(DSDataFormat.JSON);
-		dataSource.setDataProtocol(DSProtocol.GETPARAMS);
-		dataSource.setJsonPrefix("");
-		dataSource.setJsonSuffix("");
-
-
-		dataSource.setDataURL(url);
-		dataSource.setFields(fields);
+//		DataSource dataSource =
+//				new RestDataSource() {
+//
+//					protected Object transformRequest(DSRequest dsRequest) {
+//						//dsRequest.setParams(getRequestParams());
+//						return super.transformRequest(dsRequest);
+//					}
+//
+//					protected void transformResponse(DSResponse response, DSRequest request, Object data) {
+//						super.transformResponse(response, request, data);
+//					}
+//				};
+//
+//		dataSource.setDataFormat(DSDataFormat.JSON);
+//		dataSource.setDataProtocol(DSProtocol.GETPARAMS);
+//		dataSource.setJsonPrefix("");
+//		dataSource.setJsonSuffix("");
+//
+//
+//		dataSource.setDataURL(url);
+//		dataSource.setFields(fields);
 
 		/* finally set data source */
-		return dataSource;
+		//return dataSource;
+		return createDS("/users",fields);
 	}
 
 	private static DataSource createRestGroupDS() {
@@ -354,8 +356,29 @@ public class GlobalData {
 		String dsName = "/groups";
 
 		/* Request fields */
+		DataSourceField id = new DataSourceField("id", FieldType.INTEGER);
+		id.setPrimaryKey(true);
+
 		DataSourceField[] fields = {
-				new DataSourceField("id", FieldType.INTEGER),
+				id,
+				new DataSourceField("name", FieldType.TEXT, "Название"),
+				new DataSourceField("description", FieldType.TEXT, "Описание"),
+		};
+
+		return createDS(dsName,fields);
+	}
+
+	private static DataSource createRestUserGroupDS() {
+
+		/* Request url*/
+		String dsName = "/user_groups";
+
+		/* Request fields */
+		DataSourceField id = new DataSourceField("id", FieldType.INTEGER);
+		id.setPrimaryKey(true);
+
+		DataSourceField[] fields = {
+				id,
 				new DataSourceField("name", FieldType.TEXT, "Название"),
 				new DataSourceField("description", FieldType.TEXT, "Описание"),
 		};
@@ -588,7 +611,7 @@ public class GlobalData {
 		remove.setDataURL(name + "/modify");
 		remove.setDataProtocol(DSProtocol.POSTPARAMS);
 
-		//set up REMOVE to use DELETE
+		//set up custom operation
 		OperationBinding moveToBacklog = new OperationBinding();
 		moveToBacklog.setOperationType(DSOperationType.CUSTOM);
 		moveToBacklog.setDataURL(name + "/moveToBacklog");
@@ -657,5 +680,4 @@ public class GlobalData {
 		/* finally set data source */
 		return dataSource;
 	}
-
 }

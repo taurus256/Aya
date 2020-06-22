@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="users") // Name 'user' used as keyword in PostgreSQL
@@ -31,7 +32,7 @@ public class User {
           inverseJoinColumns = @JoinColumn(name="groupid")
   )
   @JsonIgnore
-  private List<Group> groups;
+  private Set<Group> groups;
 
   public Long getId() {
     return id;
@@ -125,11 +126,12 @@ public class User {
     return firstname + " " + surname;
   }
 
-  public List<Group> getGroups() {
+  @OrderBy("id")
+  public Set<Group> getGroups() {
     return groups;
   }
 
-  public void setGroups(List<Group> groups) {
+  public void setGroups(Set<Group> groups) {
     this.groups = groups;
   }
 }

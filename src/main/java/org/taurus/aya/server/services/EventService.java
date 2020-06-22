@@ -42,19 +42,19 @@ public class EventService {
         //System.out.println(criteriaMap);
         if (Boolean.valueOf(criteriaMap.getOrDefault("isGraph","false"))){
             if (criteriaMap.get("executor") != null)
-                eventList = eventRepository.findAllByStartDateLessThanAndEndDateGreaterThanAndIsGraphIsTrueAndExecutor(
+                eventList = eventRepository.findAllByStartDateLessThanEqualAndEndDateGreaterThanAndIsGraphIsTrueAndExecutor(
                             formatter.parse(criteriaMap.getOrDefault("startDate", "2000-01-0")),
                             formatter.parse(criteriaMap.getOrDefault("endDate", "2050-01-01")),
                             Long.valueOf(criteriaMap.get("executor"))
                     );
             else
-                eventList = eventRepository.findAllByStartDateLessThanAndEndDateGreaterThanAndIsGraphIsTrue(
+                eventList = eventRepository.findAllByStartDateLessThanEqualAndEndDateGreaterThanAndIsGraphIsTrue(
                         formatter.parse(criteriaMap.getOrDefault("startDate", "2000-01-0")),
                         formatter.parse(criteriaMap.getOrDefault("endDate", "2050-01-01"))
                 );
         }
         else
-            eventList = eventRepository.findAllByStartDateGreaterThanAndEndDateLessThanAndIsGraphIsFalse(
+            eventList = eventRepository.findAllByStartDateGreaterThanAndEndDateLessThanEqualAndIsGraphIsFalse(
                 formatter.parse(criteriaMap.getOrDefault("startDate","2000-01-01")),
                 formatter.parse(criteriaMap.getOrDefault("endDate","2050-01-01"))
             );
@@ -64,17 +64,17 @@ public class EventService {
 
 
     public HashMap<String,String> parseCriteriaString(String[] criterias) throws IOException{
-        
+
         HashMap<String,String> result = new HashMap<>();
-        
+
         for (String crit: criterias)
             parseCriteria(objectMapper.readTree(crit),result);
 
         return result;
     }
-    
+
     private void parseCriteria(JsonNode node, Map<String,String> result) throws IOException {
-        
+
         if (node.has("fieldName") && node.has("value"))
             result.put(node.get("fieldName").textValue(), node.get("value").asText());
         if (node.has("criteria"))

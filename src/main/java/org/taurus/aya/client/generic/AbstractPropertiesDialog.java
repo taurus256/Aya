@@ -48,7 +48,7 @@ import java.util.LinkedHashMap;
 abstract public class AbstractPropertiesDialog extends Window {
 
 	AbstractPropertiesDialog thisDialog;
-	protected Record record, previousRecord;
+	protected Record record;
 	protected RadioGroupItem radioGroupRead, radioGroupWrite;
 	ComboBoxItem groupReadSelector, groupWriteSelector;
 	protected Label labelPermissions;
@@ -66,7 +66,7 @@ abstract public class AbstractPropertiesDialog extends Window {
 	String suffix = "";
 	String imageName = "";
 	final ResourceType resourceType;
-	protected boolean canWriteToThisResource;
+	protected boolean canWriteToThisResource=true;
 
 	java.util.function.Consumer<Void> func = null;
 
@@ -80,8 +80,6 @@ abstract public class AbstractPropertiesDialog extends Window {
 		imageName = imgName;
 		resourceType = resType;
 		suffix = suff;
-		//создаем копию существующего состояния записи, чтобы отправить уведомление при изменении её свойств
-		previousRecord = Record.copyAttributes(r, new String[]{"name","id","author","rgroup","wgroup"});
 
 		if (record == null )
 		{
@@ -104,7 +102,7 @@ abstract public class AbstractPropertiesDialog extends Window {
 		setAutoCenter(true);
 		setAnimateShowEffect(AnimationEffect.FADE);
 		setAnimateTime(2000);
-		canWriteToThisResource = GlobalData.canWrite(r);
+		if (r.getAttribute("author") != null) canWriteToThisResource = GlobalData.canWrite(r);
 		createDynamicForm();
 		constructInterface();
 
