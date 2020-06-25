@@ -75,19 +75,6 @@ public class Aya implements EntryPoint {
 			 }
 		 });
 
-		 KeyIdentifier setProcessStateKey = new KeyIdentifier();
-		 setProcessStateKey.setAltKey(true);
-		 setProcessStateKey.setKeyName("2");
-
-		 Page.registerKey(setProcessStateKey, new PageKeyHandler() {
-			 public void execute(String keyName) {
-				 GlobalData.getTaskView().getCurrentTimeline().setEventState(EventState.PROCESS);
-			 }
-		 });
-
-		 Window.enableScrolling(false);
-		 Window.setMargin("0px");
-
          // Создание раскладки виджетов главного окна
 
          SC.logWarn("Initialization. Cookie is:" + Cookies.getCookie("usid"));
