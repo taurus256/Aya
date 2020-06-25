@@ -516,7 +516,7 @@ public class GlobalData {
 		//start.setCanView(false);
 		DataSourceField is_graph = new DataSourceField("isGraph", FieldType.BOOLEAN);
 		//is_graph.setCanView(false);
-		DataSourceField spentTime = new DataSourceField("spentTime", FieldType.FLOAT, "Затрачено времени");
+		DataSourceField spentTime = new DataSourceField("spentTime", FieldType.FLOAT, "Затрачено на фрагмент (часов)");
 		spentTime.setDecimalPrecision(1);
 
 		DataSourceField lane = new DataSourceField("lane", FieldType.TEXT, "Поток");

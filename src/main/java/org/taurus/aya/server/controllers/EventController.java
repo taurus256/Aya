@@ -73,7 +73,6 @@ public class EventController extends GenericController {
         @RequestParam (required = false) String executor,       //Integer executor,
         @RequestParam (required = false) String priority,                          //  Integer priority
         @RequestParam (required = false) String duration_h,     //Integer duration_h,
-        @RequestParam (required = false) String icon,            //String icon,
         @RequestParam (required = false) String state,          //Integer state,
         @RequestParam (required = false) String spentTime,     //Integer spent_time,
         @RequestParam (required = false) String isGraph,        //Boolean is_graph,
@@ -127,7 +126,6 @@ public class EventController extends GenericController {
                         filterDateValue(startDate),
                         dEnd,
                         eventWindowStyle,
-                        icon,
                         filterIntValue(state)
                 );
                 event = eventRepository.save(e);
@@ -178,7 +176,6 @@ public class EventController extends GenericController {
                                     Date.from(evStart.atZone(ZoneId.systemDefault()).toInstant()),
                                     Date.from(evEnd.atZone(ZoneId.systemDefault()).toInstant()),
                                     "s3_process",
-                                    event.getIcon(),
                                     EventState.PROCESS.ordinal()
                             );
                             ev = eventRepository.save(ev);
@@ -212,7 +209,6 @@ public class EventController extends GenericController {
                 event.setExecutor(filterLongValue(executor));
                 event.setPriority(filterIntValue(priority));
                 event.setDuration_h(filterDoubleValue(duration_h));
-                event.setIcon(icon);
                 event.setState(filterIntValue(state));
                 event.setIsGraph(filterBooleanValue(isGraph));
 

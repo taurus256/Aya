@@ -29,7 +29,6 @@ public class Event {
 
     private Double spentTime = 0.0; // реальное (посчитанное системой или заданное пользователем) время выполнения задачи в часах
 
-    private String icon;
     private Integer state;
     private Boolean isGraph;
     private Boolean userCorrectSpentTime = false;
@@ -52,7 +51,6 @@ public class Event {
             Date startDate,
             Date endDate,
             String eventWindowStyle,
-            String icon,
             Integer state
     ){
         this.task = t;
@@ -65,7 +63,6 @@ public class Event {
         this.startDate = startDate;
         this.endDate = endDate;
         this.eventWindowStyle = eventWindowStyle;
-        this.icon = icon;
         this.state = state;
         this.isGraph = true;
     }
@@ -204,23 +201,6 @@ public class Event {
     public void setDuration_h(Double duration_h) {
 
         task.setPlannedDuration(duration_h==null ? 0 : duration_h);
-    }
-
-    //TODO:: delete this method and 'icon' property
-    public String getIcon() {
-        switch (task.getPriority())
-        {
-            case 2: return "task_high.png"; //high priority
-            case 0: return "tree/task_low.png"; // low priority
-            default: return "tree/task_normal.png";
-        }
-    }
-
-    public void setIcon(String icon) {
-        if (icon != null)
-            this.icon = icon;
-        else
-            this.icon = "tree/task_normal.png";
     }
 
     public Integer getState() {

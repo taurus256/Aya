@@ -213,11 +213,16 @@ public class ApplicationMenu extends HLayout {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				SC.say("Горячие клавиши","<table width=300" +
-						"<tr><td><b>Действие</b></td><td><b>Linux</b></td><td><b>Windows</b></td></tr>" +
-						"<tr><td>Показать/скрыть панель задач</td><td>Alt+1</td><td>Alt+1</td></tr>" +
-						"<tr><td>Показать/скрыть панель статистики</td><td>Alt+2</td><td>Alt+2</td></tr>" +
-						"<tr><td>Показать свойства задачи в графике</td><td>Alt+Shift+клик по задаче</td><td>Alt+клик по задаче</td></tr>" +
-						"</table>");
+						"<tr><td><b>Действие</b></td><td><b>Сочетание<sup>*</sup></b></td></tr>" +
+						"<tr><td>Показать/скрыть панель задач</td><td>Alt+1</td></tr>" +
+						"<tr><td>Показать/скрыть панель статистики</td><td>Alt+2</td></tr>" +
+						"<tr><td>Открыть свойства задачи</td><td>Alt+клик по задаче</td></tr>" +
+						"<tr><td>Начать выполнение текущей задачи</td><td>Alt+A</td></tr>" +
+						"<tr><td>Приостановить выполнение текущей задачи</td><td>Alt+S</td></tr>" +
+						"<tr><td>Завершить выполнение текущей задачи</td><td>Alt+D</td></tr>" +
+						"<tr><td>Установить статус \"внимание\" текущей задаче</td><td>Alt+F</td></tr>" +
+						"</table>" +
+						"<br><sup>*</sup> Вместо Alt можно использовать сочетание Alt+Shift, если сочетание с Alt занято браузером или операционной системой");
 			}
 
 		});

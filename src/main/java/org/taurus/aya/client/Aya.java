@@ -94,7 +94,6 @@ public class Aya implements EntryPoint {
 		 Window.enableScrolling(false);
 		 Window.setMargin("0px");
 
-
          // Создание раскладки виджетов главного окна
 
          SC.logWarn("Initialization. Cookie is:" + Cookies.getCookie("usid"));
