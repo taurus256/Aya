@@ -59,8 +59,6 @@ public class DateControlWidget extends HLayout {
         currentDate = new Label("<b>" + monthNameAndYearFormat.format(current) + "</b>");
         currentDate.setAlign(Alignment.CENTER);
         currentDate.setWidth("*");
-        currentDate.setIconCursor(Cursor.HAND);
-        currentDate.addClickHandler(labelClickHandler);
 
         addMember(leftMonth);
         addMember(leftWeek);
@@ -85,14 +83,6 @@ public class DateControlWidget extends HLayout {
         public void onClick(ClickEvent clickEvent) {
             CalendarUtil.addDaysToDate(start,-7);
             CalendarUtil.addDaysToDate(end,-7);
-            update();
-        }
-    };
-
-    ClickHandler labelClickHandler = new ClickHandler(){
-        @Override
-        public void onClick(ClickEvent clickEvent) {
-            setMonthRange();
             update();
         }
     };

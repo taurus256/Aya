@@ -91,7 +91,6 @@ public class TabManager {
 				public void onTabSelected(TabSelectedEvent event)
 				{
 					selectedPane = (ContentPane) event.getTab().getPane();
-					GlobalData.getApplicationMenu().updateMenu(selectedPane.getResourceType(), selectedPane.getResource());
 					selectedPane.deferredUpdate();
 				}
 		});

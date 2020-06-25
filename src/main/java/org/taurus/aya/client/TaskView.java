@@ -24,6 +24,8 @@ import org.taurus.aya.shared.Advice;
 import org.taurus.aya.shared.AdviceState;
 import org.taurus.aya.shared.TaskAnalyseData;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.function.Function;
 
 public class TaskView extends ContentPane {
 	
@@ -116,6 +118,11 @@ public class TaskView extends ContentPane {
 		setSwitchStateHotKey(EventState.PAUSE, "S");
 		setSwitchStateHotKey(EventState.READY, "D");
 		setSwitchStateHotKey(EventState.FAIL, "F");
+		setSwitchStateHotKey(EventState.NEW, "G");
+		setSwitchStateHotKey(() -> setWeekMode(false), "Q");
+		setSwitchStateHotKey(() -> setWeekMode(true), "W");
+		setSwitchStateHotKey(() -> setViewMyTasksMode(true), "M");
+		setSwitchStateHotKey(() -> setViewMyTasksMode(false), "C");
 	}
 
     HLayout createToolStripPanel()
@@ -331,11 +338,11 @@ public class TaskView extends ContentPane {
 		arrowDown.setAlign(Alignment.CENTER);
 		arrowDownLayout.addMember(arrowDown);
 		arrowDownLayout.setHeight(25);
-		arrowDownLayout.addClickHandler(event->{menu.hide();});
+		arrowDownLayout.addClickHandler(event->menu.hide());
 
 		final MenuItem closeItem = new MenuItem();
 		closeItem.setEmbeddedComponent(arrowDownLayout);
-		closeItem.addClickHandler(event -> {menu.hide();});
+		closeItem.addClickHandler(event -> menu.hide());
 
 		final MenuItem commandItem = new MenuItem();
 		commandItem.setEmbeddedComponent(pane);
@@ -350,11 +357,14 @@ public class TaskView extends ContentPane {
 			dateControlWidget.setWeekRange();
 		else
 			dateControlWidget.setMonthRange();
+
+		GlobalData.getApplicationMenu().setWeekModeMenu(weekMode);
 	}
 
 	public void setViewMyTasksMode(boolean viewMyTasks)
 	{
 		getCurrentTimeline().setViewMyTasksMode(viewMyTasks);
+		GlobalData.getApplicationMenu().setViewMyTasksMenu(viewMyTasks);
 	}
 
 	public native void setBrowserIconToRunning(boolean setPlay, String title)
@@ -377,6 +387,18 @@ public class TaskView extends ContentPane {
 		Page.registerKey(setProcessStateKey, new PageKeyHandler() {
 			public void execute(String keyName) {
 				getCurrentTimeline().setEventState(state);
+			}
+		});
+	}
+
+	private void setSwitchStateHotKey(Runnable f, String key){
+		KeyIdentifier setProcessStateKey = new KeyIdentifier();
+		setProcessStateKey.setAltKey(true);
+		setProcessStateKey.setKeyName(key);
+
+		Page.registerKey(setProcessStateKey, new PageKeyHandler() {
+			public void execute(String keyName) {
+				f.run();
 			}
 		});
 	}

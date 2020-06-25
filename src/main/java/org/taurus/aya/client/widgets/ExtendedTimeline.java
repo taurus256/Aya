@@ -582,34 +582,34 @@ public class ExtendedTimeline extends Timeline {
 		setStateProcess = new MenuItem(EventState.PROCESS.getName());
         setStateProcess.addClickHandler(event -> { setEventState(EventState.PROCESS);});
         setStateProcess.setIcon("buttons/task_play.png");
-        setStateProcess.setKeyTitle("Alt+A");
+        setStateProcess.setKeyTitle("<sup>Alt+A</sup>");
         menu.addItem(setStateProcess);
 
 		setStatePause = new MenuItem(EventState.PAUSE.getName());
         setStatePause.addClickHandler(event -> { setEventState(EventState.PAUSE);});
         setStatePause.setIcon("buttons/task_pause.png");
-        setStatePause.setKeyTitle("Alt+S");
+        setStatePause.setKeyTitle("<sup>Alt+S</sup>");
         setStatePause.setEnabled(false);
         menu.addItem(setStatePause);
 
 		setStateReady = new MenuItem(EventState.READY.getName());
         setStateReady.addClickHandler(event -> { setEventState(EventState.READY);});
         setStateReady.setIcon("buttons/task_ready.png");
-        setStateReady.setKeyTitle("Alt+D");
+        setStateReady.setKeyTitle("<sup>Alt+D</sup>");
         setStateReady.setEnabled(false);
         menu.addItem(setStateReady);
 
 		setStateFail = new MenuItem(EventState.FAIL.getName());
         setStateFail.addClickHandler(event -> { setEventState(EventState.FAIL);});
         setStateFail.setIcon("buttons/task_fail.png");
-        setStateFail.setKeyTitle("Alt+F");
+        setStateFail.setKeyTitle("<sup>Alt+F</sup>");
         setStateFail.setEnabled(false);
         menu.addItem(setStateFail);
 
 		setStateNew = new MenuItem(EventState.NEW.getName());
         setStateNew.addClickHandler(event -> { setEventState(EventState.NEW);});
         setStateNew.setIcon("buttons/task_new.png");
-        setStateNew.setKeyTitle("Alt+G");
+        setStateNew.setKeyTitle("<sup>Alt+G</sup>");
         menu.addItem(setStateNew);
 
         menu.addItem(new com.smartgwt.client.widgets.menu.MenuItemSeparator());
@@ -617,7 +617,7 @@ public class ExtendedTimeline extends Timeline {
         eventPropertiesMenu = new MenuItem("Свойства задачи");
         eventPropertiesMenu.addClickHandler(event -> getEditEventDialog(selectedEvent));
         eventPropertiesMenu.setEnabled(false);
-        eventPropertiesMenu.setKeyTitle("Alt+Click");
+        eventPropertiesMenu.setKeyTitle("<sup>Alt+Click</sup>");
         menu.addItem(eventPropertiesMenu);
         menu.setHeight(menu.getItems().length*ApplicationMenu.ITEM_MENU_HEIGHT - (menu.getItems().length-2));
 

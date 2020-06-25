@@ -61,10 +61,7 @@ public class Aya implements EntryPoint {
 
 		 Page.registerKey(showTasksKey, new PageKeyHandler() {
 			 public void execute(String keyName) {
-				 if (GlobalData.getNavigationArea().getWidth().equals(0))
-					GlobalData.getNavigationArea().setWidth(275);
-				 else
-					 GlobalData.getNavigationArea().setWidth(0);
+				 switchTaskPanel();
 			 }
 		 });
 
@@ -74,10 +71,7 @@ public class Aya implements EntryPoint {
 
 		 Page.registerKey(showStatisticsKey, new PageKeyHandler() {
 			 public void execute(String keyName) {
-				 if (GlobalData.getStatisticsPanel().getWidth().equals(0))
-					 GlobalData.getStatisticsPanel().showPanel();
-				 else
-					 GlobalData.getStatisticsPanel().hidePanel();
+				 switchStatisticsPanel();
 			 }
 		 });
 
@@ -213,6 +207,28 @@ public class Aya implements EntryPoint {
 				}});
          }
     }
+
+	public static void switchTaskPanel() {
+		if (GlobalData.getNavigationArea().getWidth().equals(0)) {
+			GlobalData.getNavigationArea().setWidth(275);
+			GlobalData.getApplicationMenu().setCheckedSwitchTasksMenu(true);
+		}
+		else {
+			GlobalData.getNavigationArea().setWidth(0);
+			GlobalData.getApplicationMenu().setCheckedSwitchTasksMenu(false);
+		}
+	}
+
+	public static void switchStatisticsPanel() {
+		if (GlobalData.getStatisticsPanel().getWidth().equals(0)){
+			GlobalData.getStatisticsPanel().showPanel();
+			GlobalData.getApplicationMenu().setCheckedSwitchStatisticsMenu(true);
+		}
+		else {
+			GlobalData.getStatisticsPanel().hidePanel();
+			GlobalData.getApplicationMenu().setCheckedSwitchStatisticsMenu(false);
+		}
+	}
 }
 
 

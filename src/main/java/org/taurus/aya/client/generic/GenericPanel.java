@@ -276,7 +276,7 @@ public class GenericPanel extends VLayout implements SidePanel{
 		menuCreateLink = new MenuItem("Получить ссылку");
 		menuCreateLink.setEnabled(false);
 		
-		menuCreateLink.addClickHandler(new ClickHandler(){
+		hrCreateLink = menuCreateLink.addClickHandler(new ClickHandler(){
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {

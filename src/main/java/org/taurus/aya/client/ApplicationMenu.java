@@ -28,9 +28,8 @@ public class ApplicationMenu extends HLayout {
 	
     private static final int APPLICATION_MENU_HEIGHT = 27;
     public static  final int ITEM_MENU_HEIGHT = 23;
-    public static final int CONTEXT_MENU_HEIGHT = 24;
-    
-    Menu createResourceMenu = null;
+
+    Menu layoutMenu = null;
     Menu userMenu = null;
     Menu viewMenu = null;
     MenuItem createLink;
@@ -39,8 +38,14 @@ public class ApplicationMenu extends HLayout {
     
     private ResourceType resourceType;
     private Record resourceRecord;
-   
-    public ApplicationMenu() {
+	private final MenuItem switchTasksView;
+	private final MenuItem switchStatisticsView;
+	private final MenuItem setWeekMode;
+	private final MenuItem setMonthMode;
+	private final MenuItem setViewMyTasks;
+	private final MenuItem setViewAllTasks;
+
+	public ApplicationMenu() {
          
         super();
         this.setHeight(APPLICATION_MENU_HEIGHT);
@@ -48,106 +53,52 @@ public class ApplicationMenu extends HLayout {
         ToolStrip toolStrip = new ToolStrip();
 	    toolStrip.setWidth100();
         
-//        ToolStripButton iconButton = new ToolStripButton();
-//	    iconButton.setIcon("S5icon.png");
-//	    toolStrip.addButton(iconButton);
-//	    iconButton.addClickHandler(new ClickHandler(){
-//
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				GlobalData.getNavigationArea().toggle();
-//			}});
-//	    
 //	    /*										NEW Menu										*/
 	    /****************************************************************************************/
 	    
-	    createResourceMenu = new Menu();
-	    
-	    MenuItem createTask = new MenuItem("Задачу");
-	    createTask.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+	    layoutMenu = new Menu();
 
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				CommandExecutor.exec(new Command(CommandType.CREATE_BACKLOG_TASK));
-			}
-		});
-	    
-	    MenuItem createDocument = new MenuItem("Документ");
-	    createDocument.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		switchTasksView = new MenuItem("Панель ожидающих задач");
+		switchTasksView.setKeyTitle("<sup>Alt+1</sup>");
+		switchTasksView.setChecked(true);
+	    switchTasksView.addClickHandler(event -> Aya.switchTaskPanel());
 
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				Record r = new Record();
-				r.setAttribute("parent",-1);
-				r.setAttribute("author",GlobalData.getCurrentUser().getAttribute("id"));
-				r.setAttribute("rgroup",GlobalData.ACCESS_ALL);
-				r.setAttribute("wgroup",GlobalData.ACCESS_ALL);
-			}
-		});
+		switchStatisticsView = new MenuItem("Панель статистики");
+		switchStatisticsView.setKeyTitle("<sup>Alt+2</sup>");
+	    switchStatisticsView.addClickHandler(event -> Aya.switchStatisticsPanel());
 	    
-	    MenuItem createScript = new MenuItem("Скрипт");
-	    createScript.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				Record r = new Record();
-				r.setAttribute("parent",0);
-				r.setAttribute("author",GlobalData.getCurrentUser().getAttribute("id"));
-				r.setAttribute("rgroup",GlobalData.ACCESS_ALL);
-				r.setAttribute("wgroup",GlobalData.ACCESS_ALL);
-			}
-		});
+	    layoutMenu.setData(switchTasksView, switchStatisticsView);
+	    layoutMenu.setHeight(2 *ITEM_MENU_HEIGHT - 2);
 	    
-	    MenuItem createTag = new MenuItem("Тэг");
-	    createTag.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				Record r = new Record();
-				r.setAttribute("parent",0);
-				r.setAttribute("author",GlobalData.getCurrentUser().getAttribute("id"));
-				r.setAttribute("rgroup",GlobalData.ACCESS_ALL);
-				r.setAttribute("wgroup",GlobalData.ACCESS_ALL);
-				GenericPropertiesDialog gpd = new GenericPropertiesDialog(r, "tag.png", ResourceType.TAG, GlobalData.getDataSource_tags(), "тега");
-			}
-		});
-	    
-	    createLink = new MenuItem("Ссылку");
-	    createLink.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler(){
-
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				CommandExecutor.exec(new Command(CommandType.CREATE_LINK,resourceType,resourceRecord.getAttributeAsString("name") + "\"", resourceRecord.getAttributeAsInt("id")));
-			}});
-	    createLink.setEnabled(false);
-	    
-	    createResourceMenu.setData(createTask,createDocument,createScript,createTag,new MenuItemSeparator(),createLink);
-	    createResourceMenu.setHeight(6 *ITEM_MENU_HEIGHT - 2);
-	    
-	    ToolStripMenuButton menuCreateButton = new ToolStripMenuButton("Создать", createResourceMenu);
-	    toolStrip.addMenuButton(menuCreateButton);
+	    ToolStripMenuButton layoutControlButton = new ToolStripMenuButton("Панели", layoutMenu);
+	    toolStrip.addMenuButton(layoutControlButton);
 	    
 	    /* 										View menu										*/
 	    /********************************************************************************************/
 	    
 	    viewMenu = new Menu();
 
-		final MenuItem setWeekMode = new MenuItem("Недельный график");
-		final MenuItem setMonthMode = new MenuItem("Месячный график");
-		final MenuItem setViewMyTasks = new MenuItem("Показывать только мои задачи");
-		final MenuItem setViewAllTasks = new MenuItem("Показывать задачи всех пользователей");
+		setWeekMode = new MenuItem("На неделю");
+		setWeekMode.setKeyTitle("<sup>Alt+W</sup>");
+		setMonthMode = new MenuItem("На месяц");
+		setMonthMode.setKeyTitle("<sup>Alt+Q</sup>");
+		setViewMyTasks = new MenuItem("Показывать только мои задачи");
+		setViewMyTasks.setKeyTitle("<sup>Alt+M</sup>");
+		setViewAllTasks = new MenuItem("Показывать задачи всех пользователей");
+		setViewAllTasks.setKeyTitle("<sup>Alt+C</sup>");
+
 		setWeekMode.setChecked(true);
 		setViewMyTasks.setChecked(true);
 
-		setWeekMode.addClickHandler(event -> { GlobalData.getTaskView().setWeekMode(true); setWeekMode.setChecked(true); setMonthMode.setChecked(false); viewMenu.refreshRow(0); viewMenu.refreshRow(1);});
-		setMonthMode.addClickHandler(event -> { GlobalData.getTaskView().setWeekMode(false); setWeekMode.setChecked(false); setMonthMode.setChecked(true); viewMenu.refreshRow(0); viewMenu.refreshRow(1);});
-		setViewMyTasks.addClickHandler(event -> { GlobalData.getTaskView().setViewMyTasksMode(true); setViewMyTasks.setChecked(true); setViewAllTasks.setChecked(false); viewMenu.refreshRow(3); viewMenu.refreshRow(4);});
-		setViewAllTasks.addClickHandler(event -> { GlobalData.getTaskView().setViewMyTasksMode(false); setViewMyTasks.setChecked(false); setViewAllTasks.setChecked(true); viewMenu.refreshRow(3); viewMenu.refreshRow(4);});
+		setWeekMode.addClickHandler(event -> GlobalData.getTaskView().setWeekMode(true));
+		setMonthMode.addClickHandler(event -> GlobalData.getTaskView().setWeekMode(false));
+		setViewMyTasks.addClickHandler(event -> GlobalData.getTaskView().setViewMyTasksMode(true));
+		setViewAllTasks.addClickHandler(event -> GlobalData.getTaskView().setViewMyTasksMode(false));
 
-		viewMenu.setData(setWeekMode,setMonthMode,new MenuItemSeparator(), setViewMyTasks, setViewAllTasks);
+		viewMenu.setData(setWeekMode, setMonthMode,new MenuItemSeparator(), setViewMyTasks, setViewAllTasks);
 		viewMenu.setHeight(5 *ITEM_MENU_HEIGHT - 2);
 
-		ToolStripMenuButton viewMenuButton = new ToolStripMenuButton("Вид", viewMenu);
+		ToolStripMenuButton viewMenuButton = new ToolStripMenuButton("График", viewMenu);
 		toolStrip.addMenuButton(viewMenuButton);
 
 		/* 										Administration menu									*/
@@ -158,29 +109,21 @@ public class ApplicationMenu extends HLayout {
 
 	    
 	    MenuItem lanesManager = new MenuItem("Управление потоками");
-	    lanesManager.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				LaneCreationDialog ld = new LaneCreationDialog(GlobalData.getDataSource_lanes(), new Consumer(){
-					@Override
-					public void accept(Object o) {
-						GlobalData.getTaskView().updateTimeline();
-					}
-				});
-				ld.show();
-			}
+	    lanesManager.addClickHandler(event -> {
+			LaneCreationDialog ld = new LaneCreationDialog(GlobalData.getDataSource_lanes(), new Consumer(){
+				@Override
+				public void accept(Object o) {
+					GlobalData.getTaskView().updateTimeline();
+				}
+			});
+			ld.show();
 		});
 
 
 	    MenuItem usersManager = new MenuItem("Управление пользователями");
-	    usersManager.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				UserManagementDialog umd = new UserManagementDialog();
-				umd.show();
-			}
+	    usersManager.addClickHandler(event -> {
+			UserManagementDialog umd = new UserManagementDialog();
+			umd.show();
 		});
 	    
 	    MenuItem groupsManager = new MenuItem("Управление группами");
@@ -208,44 +151,39 @@ public class ApplicationMenu extends HLayout {
 	    Menu helpMenu = new Menu();
 
 	    MenuItem hotKeysItem = new MenuItem("Горячие клавиши");
-		hotKeysItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler(){
-
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				SC.say("Горячие клавиши","<table width=300" +
-						"<tr><td><b>Действие</b></td><td><b>Сочетание<sup>*</sup></b></td></tr>" +
-						"<tr><td>Показать/скрыть панель задач</td><td>Alt+1</td></tr>" +
-						"<tr><td>Показать/скрыть панель статистики</td><td>Alt+2</td></tr>" +
-						"<tr><td>Открыть свойства задачи</td><td>Alt+клик по задаче</td></tr>" +
-						"<tr><td>Начать выполнение текущей задачи</td><td>Alt+A</td></tr>" +
-						"<tr><td>Приостановить выполнение текущей задачи</td><td>Alt+S</td></tr>" +
-						"<tr><td>Завершить выполнение текущей задачи</td><td>Alt+D</td></tr>" +
-						"<tr><td>Установить статус \"внимание\" текущей задаче</td><td>Alt+F</td></tr>" +
-						"</table>" +
-						"<br><sup>*</sup> Вместо Alt можно использовать сочетание Alt+Shift, если сочетание с Alt занято браузером или операционной системой");
-			}
-
-		});
+		hotKeysItem.addClickHandler(event -> SC.say("Горячие клавиши","" +
+				"<table width=500>" +
+				"<tr><td><b>Действия с панелями</b></td><td><b>Сочетание<sup>*</sup></b></td></tr>" +
+				"<tr><td>Показать/скрыть панель задач</td><td>Alt+1</td></tr>" +
+				"<tr><td>Показать/скрыть панель статистики</td><td>Alt+2</td></tr>" +
+				"</table>" +
+				"<table width=500>" +
+				"<tr><td><b>Переключение режимов графика</b></td><td><b>Сочетание<sup>*</sup></b></td></tr>" +
+				"<tr><td>График на месяц</td><td>Alt+Q</td></tr>" +
+				"<tr><td>График на неделю</td><td>Alt+W</td></tr>" +
+				"<tr><td>Показывать только мои задачи</td><td>Alt+M</td></tr>" +
+				"<tr><td>Показывать задачи всей команды</td><td>Alt+C</td></tr>" +
+				"</table>" +
+				"<table width=500>" +
+				"<tr><td><b>Действия с задачами</b></td><td><b>Сочетание<sup>*</sup></b></td></tr>" +
+				"<tr><td>Показать/скрыть панель задач</td><td>Alt+1</td></tr>" +
+				"<tr><td>Показать/скрыть панель статистики</td><td>Alt+2</td></tr>" +
+				"<tr><td>Открыть свойства задачи</td><td>Alt+клик по задаче</td></tr>" +
+				"<tr><td>Начать выполнение текущей задачи (Activate)</td><td>Alt+A</td></tr>" +
+				"<tr><td>Приостановить выполнение текущей задачи (Suspend)</td><td>Alt+S</td></tr>" +
+				"<tr><td>Завершить выполнение текущей задачи (Done)</td><td>Alt+D</td></tr>" +
+				"<tr><td>Установить статус \"внимание\" текущей задаче (Fail)</td><td>Alt+F</td></tr>" +
+				"<tr><td>Сбросить статус текщей задачи (General)</td><td>Alt+G</td></tr>" +
+				"</table>" +
+				"<br><sup>*</sup> Вместо Alt можно использовать сочетание Alt+Shift, если сочетание с Alt занято браузером или операционной системой"));
 
 	    MenuItem showConsoleItem = new MenuItem("Консоль SmartGWT");
-	    com.smartgwt.client.widgets.menu.events.ClickHandler handler = new com.smartgwt.client.widgets.menu.events.ClickHandler(){
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				SC.showConsole();
-			}
-		};
+	    com.smartgwt.client.widgets.menu.events.ClickHandler handler = event -> SC.showConsole();
 	    showConsoleItem.addClickHandler(handler);
 	    helpMenu.addItem(showConsoleItem);
 
 	    MenuItem aboutItem = new MenuItem("О программе");
-	    aboutItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler(){
-
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				new AboutDialog();
-			}
-			
-		});
+	    aboutItem.addClickHandler(event -> new AboutDialog());
 	    
 	    helpMenu.setData(hotKeysItem, new MenuItemSeparator(), showConsoleItem, aboutItem);
 
@@ -262,13 +200,10 @@ public class ApplicationMenu extends HLayout {
 
 		// Профиль пользователя
 	    MenuItem showProfile = new MenuItem("Профиль");
-	    showProfile.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler(){
-
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				UserProfileDialog upd = new UserProfileDialog(GlobalData.getCurrentUser()); 
-				upd.show();
-			}});
+	    showProfile.addClickHandler(event -> {
+			UserProfileDialog upd = new UserProfileDialog(GlobalData.getCurrentUser());
+			upd.show();
+		});
 	    userMenuArray[0] = showProfile;
 	    
 	    userMenuArray[1] = new MenuItemSeparator();
@@ -287,14 +222,11 @@ public class ApplicationMenu extends HLayout {
 //	    userMenuArray[2] = changeUser;
 	   
 	    MenuItem forgetUser= new MenuItem("Выйти");
-	    forgetUser.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler(){
-
-				@Override
-				public void onClick(MenuItemClickEvent event) {
-					//обнулить cookie и обновить страницу
-					Cookies.setCookie("usid", "", new Date(System.currentTimeMillis()+30L*24*3600*1000),"","/",false);
-	    			com.google.gwt.user.client.Window.Location.reload();
-				}});
+	    forgetUser.addClickHandler(event -> {
+			//обнулить cookie и обновить страницу
+			Cookies.setCookie("usid", "", new Date(System.currentTimeMillis()+30L*24*3600*1000),"","/",false);
+			com.google.gwt.user.client.Window.Location.reload();
+		});
 
 	    userMenuArray[2] = forgetUser;
 	     
@@ -306,12 +238,7 @@ public class ApplicationMenu extends HLayout {
 	    final ToolStripButton userButton = new ToolStripButton();
 	    userButton.setTitle(GlobalData.getCurrentUser().getAttributeAsString("firstname") + " " + GlobalData.getCurrentUser().getAttributeAsString("surname"));
 
-	    userButton.addClickHandler(new ClickHandler(){
-
-			@Override
-			public void onClick(ClickEvent event) {
-				userMenu.showNextTo(userButton,"bottom");
-			}});
+	    userButton.addClickHandler(event -> userMenu.showNextTo(userButton,"bottom"));
 	    
 	    toolStripRight.addButton(userButton);
 		
@@ -320,28 +247,35 @@ public class ApplicationMenu extends HLayout {
 	    GlobalData.setApplicationMenu(this);
     }
     
-    /* Methods for dynamically-created Operations menu*/
-    
-	com.smartgwt.client.widgets.menu.events.ClickHandler scriptHandler = new com.smartgwt.client.widgets.menu.events.ClickHandler(){
+    //Обновить меню
+    public void setCheckedSwitchTasksMenu(boolean state){
+    	switchTasksView.setChecked(state);
+		layoutMenu.refreshFields();
+	}
 
+	public void setCheckedSwitchStatisticsMenu(boolean state){
+		switchStatisticsView.setChecked(state);
+		layoutMenu.refreshFields();
+	}
 
-		@Override
-		public void onClick(MenuItemClickEvent event) {
-			SC.say(event.getItem().getAttributeAsString("id"));
-			
+	public void setWeekModeMenu(boolean state){
+		if (state) {
+			setWeekMode.setChecked(true); setMonthMode.setChecked(false);
 		}
-	};
-    
-    //Обновить меню операций и запомнить данные для генерации ссылки, если потребуется
-    public void updateMenu(ResourceType type, Record r)
-    {
-    	resourceType = type;
-    	resourceRecord = r;
-    	if (type.ordinal()<5)
-    		createLink.setEnabled(true);
-    	else
-    		createLink.setEnabled(false);
-    	createResourceMenu.refreshFields();
-    }
-    
+		else{
+			setWeekMode.setChecked(false); setMonthMode.setChecked(true);
+		}
+		viewMenu.refreshRow(0);
+		viewMenu.refreshRow(1);
+	}
+
+	public void setViewMyTasksMenu(boolean state){
+		if (state){
+			setViewMyTasks.setChecked(true); setViewAllTasks.setChecked(false);
+		}else{
+			setViewMyTasks.setChecked(false); setViewAllTasks.setChecked(true);
+		}
+		viewMenu.refreshRow(3);
+		viewMenu.refreshRow(4);
+	}
 }

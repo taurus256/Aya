@@ -1,7 +1,10 @@
 package org.taurus.aya.client;
 
+import com.smartgwt.client.core.KeyIdentifier;
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.*;
+import com.smartgwt.client.util.Page;
+import com.smartgwt.client.util.PageKeyHandler;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
@@ -61,12 +64,8 @@ public class TaskPanel extends VLayout implements SidePanel {
 
 			hrCreateResource.removeHandler();
 
-			menuCreateResource.addClickHandler(new ClickHandler(){
-				@Override
-				public void onClick(MenuItemClickEvent event) {
-					CommandExecutor.exec(new Command(Command.CommandType.CREATE_BACKLOG_TASK));
-				}
-			});
+			menuCreateResource.addClickHandler(event -> createBacklogTask());
+			menuCreateResource.setKeyTitle("<sup>Alt+N</sup>");
 
 			hrProperties.removeHandler();
 			menuProperties.addClickHandler(new ClickHandler(){
@@ -82,6 +81,23 @@ public class TaskPanel extends VLayout implements SidePanel {
 						}
 					});
 				}});
+
+			hrCreateLink.removeHandler();
+			menuCreateLink.setTitle("Отправить на график");
+			menuCreateLink.setKeyTitle("<sup>DblClick</sup>");
+			menuCreateLink.setIcon("buttons/task_graph.png");
+			menuCreateLink.addClickHandler((event) -> sendTaskToGraph());
+
+			//Установка обработчика "горячей клавиши" для создания задачи
+			KeyIdentifier showTasksKey = new KeyIdentifier();
+			showTasksKey.setAltKey(true);
+			showTasksKey.setKeyName("N");
+
+			Page.registerKey(showTasksKey, new PageKeyHandler() {
+				public void execute(String keyName) {
+					createBacklogTask();
+				}
+			});
 
 		}
 	}
@@ -142,24 +158,7 @@ public class TaskPanel extends VLayout implements SidePanel {
 			
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-
-				Record taskRecord = panelBacklog.getTreeSelectedRecord();
-
-				if (taskRecord != null)
-				{
-					Record r = createEventRecord(taskRecord);;
-					GlobalData.getDataSource_events().addData(r);
-					taskRecord.setAttribute("showInBacklog",false);
-					taskRecord.setAttribute("startDate",new Date());
-					taskRecord.setAttribute("endDate",new Date(new Date().getTime()+1000*3600*24*2));
-					taskRecord.setAttribute("executor",GlobalData.getCurrentUser().getAttribute("id"));
-					GlobalData.getDataSource_tasks().updateData(taskRecord, new DSCallback() {
-						@Override
-						public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
-							panelBacklog.getTreeGrid().refreshData();
-						}
-					});
-				}
+				sendTaskToGraph();
 			}
 		});
 
@@ -305,6 +304,26 @@ public class TaskPanel extends VLayout implements SidePanel {
 
 	}
 
+	private void sendTaskToGraph() {
+		Record taskRecord = panelBacklog.getTreeSelectedRecord();
+
+		if (taskRecord != null)
+		{
+			Record r = createEventRecord(taskRecord);;
+			GlobalData.getDataSource_events().addData(r);
+			taskRecord.setAttribute("showInBacklog",false);
+			taskRecord.setAttribute("startDate",new Date());
+			taskRecord.setAttribute("endDate",new Date(new Date().getTime()+1000*3600*24*2));
+			taskRecord.setAttribute("executor",GlobalData.getCurrentUser().getAttribute("id"));
+			GlobalData.getDataSource_tasks().updateData(taskRecord, new DSCallback() {
+				@Override
+				public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
+					panelBacklog.getTreeGrid().refreshData();
+				}
+			});
+		}
+	}
+
 	private Record createEventRecord(Record record) {
 		Record r = Record.copyAttributes(record,record.getAttributes());
 		r.setAttribute("id","null");
@@ -359,5 +378,16 @@ public class TaskPanel extends VLayout implements SidePanel {
 //			panelMyTasks.update();
 //			panelOtherTasks.update();
 	};
+
+	private void createBacklogTask(){
+		Record r = new Record();
+		r.setAttribute("parent",0);
+		r.setAttribute("author",GlobalData.getCurrentUser().getAttribute("id"));
+		r.setAttribute("rgroup",GlobalData.ACCESS_ALL);
+		r.setAttribute("wgroup",GlobalData.ACCESS_ALL);
+		r.setAttribute("isBacklog", true);
+		SC.logWarn("Set date for task");
+		BacklogTaskDialog btd = new BacklogTaskDialog(r);
+	}
 
 }
