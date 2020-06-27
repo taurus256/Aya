@@ -25,7 +25,7 @@ public class User {
   private java.sql.Timestamp imageDateCreated;
   private String showedName;
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
           name="relation_user_group",
           joinColumns = @JoinColumn(name="userid"),

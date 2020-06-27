@@ -11,6 +11,7 @@ import org.taurus.aya.server.LaneRepository;
 import org.taurus.aya.server.TaskRepository;
 import org.taurus.aya.server.UserRepository;
 import org.taurus.aya.server.entity.Event;
+import org.taurus.aya.server.entity.Group;
 import org.taurus.aya.server.entity.Lane;
 import org.taurus.aya.server.entity.User;
 import org.taurus.aya.servlets.advicers.MatrixAdvicer;
@@ -23,10 +24,9 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjusters;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @WebServlet(urlPatterns = "/app/aya/analytic", loadOnStartup = 1)
 public class AnalyticServiceimpl extends RemoteServiceServlet implements AnalyticService {
@@ -70,29 +70,33 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         System.out.println("AnalyticServiceimpl.getPrognosis");
         String labelText="";
 
+        User user = userRepository.findById(userId).orElseThrow(Exception::new);
+        List<Long> groups = user.getGroups().stream().map(Group::getId).collect(Collectors.toList());
 
         List<User> userList = userRepository.findAll();
-        List<Lane> laneList = laneRepository.findAll();
+        List<Lane> laneList = laneRepository.findAll(userId,groups);
+        List<String> laneNames = laneList.stream().map(Lane::getName).collect(Collectors.toList());
 
             //Ищем "будущие" задачи на графике: имеющие статус NEW и дату завершения сегодня или в будущем
             LinkedList<Event> futureEventsList = eventRepository.findAllByStartDateGreaterThanAndIsState(
-                    Date.from(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).toInstant(ZoneOffset.UTC))
+                    Date.from(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).toInstant(ZoneOffset.UTC)),
+                    laneNames
             );
 
             System.out.println("eventRepository futureEventsList() = " + futureEventsList.size());
 
-            Date deadline = eventRepository.findAllByStartDateGreaterThanAndIsState(new Date()).stream().map(e -> e.getEndDate()).max(Date::compareTo).orElse(new Date());
+            Date deadline = eventRepository.findAllByStartDateGreaterThanAndIsState(new Date(), laneNames).stream().map(e -> e.getEndDate()).max(Date::compareTo).orElse(new Date());
             System.out.println("AnalyticServiceimpl deadline = " + deadline);
 
             // Получаем количество задач, выполненное в прошлом за время, равное горизонту планирования
             Duration interval = Duration.between(Instant.now(), deadline.toInstant());
             Instant start = Instant.now().minus(Duration.ofDays(60));
             Instant today = LocalDateTime.now().plus(1, ChronoUnit.DAYS).withHour(0).withMinute(0).withSecond(0).toInstant(ZoneOffset.UTC);
-            Integer executedTaskCount = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date.from(start), Date.from(today), EventState.READY.ordinal()).size();
-            System.out.println("AnalyticServiceimpl executedTaskCount = " + executedTaskCount);
+//            Integer executedTaskCount = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date.from(start), Date.from(today), EventState.READY.ordinal(), laneNames).size();
+//            System.out.println("AnalyticServiceimpl executedTaskCount = " + executedTaskCount);
 
             //Получаем список задач, выполненных за последний месяц
-            LinkedList oldEventsList = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date.from(start), new Date(), EventState.READY.ordinal());
+            LinkedList oldEventsList = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date.from(start), new Date(), EventState.READY.ordinal(), laneNames);
             LinkedList oldTasksList = taskRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(start), Date.from(today), EventState.READY.ordinal());
             System.out.println("AnalyticServiceimpl oldEventList.size = " + oldEventsList.size());
             System.out.println("AnalyticServiceimpl oldTasksList.size = " + oldTasksList.size());
@@ -244,21 +248,16 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         return workingDays;
     }
 
-    public GraphData getMonthGraph(Long userId)
-    {
-
-        return getMonthGraph(userId, new Date(120, 2,1), new Date(120,3,1));
-    }
-
     public GraphData getMonthGraph(Long userId, Date startDate, Date endDate) throws IllegalArgumentException
     {
-        //getting current user ID and amount of users
-        Long currentUserId = userRepository.getOne(userId).getId();
-        long userCount = userRepository.count();
+        User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        List<Long> groups = user.getGroups().stream().map(Group::getId).collect(Collectors.toList());
+        List<String> lanesString = laneRepository.findAll(userId,groups).stream().map(Lane::getName).collect(Collectors.toList());
+        //здесь получить список потоков
 
         LocalDateTime startDateTime = LocalDateTime.ofInstant(startDate.toInstant(),ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0);//начало расчетного периода
         LocalDateTime endDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()).plusDays(1).withHour(0).withMinute(0).withSecond(0); // конец расчетного периода - день, следующий за последним запрашиваемым
-        List<Event> list = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(startDateTime.toInstant(ZoneOffset.UTC)), Date.from(endDateTime.toInstant(ZoneOffset.UTC)), EventState.READY.ordinal());
+        List<Event> list = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(startDateTime.toInstant(ZoneOffset.UTC)), Date.from(endDateTime.toInstant(ZoneOffset.UTC)), EventState.READY.ordinal(), lanesString);
         Duration d = Duration.between(startDateTime,endDateTime);
         double[] daysLocal = new double[Long.valueOf(d.toDays()).intValue()];
         Arrays.setAll(daysLocal,(a) -> {return 0.0;});
@@ -280,7 +279,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
             if (eventLocalEnd.isAfter(endDateTime)) throw new IllegalArgumentException("Для задачи '" + e.getName() + "' указано неверное время завершения");
             long offsetStart = Duration.between(startDateTime,eventLocalStart).toDays();
             long offsetEnd = Duration.between(startDateTime, eventLocalEnd).toDays();
-            if (currentUserId.equals(e.getTask().getExecutor()))
+            if (userId.equals(e.getTask().getExecutor()))
                 for (int i=Long.valueOf(offsetStart).intValue(); i <= offsetEnd; i++) {
                     daysLocal[i] += dayCost;
                     daysGroup[i] += dayCost;
@@ -302,8 +301,13 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
     {
         MatrixAdvicer matrixAdvicer = new MatrixAdvicer();
         Instant start = LocalDateTime.now().minusMonths(1).toInstant(ZoneOffset.UTC); //используется смещение по умолчанию (UTC)
+
+        User user = userRepository.findById(userId).get(); //!
+        List<Long> groups = user.getGroups().stream().map(Group::getId).collect(Collectors.toList());
+
         List<User> userList = userRepository.findAll();
-        List<Lane> laneList = laneRepository.findAll();
+        List<Lane> laneList = laneRepository.findAll(userId, groups);
+
         try {
 
             StatData[] stats = matrixAdvicer.calculateUserStatustics(userId,

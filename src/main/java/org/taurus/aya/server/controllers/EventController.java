@@ -30,6 +30,7 @@ public class EventController extends GenericController {
     private TaskRepository taskRepository;
 
     private TaskService taskService;
+
     private EventService eventService;
 
     public EventController(@Autowired EventRepository eventRepository, @Autowired TaskRepository taskRepository, @Autowired TaskService taskService, @Autowired EventService service)
@@ -49,7 +50,7 @@ public class EventController extends GenericController {
         System.out.println("request body is:" + _operationType);
         System.out.println("criteria length is:" + criteria.length);
 
-        List<Event> events = eventService.getData(criteria);
+        List<Event> events = eventService.getData(request, criteria);
         return new GwtResponse(0,events.size(),events.size(), events);
     }
 

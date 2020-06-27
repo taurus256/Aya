@@ -118,10 +118,6 @@ public class DateControlWidget extends HLayout {
     }
 
     private void setToFirstDayOfWeek(Date date){
-//TODO::delete this
-        //        int firstDay = CalendarUtil.getStartingDayOfWeek() - 1;
-//        int offset = firstDay - date.getDay();
-
         date.setDate(date.getDate() - date.getDay() + 1);
     }
 

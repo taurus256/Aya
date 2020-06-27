@@ -6,13 +6,19 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.taurus.aya.server.LaneRepository;
+import org.taurus.aya.server.UserRepository;
+import org.taurus.aya.server.entity.Group;
 import org.taurus.aya.server.entity.Lane;
+import org.taurus.aya.server.entity.User;
 import org.taurus.aya.shared.GwtResponse;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/lanes")
@@ -20,9 +26,12 @@ public class LaneController extends GenericController {
 
     private LaneRepository laneRepository;
 
-    public LaneController(@Autowired LaneRepository repository)
+    private UserRepository userRepository;
+
+    public LaneController(@Autowired LaneRepository laneRepository, @Autowired UserRepository userRepository)
     {
-        this.laneRepository = repository;
+        this.laneRepository = laneRepository;
+        this.userRepository = userRepository;
     }
 
     @ResponseBody
@@ -65,9 +74,16 @@ public class LaneController extends GenericController {
 
         System.out.println("Operation_type=" + _operationType);
         System.out.println("request body is:" + _operationType);
+
+        String usid = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("usid")).map(Cookie::getValue).findFirst().orElseThrow(() -> new RuntimeException("Не могу прочитать USID"));
+        List<User> users = userRepository.findUserByUsid(usid);
+        if (users.size() != 1) throw new RuntimeException("Неверное число пользователей ( " + users.size() + ") с USID " + usid);
+        User user = users.get(0);
+        List<Long> groups = user.getGroups().parallelStream().map(Group::getId).collect(Collectors.toList());
+
         List<Lane> lanes = new ArrayList<>();
         if (_operationType.equals("fetch")) {
-            lanes = laneRepository.findAll();
+            lanes = laneRepository.findAll(user.getId(), groups);
         }
 
         return new GwtResponse(0,lanes.size(),lanes.size(),lanes);
@@ -117,10 +133,10 @@ public class LaneController extends GenericController {
                 lane.setVisible(filterBooleanValue(visible));
                 lane.setAuthor(filterLongValue(author));
                 lane.setIsFolder(filterBooleanValue(isFolder));
-                lane.setWuser(filterIntValue(wuser));
-                lane.setWgroup(filterIntValue(wgroup));
-                lane.setRuser(filterIntValue(ruser));
-                lane.setRgroup(filterIntValue(rgroup));
+                lane.setWuser(filterLongValue(wuser));
+                lane.setWgroup(filterLongValue(wgroup));
+                lane.setRuser(filterLongValue(ruser));
+                lane.setRgroup(filterLongValue(rgroup));
 
                 laneRepository.save(lane);
                 System.out.println("Lane saved");

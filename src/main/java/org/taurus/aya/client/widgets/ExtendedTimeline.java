@@ -102,8 +102,7 @@ public class ExtendedTimeline extends Timeline {
         setDataSource(GlobalData.getDataSource_events());
 		//setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS, true));
 		setImplicitCriteria(new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-				new Criterion("executor", OperatorId.EQUALS, GlobalData.getCurrentUser().getAttributeAsString("id")),
-				new Criterion("isGraph", OperatorId.EQUALS, true),
+				new Criterion("isGraph", OperatorId.EQUALS, true)
 		}));
 
 		setAutoFetchData(true);

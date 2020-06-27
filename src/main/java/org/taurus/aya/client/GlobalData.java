@@ -259,9 +259,12 @@ public class GlobalData {
 		GlobalData.statusBar = statusBar;
 	}
 
-	public static StatisticsPanel getStatisticsPanel() throws RuntimeException{
+	public static StatisticsPanel getStatisticsPanel(){
 		if (statisticsPanel == null)
-			throw new RuntimeException("StatisticsPanel IS NULL");
+		{
+			SC.logWarn("StatisticsPanel IS NULL");
+			return null;
+		}
 		else
 			return statisticsPanel;
 	}

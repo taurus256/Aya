@@ -11,10 +11,10 @@ public class Lane {
   private Integer parent;
   private String name;
   private String description;
-  private Integer wuser;
-  private Integer wgroup;
-  private Integer ruser;
-  private Integer rgroup;
+  private Long wuser;
+  private Long wgroup;
+  private Long ruser;
+  private Long rgroup;
   @Column(name="lane_order")
   private Integer laneOrder;
   private Boolean visible;
@@ -61,38 +61,38 @@ public class Lane {
   }
 
 
-  public Integer getWuser() {
+  public Long getWuser() {
     return wuser;
   }
 
-  public void setWuser(Integer wuser) {
+  public void setWuser(Long wuser) {
     this.wuser = wuser;
   }
 
 
-  public Integer getWgroup() {
+  public Long getWgroup() {
     return wgroup;
   }
 
-  public void setWgroup(Integer wgroup) {
+  public void setWgroup(Long wgroup) {
     this.wgroup = wgroup;
   }
 
 
-  public Integer getRuser() {
+  public Long getRuser() {
     return ruser;
   }
 
-  public void setRuser(Integer ruser) {
+  public void setRuser(Long ruser) {
     this.ruser = ruser;
   }
 
 
-  public Integer getRgroup() {
+  public Long getRgroup() {
     return rgroup;
   }
 
-  public void setRgroup(Integer rgroup) {
+  public void setRgroup(Long rgroup) {
     this.rgroup = rgroup;
   }
 

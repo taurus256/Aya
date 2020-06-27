@@ -7,8 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.taurus.aya.client.EventState;
 import org.taurus.aya.server.EventRepository;
+import org.taurus.aya.server.LaneRepository;
+import org.taurus.aya.server.UserRepository;
 import org.taurus.aya.server.entity.Event;
+import org.taurus.aya.server.entity.Group;
+import org.taurus.aya.server.entity.User;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,28 +22,42 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
 
     private EventRepository eventRepository;
 
+    private UserRepository userRepository;
+
+    private LaneRepository laneRepository;
+
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     //2019-07-19T03:12:27.000
     private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
-    public EventService(@Autowired EventRepository repository)
+    public EventService(@Autowired EventRepository repository, @Autowired LaneRepository laneRepository, @Autowired UserRepository userRepository)
     {
         this.eventRepository = repository;
+        this.laneRepository = laneRepository;
+        this.userRepository = userRepository;
     }
 
     public ObjectMapper objectMapper = new ObjectMapper();
 
-    public List<Event> getData(String[] criteria) throws RuntimeException, ParseException,  IOException
+    public List<Event> getData(HttpServletRequest request, String[] criteria) throws RuntimeException, ParseException,  IOException
     {
         List<Event> eventList;
         HashMap<String,String> criteriaMap = parseCriteriaString(criteria);
+
+        String usid = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("usid")).map(Cookie::getValue).findFirst().orElseThrow(() -> new RuntimeException("Не могу прочитать USID"));
+        List<User> users = userRepository.findUserByUsid(usid);
+        if (users.size() != 1) throw new RuntimeException("Неверное число пользователей ( " + users.size() + ") с USID " + usid);
+        User user = users.get(0);
+        List<Long> groups = user.getGroups().parallelStream().map(Group::getId).collect(Collectors.toList());
+        List<String> laneNames = laneRepository.findAllNames(user.getId(), groups);
 
         //System.out.println(criteriaMap);
         if (Boolean.valueOf(criteriaMap.getOrDefault("isGraph","false"))){
@@ -45,18 +65,20 @@ public class EventService {
                 eventList = eventRepository.findAllByStartDateLessThanEqualAndEndDateGreaterThanAndIsGraphIsTrueAndExecutor(
                             formatter.parse(criteriaMap.getOrDefault("startDate", "2000-01-0")),
                             formatter.parse(criteriaMap.getOrDefault("endDate", "2050-01-01")),
-                            Long.valueOf(criteriaMap.get("executor"))
+                            laneNames
                     );
             else
                 eventList = eventRepository.findAllByStartDateLessThanEqualAndEndDateGreaterThanAndIsGraphIsTrue(
                         formatter.parse(criteriaMap.getOrDefault("startDate", "2000-01-0")),
-                        formatter.parse(criteriaMap.getOrDefault("endDate", "2050-01-01"))
+                        formatter.parse(criteriaMap.getOrDefault("endDate", "2050-01-01")),
+                        laneNames
                 );
         }
         else
             eventList = eventRepository.findAllByStartDateGreaterThanAndEndDateLessThanEqualAndIsGraphIsFalse(
                 formatter.parse(criteriaMap.getOrDefault("startDate","2000-01-01")),
-                formatter.parse(criteriaMap.getOrDefault("endDate","2050-01-01"))
+                formatter.parse(criteriaMap.getOrDefault("endDate","2050-01-01")),
+                laneNames
             );
 
         return eventList;
