@@ -36,7 +36,7 @@ public class LaneCreationDialog extends Dialog {
 		this.func = func;
 		setCanDragReposition(true);  
 		setCanDragResize(false);
-		setSize("450px", "180px");
+		setSize("500px", "180px");
 		setTitle("Настройка потоков задач");
 		setBodyColor("rgb(253, 253, 253)");
 		setHoverMoveWithMouse(true);
@@ -67,7 +67,7 @@ public class LaneCreationDialog extends Dialog {
 		hLayout.setMembersMargin(10);
 		//lanes_list = new ListGrid();
 		lanes_list = new ListGrid();
-		lanes_list.setSize("300", "300");
+		lanes_list.setSize("400", "300");
 		lanes_list.setShowHeader(true);
 		//lanes_list.setCanDragReposition(true);
 		lanes_list.setDataSource(ds_lanes);
@@ -129,6 +129,7 @@ public class LaneCreationDialog extends Dialog {
 			r.setAttribute("author", GlobalData.getCurrentUser().getAttributeAsInt("id"));
 			r.setAttribute("laneOrder", lanes_list.getRecords().length);
 			r.setAttribute("visible", true);
+			r.setAttribute("analysed", true);
 			lanes_list.addData(r);
 			dataWasUpdated = true;
 			orderWasUpdated = true;
@@ -203,16 +204,16 @@ public class LaneCreationDialog extends Dialog {
 		
 		bottomButtons.addMember(cancelButton);
 		
-		bottomButtons.setWidth100();
+		bottomButtons.setWidth("510px");
 		bottomButtons.setHeight(40);
 		bottomButtons.setAlign(Alignment.RIGHT);
-		
+		bottomButtons.setLayoutTopMargin(10);
+
 		return bottomButtons;
 	}
 
 	private void editSelectedLane(Record record) {
 		Consumer<Void> c = Void -> {
-				SC.logWarn("Call resourceChanged");
 				//ResourceLifeCycleManager.resourceChanged(ResourceType.LANE, record);
 				func.accept(null);
 		};

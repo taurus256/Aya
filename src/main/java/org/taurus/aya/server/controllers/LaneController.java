@@ -101,7 +101,7 @@ public class LaneController extends GenericController {
         @RequestParam (required = false) String visible,
         @RequestParam (required = false) String author,
         @RequestParam (required = false) String isFolder,
-//      @RequestParam (required = false) Boolean lane,
+        @RequestParam (required = false) String analysed,
         @RequestParam (required = false) String wuser,
         @RequestParam (required = false) String wgroup,
         @RequestParam (required = false) String ruser,
@@ -131,6 +131,7 @@ public class LaneController extends GenericController {
                 lane.setDescription(description);
                 lane.setLaneOrder(filterIntValue(laneOrder));
                 lane.setVisible(filterBooleanValue(visible));
+                lane.setAnalysed(filterBooleanValue(analysed));
                 lane.setAuthor(filterLongValue(author));
                 lane.setIsFolder(filterBooleanValue(isFolder));
                 lane.setWuser(filterLongValue(wuser));

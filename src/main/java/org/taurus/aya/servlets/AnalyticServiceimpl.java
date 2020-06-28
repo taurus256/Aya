@@ -74,7 +74,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         List<Long> groups = user.getGroups().stream().map(Group::getId).collect(Collectors.toList());
 
         List<User> userList = userRepository.findAll();
-        List<Lane> laneList = laneRepository.findAll(userId,groups);
+        List<Lane> laneList = laneRepository.findAllAnalysed(userId,groups);
         List<String> laneNames = laneList.stream().map(Lane::getName).collect(Collectors.toList());
 
             //Ищем "будущие" задачи на графике: имеющие статус NEW и дату завершения сегодня или в будущем
@@ -252,12 +252,12 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
     {
         User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
         List<Long> groups = user.getGroups().stream().map(Group::getId).collect(Collectors.toList());
-        List<String> lanesString = laneRepository.findAll(userId,groups).stream().map(Lane::getName).collect(Collectors.toList());
+        List<String> lanesNames = laneRepository.findAllNamesAnalysed(userId,groups);
         //здесь получить список потоков
 
         LocalDateTime startDateTime = LocalDateTime.ofInstant(startDate.toInstant(),ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0);//начало расчетного периода
         LocalDateTime endDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()).plusDays(1).withHour(0).withMinute(0).withSecond(0); // конец расчетного периода - день, следующий за последним запрашиваемым
-        List<Event> list = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(startDateTime.toInstant(ZoneOffset.UTC)), Date.from(endDateTime.toInstant(ZoneOffset.UTC)), EventState.READY.ordinal(), lanesString);
+        List<Event> list = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(startDateTime.toInstant(ZoneOffset.UTC)), Date.from(endDateTime.toInstant(ZoneOffset.UTC)), EventState.READY.ordinal(), lanesNames);
         Duration d = Duration.between(startDateTime,endDateTime);
         double[] daysLocal = new double[Long.valueOf(d.toDays()).intValue()];
         Arrays.setAll(daysLocal,(a) -> {return 0.0;});
@@ -306,7 +306,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         List<Long> groups = user.getGroups().stream().map(Group::getId).collect(Collectors.toList());
 
         List<User> userList = userRepository.findAll();
-        List<Lane> laneList = laneRepository.findAll(userId, groups);
+        List<Lane> laneList = laneRepository.findAllAnalysed(userId, groups);
 
         try {
 

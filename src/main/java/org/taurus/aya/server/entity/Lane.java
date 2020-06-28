@@ -1,5 +1,7 @@
 package org.taurus.aya.server.entity;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 
 @Entity
@@ -21,7 +23,8 @@ public class Lane {
   private Long author;
   @Column(name="isfolder")
   private Boolean isFolder;
-  private Boolean lane;
+  @ColumnDefault("true")
+  private Boolean analysed = true;
 
 
   public Long getId() {
@@ -133,12 +136,12 @@ public class Lane {
   }
 
 
-  public Boolean getLane() {
-    return lane;
+  public Boolean getAnalysed() {
+    return analysed;
   }
 
-  public void setLane(Boolean lane) {
-    this.lane = lane;
+  public void setAnalysed(Boolean lane) {
+    this.analysed = lane;
   }
 
 }
