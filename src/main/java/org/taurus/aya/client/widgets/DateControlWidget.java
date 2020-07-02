@@ -11,19 +11,21 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
+import org.taurus.aya.client.GlobalData;
 import org.taurus.aya.client.TaskView;
 
 import java.util.Date;
 
 public class DateControlWidget extends HLayout {
-    TaskView taskView;
+    static TaskView taskView;
     Date current = new Date();
     Date start, end;
     DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd.MM");
     DateTimeFormat monthNameAndYearFormat = DateTimeFormat.getFormat("LLLL yyyy");
     DateTimeFormat monthNameFormat = DateTimeFormat.getFormat("LLLL");
 
-    IButton leftMonth, leftWeek, rightWeek, rightMonth;
+    //переменые статические, поскольку используются в методе, вызываемом из JS - а иначе он не работает
+    static IButton leftMonth, leftWeek, rightWeek, rightMonth;
     Label startDate, currentDate, endDate;
 
     public DateControlWidget(TaskView taskView){
@@ -68,6 +70,7 @@ public class DateControlWidget extends HLayout {
 //        addMember(endDate);
         addMember(rightWeek);
         addMember(rightMonth);
+        setTabUpdateHandlers();
     }
 
     ClickHandler leftMonthHandler = new ClickHandler() {
@@ -120,8 +123,6 @@ public class DateControlWidget extends HLayout {
 
     private void setToFirstDayOfWeek(Date date){
         //        int firstDay = CalendarUtil.getStartingDayOfWeek() - 1;
-        SC.logWarn("DateControlWidget:: unmodif:" + date.getDate());
-        SC.logWarn("DateControlWidget:: getDay=" + date.getDay());
         // special processing of Sunday (set to previous week)
         date.setDate(date.getDate() - (date.getDay()==0?7:date.getDay()) + 1);
         SC.logWarn("DateControlWidget:: modif:" + date.getDate());
@@ -132,10 +133,8 @@ public class DateControlWidget extends HLayout {
         setToFirstDayOfWeek(start);
         end = CalendarUtil.copyDate(start);
         CalendarUtil.addDaysToDate(end, 6);
-
         taskView.getCurrentTimeline().setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 7, 150);
         taskView.getCurrentTimeline().setTimelineRange(start, end);
-
         leftMonth.hide();
         rightMonth.hide();
     }
@@ -153,4 +152,24 @@ public class DateControlWidget extends HLayout {
         leftMonth.show();
         rightMonth.show();
     }
+
+    public void updateIndicators(){
+        taskView.getCurrentTimeline().updateIndicators();
+    }
+
+    public native void setTabUpdateHandlers()/*-{
+        $wnd.setWeekRange = $entry(this.@org.taurus.aya.client.widgets.DateControlWidget::setWeekRange());
+        $wnd.updateIndicators = $entry(this.@org.taurus.aya.client.widgets.DateControlWidget::updateIndicators());
+        $wnd.currentDate= (new Date()).getDate();
+        window.top.document.addEventListener("visibilitychange", function() {
+            if (!$wnd.document.hidden){
+                cDate = (new Date()).getDate();
+                if ($wnd.currentDate != cDate) {
+                    $wnd.currentDate = cDate;
+                    $wnd.setWeekRange();
+                    $wnd.updateIndicators();
+                }
+            }
+        });
+    }-*/;
 }

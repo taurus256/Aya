@@ -63,7 +63,8 @@ public class ExtendedTimeline extends Timeline {
 	private MenuItem setStateFail;
 	private MenuItem setStateNew;
 	private boolean lastCanSwitch = false;
-	private final CalendarEvent indicator1;
+	private static CalendarEvent indicator1;
+	private static CalendarEvent indicator2;
 
 	public ExtendedTimeline(TaskView panel, final boolean distinctByUsers, Consumer<Boolean> enableButtonsCallback, Runnable generateAdvicesCallback)
 	{
@@ -116,8 +117,8 @@ public class ExtendedTimeline extends Timeline {
         indicator1.setHeaderBackgroundColor("white");
         indicator1.setHeaderBorderColor("white");
 
-		CalendarEvent indicator2 = new CalendarEvent();
-		d.setTime(d.getTime() + 23*3600*1000);
+		indicator2 = new CalendarEvent();
+		d.setTime(d.getTime() + 24*3600*1000);
 		indicator2.setStartDate(d);
 		indicator2.setCanEdit(false);
 		indicator2.setName("");
@@ -808,7 +809,7 @@ public class ExtendedTimeline extends Timeline {
 		updateTasks();
 	}
 
-	private void  setCanSwitchToAnyState(boolean canSwitch)
+	private void setCanSwitchToAnyState(boolean canSwitch)
 	{
 		if (lastCanSwitch != canSwitch) {
 			lastCanSwitch = !lastCanSwitch;
@@ -821,4 +822,22 @@ public class ExtendedTimeline extends Timeline {
 			enableButtonsCallback.accept(canSwitch);
 		}
 	}
+
+	public void updateIndicators(){
+		removeIndicator(indicator1);
+		removeIndicator(indicator2);
+
+		indicator1.setStartDate(new Date());
+		Date d = new Date();
+		indicator1.setEndDate(d);
+
+		d.setTime(d.getTime() + 24*3600*1000);
+		indicator2.setStartDate(d);
+
+		SC.logWarn("updateIndicators," + d);
+
+		addIndicator(indicator1);
+		addIndicator(indicator2);
+	}
+
 }
