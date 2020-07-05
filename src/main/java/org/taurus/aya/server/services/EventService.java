@@ -52,7 +52,7 @@ public class EventService {
         List<Event> eventList;
         HashMap<String,String> criteriaMap = parseCriteriaString(criteria);
 
-        if (request.getCookies() == null) return new ArrayList<>();
+        if (request.getCookies() == null) throw new RuntimeException("There are no USID cookie!");
 
         String usid = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("usid")).map(Cookie::getValue).findFirst().orElseThrow(() -> new RuntimeException("Не могу прочитать USID"));
         List<User> users = userRepository.findUserByUsid(usid);

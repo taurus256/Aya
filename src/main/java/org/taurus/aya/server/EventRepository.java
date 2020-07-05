@@ -21,10 +21,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByStartDateGreaterThanAndEndDateLessThanEqualAndIsGraphIsFalse(Date startDate, Date endDate, List<String> laneNames);
 
     //Метод для запроса данных графиков (используется инверсный выбор дат)
-    @Query("select e from Event e inner join e.task where e.startDate<=:startdate and e.endDate > :enddate and e.isGraph = true and e.task.lane in (:laneNames)")
+    @Query("select e from Event e inner join e.task where e.startDate<=:startdate and e.endDate > :enddate and e.task.showInBacklog = false and e.task.lane in (:laneNames)")
     List<Event> findAllByStartDateLessThanEqualAndEndDateGreaterThanAndIsGraphIsTrue(Date startdate, Date enddate, List<String> laneNames);
 
-    @Query("select e from Event e inner join e.task where e.startDate <= :startdate and e.endDate>:enddate and e.task.lane in (:laneNames) and e.task.executor=:executor")
+    @Query("select e from Event e inner join e.task where e.startDate <= :startdate and e.endDate>:enddate and e.task.showInBacklog = false and e.task.lane in (:laneNames) and e.task.executor=:executor")
     List<Event> findAllByStartDateLessThanEqualAndEndDateGreaterThanAndIsGraphIsTrueAndExecutor(Date startdate, Date enddate, List<String> laneNames, Long executor);
 
     @Query("select e from Event e inner join e.task where e.endDate > ?1 and e.endDate<?2 and e.task.state=?3 and e.task.lane in (?4)")

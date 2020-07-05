@@ -8,6 +8,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.smartgwt.client.core.KeyIdentifier;
 import com.smartgwt.client.data.*;
+import com.smartgwt.client.rpc.HandleErrorCallback;
+import com.smartgwt.client.rpc.RPCManager;
 import com.smartgwt.client.util.DateUtil;
 import com.smartgwt.client.util.Page;
 import com.smartgwt.client.util.PageKeyHandler;
@@ -75,9 +77,18 @@ public class Aya implements EntryPoint {
 			 }
 		 });
 
-         // Создание раскладки виджетов главного окна
+		 RPCManager.setHandleErrorCallback(new HandleErrorCallback() {
+											   @Override
+											   public void handleError(DSResponse dsResponse, DSRequest dsRequest) {
+												   SC.warn("Ошибка сервера","<b>При обращении к источнику данных</b> <br/>" + dsRequest.getDataSource()
+													+ "<br> <b>произошла ошибка</b> <br>" + dsResponse.getHttpResponseText()
+												   	+ "<br><br><b>Проверьте соединение с сетью, если оно есть, попробуйте <a href='javascript: window.location=window.location'>перезагрузить приложение</a></b>");
+											   }
+										   });
 
-         SC.logWarn("Initialization. Cookie is:" + Cookies.getCookie("usid"));
+				 // Создание раскладки виджетов главного окна
+
+				 SC.logWarn("Initialization. Cookie is:" + Cookies.getCookie("usid"));
          final  String USID = Cookies.getCookie("usid");
          if (USID == null)
          {

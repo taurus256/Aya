@@ -45,7 +45,6 @@ public class EventController extends GenericController {
     @PostMapping("/fetch")
     public GwtResponse getEvents(HttpServletRequest request, @RequestParam String _operationType, @RequestParam (required=false) String[] criteria) throws RuntimeException, ParseException, IOException
     {
-
         System.out.println("Operation_type=" + _operationType);
         System.out.println("request body is:" + _operationType);
         System.out.println("criteria length is:" + criteria.length);
@@ -163,7 +162,7 @@ public class EventController extends GenericController {
                     // Выполняется, если текущее состояние - PROCESS, и последнее изменение состояния было ранее, чем сегодня
                     if (filterIntValue(state).equals(EventState.PROCESS.ordinal()) && lastDate.getDayOfYear() != currentDate.getDayOfYear() && Duration.between(lastDate, currentDate).toDays() >= 0) {
 
-                        LocalDateTime evStart = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
+                        LocalDateTime evStart = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
 
                         LocalDateTime evEnd = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);;
 

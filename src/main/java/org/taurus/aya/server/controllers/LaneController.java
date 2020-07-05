@@ -43,6 +43,8 @@ public class LaneController extends GenericController {
         System.out.println("Operation_type=" + _operationType);
         System.out.println("request ID is:" + _operationId);
 
+        if (request.getCookies() == null) throw new RuntimeException("There are no USID cookie!");
+
         if (_operationType.equals("custom"))
             switch( _operationId) {
                 case "updateLaneOrder": {
@@ -74,16 +76,11 @@ public class LaneController extends GenericController {
 
         System.out.println("Operation_type=" + _operationType);
         System.out.println("request body is:" + _operationType);
-
-        String usid = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("usid")).map(Cookie::getValue).findFirst().orElseThrow(() -> new RuntimeException("Не могу прочитать USID"));
-        List<User> users = userRepository.findUserByUsid(usid);
-        if (users.size() != 1) throw new RuntimeException("Неверное число пользователей ( " + users.size() + ") с USID " + usid);
-        User user = users.get(0);
-        List<Long> groups = user.getGroups().parallelStream().map(Group::getId).collect(Collectors.toList());
+        GenericUserData userData = getUserData(request,userRepository);
 
         List<Lane> lanes = new ArrayList<>();
         if (_operationType.equals("fetch")) {
-            lanes = laneRepository.findAll(user.getId(), groups);
+            lanes = laneRepository.findAll(userData.getUserId(), userData.getGroups());
         }
 
         return new GwtResponse(0,lanes.size(),lanes.size(),lanes);

@@ -3,16 +3,19 @@ package org.taurus.aya.server.controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.lang.Nullable;
+import org.taurus.aya.server.UserRepository;
+import org.taurus.aya.server.entity.Group;
+import org.taurus.aya.server.entity.User;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /** SmartGWT sends string 'null' instead of null value.
  *  Methods below created for setting proper values in these cases
@@ -76,5 +79,16 @@ public class GenericController {
                 }
             else
                 parseCriteria(node,result);
+    }
+
+    GenericUserData getUserData(HttpServletRequest request, UserRepository userRepository) {
+        if (request.getCookies() == null) throw new RuntimeException("There are no USID cookie!");
+
+        String usid = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("usid")).map(Cookie::getValue).findFirst().orElseThrow(() -> new RuntimeException("Не могу прочитать USID"));
+        List<User> users = userRepository.findUserByUsid(usid);
+        if (users.size() != 1) throw new RuntimeException("Неверное число пользователей ( " + users.size() + ") с USID " + usid);
+        User user = users.get(0);
+        List<Long> groups = user.getGroups().parallelStream().map(Group::getId).collect(Collectors.toList());
+        return new GenericUserData(user.getId(),groups);
     }
 }
