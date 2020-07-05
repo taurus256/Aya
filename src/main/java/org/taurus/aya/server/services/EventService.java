@@ -52,6 +52,8 @@ public class EventService {
         List<Event> eventList;
         HashMap<String,String> criteriaMap = parseCriteriaString(criteria);
 
+        if (request.getCookies() == null) return new ArrayList<>();
+
         String usid = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("usid")).map(Cookie::getValue).findFirst().orElseThrow(() -> new RuntimeException("Не могу прочитать USID"));
         List<User> users = userRepository.findUserByUsid(usid);
         if (users.size() != 1) throw new RuntimeException("Неверное число пользователей ( " + users.size() + ") с USID " + usid);
@@ -65,7 +67,8 @@ public class EventService {
                 eventList = eventRepository.findAllByStartDateLessThanEqualAndEndDateGreaterThanAndIsGraphIsTrueAndExecutor(
                             formatter.parse(criteriaMap.getOrDefault("startDate", "2000-01-0")),
                             formatter.parse(criteriaMap.getOrDefault("endDate", "2050-01-01")),
-                            laneNames
+                            laneNames,
+                            user.getId()
                     );
             else
                 eventList = eventRepository.findAllByStartDateLessThanEqualAndEndDateGreaterThanAndIsGraphIsTrue(

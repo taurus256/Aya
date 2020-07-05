@@ -102,6 +102,7 @@ public class ExtendedTimeline extends Timeline {
         setDataSource(GlobalData.getDataSource_events());
 		//setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS, true));
 		setImplicitCriteria(new AdvancedCriteria(OperatorId.AND, new Criterion[]{
+				new Criterion("executor", OperatorId.EQUALS, GlobalData.getCurrentUser().getAttributeAsString("id")),
 				new Criterion("isGraph", OperatorId.EQUALS, true)
 		}));
 
@@ -116,7 +117,7 @@ public class ExtendedTimeline extends Timeline {
         indicator1.setHeaderBorderColor("white");
 
 		CalendarEvent indicator2 = new CalendarEvent();
-		d.setTime(d.getTime() + 24*3600*1000);
+		d.setTime(d.getTime() + 23*3600*1000);
 		indicator2.setStartDate(d);
 		indicator2.setCanEdit(false);
 		indicator2.setName("");

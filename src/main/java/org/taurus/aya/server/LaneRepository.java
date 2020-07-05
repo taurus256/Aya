@@ -15,7 +15,7 @@ public interface LaneRepository extends JpaRepository<Lane, Long> {
     @Query("SELECT l FROM Lane l WHERE l.author=:author OR l.rgroup IS NULL OR (l.rgroup IN (:groups)) ORDER BY l.laneOrder")
     List<Lane> findAll(Long author, List<Long> groups);
 
-    @Query("SELECT l.name FROM Lane l WHERE l.author=?1 OR l.rgroup IS NULL OR l.rgroup IN (?2) ORDER BY l.laneOrder")
+    @Query("SELECT l.name FROM Lane l WHERE l.author=:author OR l.rgroup IS NULL OR l.rgroup IN (:groups) ORDER BY l.laneOrder")
     public List<String> findAllNames(Long author, List<Long> groups);
 
     //filter only analysed data
@@ -23,6 +23,13 @@ public interface LaneRepository extends JpaRepository<Lane, Long> {
     List<Lane> findAllAnalysed(Long author, List<Long> groups);
 
     @Query("SELECT l.name FROM Lane l WHERE (l.author=?1 OR l.rgroup IS NULL OR l.rgroup IN (?2)) AND l.analysed=true ORDER BY l.laneOrder")
+    public List<String> findAllNamesAnalysed(Long author, List<Long> groups);
+
+    //filter only analysed data
+    @Query("SELECT l FROM Lane l WHERE (l.author=:author OR l.rgroup IS NULL OR (l.rgroup IN (:groups))) AND l.analysed=true ORDER BY l.laneOrder")
+    List<Lane> findAllAnalysed(Long author, List<Long> groups);
+
+    @Query("SELECT l.name FROM Lane l WHERE (l.author=:author OR l.rgroup IS NULL OR l.rgroup IN (:groups)) AND l.analysed=true ORDER BY l.laneOrder")
     public List<String> findAllNamesAnalysed(Long author, List<Long> groups);
 
     /*Обновить имя потока в задачах*/

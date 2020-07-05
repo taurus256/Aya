@@ -5,6 +5,7 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.TimeUnit;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -118,7 +119,12 @@ public class DateControlWidget extends HLayout {
     }
 
     private void setToFirstDayOfWeek(Date date){
-        date.setDate(date.getDate() - date.getDay() + 1);
+        //        int firstDay = CalendarUtil.getStartingDayOfWeek() - 1;
+        SC.logWarn("DateControlWidget:: unmodif:" + date.getDate());
+        SC.logWarn("DateControlWidget:: getDay=" + date.getDay());
+        // special processing of Sunday (set to previous week)
+        date.setDate(date.getDate() - (date.getDay()==0?7:date.getDay()) + 1);
+        SC.logWarn("DateControlWidget:: modif:" + date.getDate());
     }
 
     public void setWeekRange(){
