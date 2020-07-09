@@ -6,6 +6,7 @@ import com.smartgwt.client.types.*;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.tab.TabSet;
 import org.taurus.aya.client.generic.GenericPanel;
+import org.taurus.aya.client.widgets.DateControlWidget;
 
 import java.util.LinkedHashMap;
 
@@ -46,6 +47,8 @@ public class GlobalData {
 	private static GenericPanel currentPanel;
 
 	private static StatisticsPanel statisticsPanel;
+
+	private static DateControlWidget dateControlWidget;
 //	private static Connector connector;
 	
 	public static final Integer ACCESS_ALL = null;	// This records can be accessed by all users
@@ -283,6 +286,14 @@ public class GlobalData {
 
 	public static UserServiceAsync getUserService() {
 		return userService;
+	}
+
+	public static DateControlWidget getDateControlWidget() {
+		return dateControlWidget;
+	}
+
+	public static void setDateControlWidget(DateControlWidget dateControlWidget) {
+		GlobalData.dateControlWidget = dateControlWidget;
 	}
 
 	private static DataSource createRestUserDS() {

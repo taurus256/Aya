@@ -3,15 +3,12 @@ package org.taurus.aya.client.widgets;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.Cursor;
-import com.smartgwt.client.types.TimeUnit;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
-import org.taurus.aya.client.GlobalData;
 import org.taurus.aya.client.TaskView;
 
 import java.util.Date;
@@ -118,7 +115,7 @@ public class DateControlWidget extends HLayout {
         else
             currentDate.setContents("<b>" + monthNameFormat.format(start) + " - " + monthNameAndYearFormat.format(end) + "</b>");
 //        endDate.setContents( dateFormat.format(end));
-        taskView.getCurrentTimeline().setTimelineRange(start,end);
+        taskView.setTimelineRange(start,end);
     }
 
     private void setToFirstDayOfWeek(Date date){
@@ -133,8 +130,8 @@ public class DateControlWidget extends HLayout {
         setToFirstDayOfWeek(start);
         end = CalendarUtil.copyDate(start);
         CalendarUtil.addDaysToDate(end, 6);
-        taskView.getCurrentTimeline().setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 7, 150);
-        taskView.getCurrentTimeline().setTimelineRange(start, end);
+        taskView.setWeekMode();
+        taskView.setTimelineRange(start,end);
         leftMonth.hide();
         rightMonth.hide();
     }
@@ -146,15 +143,15 @@ public class DateControlWidget extends HLayout {
         end = CalendarUtil.copyDate(start);
         CalendarUtil.addMonthsToDate(end,1);
 
-        taskView.getCurrentTimeline().setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 31, 60);
-        taskView.getCurrentTimeline().setTimelineRange(start, end);
+        taskView.setMonthMode();
+        taskView.setTimelineRange(start,end);
 
         leftMonth.show();
         rightMonth.show();
     }
 
     public void updateIndicators(){
-        taskView.getCurrentTimeline().updateIndicators();
+        taskView.updateIndicators();
     }
 
     public native void setTabUpdateHandlers()/*-{

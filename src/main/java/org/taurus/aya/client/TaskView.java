@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smartgwt.client.core.KeyIdentifier;
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.TimeUnit;
 import com.smartgwt.client.util.Page;
 import com.smartgwt.client.util.PageKeyHandler;
 import com.smartgwt.client.util.SC;
@@ -23,6 +24,8 @@ import org.taurus.aya.client.widgets.ExtendedTimeline;
 import org.taurus.aya.shared.Advice;
 import org.taurus.aya.shared.AdviceState;
 import org.taurus.aya.shared.TaskAnalyseData;
+
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
@@ -401,5 +404,25 @@ public class TaskView extends ContentPane {
 				f.run();
 			}
 		});
+	}
+
+	public void setTimelineRange(Date start, Date end){
+		timeline.setTimelineRange(start, end);
+		timeline2.setTimelineRange(start, end);
+	}
+
+	public void setWeekMode(){
+		timeline.setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 7, 150);
+		timeline2.setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 7, 150);
+	}
+
+	public void setMonthMode(){
+		timeline.setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 31, 60);
+		timeline2.setTimeResolution(TimeUnit.DAY, TimeUnit.DAY, 31, 60);
+	}
+
+	public void updateIndicators(){
+		timeline.updateIndicators();
+		timeline2.updateIndicators();
 	}
 }

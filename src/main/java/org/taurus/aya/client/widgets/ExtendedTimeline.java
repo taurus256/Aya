@@ -63,8 +63,8 @@ public class ExtendedTimeline extends Timeline {
 	private MenuItem setStateFail;
 	private MenuItem setStateNew;
 	private boolean lastCanSwitch = false;
-	private static CalendarEvent indicator1;
-	private static CalendarEvent indicator2;
+	private CalendarEvent indicator1;
+	private CalendarEvent indicator2;
 
 	public ExtendedTimeline(TaskView panel, final boolean distinctByUsers, Consumer<Boolean> enableButtonsCallback, Runnable generateAdvicesCallback)
 	{

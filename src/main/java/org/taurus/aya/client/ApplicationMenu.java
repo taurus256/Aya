@@ -90,8 +90,8 @@ public class ApplicationMenu extends HLayout {
 		setWeekMode.setChecked(true);
 		setViewMyTasks.setChecked(true);
 
-		setWeekMode.addClickHandler(event -> GlobalData.getTaskView().setWeekMode(true));
-		setMonthMode.addClickHandler(event -> GlobalData.getTaskView().setWeekMode(false));
+		setWeekMode.addClickHandler(event -> {GlobalData.getDateControlWidget().setWeekRange(); setWeekModeMenu(true);});
+		setMonthMode.addClickHandler(event -> {GlobalData.getDateControlWidget().setMonthRange(); setWeekModeMenu(false);});
 		setViewMyTasks.addClickHandler(event -> GlobalData.getTaskView().setViewMyTasksMode(true));
 		setViewAllTasks.addClickHandler(event -> GlobalData.getTaskView().setViewMyTasksMode(false));
 
