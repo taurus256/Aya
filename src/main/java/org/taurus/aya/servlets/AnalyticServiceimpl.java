@@ -97,7 +97,7 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
 
             //Получаем список задач, выполненных за последний месяц
             LinkedList oldEventsList = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date.from(start), new Date(), EventState.READY.ordinal(), laneNames);
-            LinkedList oldTasksList = taskRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(start), Date.from(today), EventState.READY.ordinal());
+            LinkedList oldTasksList = taskRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(start), Date.from(today), EventState.READY.ordinal(), laneNames);
             System.out.println("AnalyticServiceimpl oldEventList.size = " + oldEventsList.size());
             System.out.println("AnalyticServiceimpl oldTasksList.size = " + oldTasksList.size());
 
@@ -255,8 +255,8 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
         List<String> lanesNames = laneRepository.findAllNamesAnalysed(userId,groups);
         //здесь получить список потоков
 
-        LocalDateTime startDateTime = LocalDateTime.ofInstant(startDate.toInstant(),ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0);//начало расчетного периода
-        LocalDateTime endDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()).plusDays(1).withHour(0).withMinute(0).withSecond(0); // конец расчетного периода - день, следующий за последним запрашиваемым
+        LocalDateTime startDateTime = LocalDateTime.ofInstant(startDate.toInstant(),ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0);//начало расчетного периода
+        LocalDateTime endDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()).plusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0); // конец расчетного периода - день, следующий за последним запрашиваемым
         List<Event> list = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(startDateTime.toInstant(ZoneOffset.UTC)), Date.from(endDateTime.toInstant(ZoneOffset.UTC)), EventState.READY.ordinal(), lanesNames);
         Duration d = Duration.between(startDateTime,endDateTime);
         double[] daysLocal = new double[Long.valueOf(d.toDays()).intValue()];
@@ -289,6 +289,11 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
                     daysGroup[i] += dayCost;
 
         }
+
+        Arrays.stream(daysLocal).mapToLong(Math::round).forEach((a)->{
+            System.out.print(a);
+        });
+
         return new GraphData(
                             Arrays.stream(daysLocal).mapToLong(Math::round).boxed().toArray(Long[]::new),
                             Arrays.stream(daysGroup).mapToLong(Math::round).boxed().toArray(Long[]::new),
@@ -313,7 +318,11 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
             StatData[] stats = matrixAdvicer.calculateUserStatustics(userId,
                     userList,
                     laneList,
-                    taskRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(startDate, endDate, EventState.READY.ordinal()));
+                    taskRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(startDate,
+                                                                                          endDate,
+                                                                                          EventState.READY.ordinal(),
+                                                  laneList.stream().map(Lane::getName).collect(Collectors.toList())
+                    ));
 
 
             List<Pair<String,String>> pairs = new LinkedList<>();
