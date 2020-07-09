@@ -174,11 +174,12 @@ public class Aya implements EntryPoint {
 										westLayout.setWidth("15%");
 										westLayout.setMinWidth(280);
 
+										StatisticsPanel statPanel = new StatisticsPanel(); // initialized by taskView
 										eastLayout = new TaskView(new Record(),1);//new MainArea();
 										eastLayout.setWidth("100%");
 
 										southLayout = new HLayout();
-										southLayout.setMembers(westLayout, eastLayout, new StatisticsPanel());
+										southLayout.setMembers(westLayout, eastLayout, statPanel);
 
 										mainLayout.addMember(northLayout);
 										mainLayout.addMember(southLayout);

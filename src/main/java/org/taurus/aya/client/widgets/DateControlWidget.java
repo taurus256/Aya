@@ -9,6 +9,8 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
+import org.taurus.aya.client.GlobalData;
+import org.taurus.aya.client.StatisticsPanel;
 import org.taurus.aya.client.TaskView;
 
 import java.util.Date;
@@ -27,6 +29,7 @@ public class DateControlWidget extends HLayout {
 
     public DateControlWidget(TaskView taskView){
         this.taskView = taskView;
+        GlobalData.setDateControlWidget(this);
         setWidth100();
         setHeight(30);
 
@@ -55,18 +58,17 @@ public class DateControlWidget extends HLayout {
         rightMonth.setWidth(100);
         rightMonth.addClickHandler(rightMonthHandler);
 
-        setWeekRange(); //has side effects: set start&end!
         currentDate = new Label("<b>" + monthNameAndYearFormat.format(current) + "</b>");
         currentDate.setAlign(Alignment.CENTER);
         currentDate.setWidth("*");
 
         addMember(leftMonth);
         addMember(leftWeek);
-//        addMember(startDate);
         addMember(currentDate);
-//        addMember(endDate);
         addMember(rightWeek);
         addMember(rightMonth);
+
+        setWeekRange(); //has side effects: set start&end!
         setTabUpdateHandlers();
     }
 
@@ -116,6 +118,11 @@ public class DateControlWidget extends HLayout {
             currentDate.setContents("<b>" + monthNameFormat.format(start) + " - " + monthNameAndYearFormat.format(end) + "</b>");
 //        endDate.setContents( dateFormat.format(end));
         taskView.setTimelineRange(start,end);
+
+        StatisticsPanel statisticsPanel = GlobalData.getStatisticsPanel();
+
+        if (statisticsPanel !=null)
+            statisticsPanel.updateDates(start, end);
     }
 
     private void setToFirstDayOfWeek(Date date){
@@ -131,9 +138,10 @@ public class DateControlWidget extends HLayout {
         end = CalendarUtil.copyDate(start);
         CalendarUtil.addDaysToDate(end, 6);
         taskView.setWeekMode();
-        taskView.setTimelineRange(start,end);
+
         leftMonth.hide();
         rightMonth.hide();
+        update();
     }
 
     public void setMonthRange(){
@@ -144,10 +152,10 @@ public class DateControlWidget extends HLayout {
         CalendarUtil.addMonthsToDate(end,1);
 
         taskView.setMonthMode();
-        taskView.setTimelineRange(start,end);
 
         leftMonth.show();
         rightMonth.show();
+        update();
     }
 
     public void updateIndicators(){

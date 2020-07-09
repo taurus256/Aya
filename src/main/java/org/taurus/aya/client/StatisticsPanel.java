@@ -28,6 +28,7 @@ public class StatisticsPanel extends VLayout {
     Date startDate, endDate;
 
     public StatisticsPanel(){
+        setVisible(false);
         setWidth(0);
         setShowResizeBar(true);
         setResizeBarSize(5);
@@ -128,6 +129,7 @@ public class StatisticsPanel extends VLayout {
 
     public void showPanel(){
         this.setWidth(300);
+        this.setVisible(true);
         refreshData();
     }
 
@@ -138,6 +140,7 @@ public class StatisticsPanel extends VLayout {
     }
 
     public void hidePanel(){
+        this.setVisible(false);
         this.setWidth(0);
     }
 }

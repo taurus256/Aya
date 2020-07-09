@@ -372,17 +372,6 @@ public class ExtendedTimeline extends Timeline {
 									if (thisIsFirstCall) getTimelineView().scrollBodyTo(delta, 0);
 								}
 							});
-
-		addDateChangedHandler(new DateChangedHandler() {
-								  @Override
-								  public void onDateChanged(DateChangedEvent dateChangedEvent) {
-									  StatisticsPanel statisticsPanel = GlobalData.getStatisticsPanel();
-
-									  if (statisticsPanel !=null)
-										statisticsPanel.updateDates(extendedTimeline.getStartDate(), extendedTimeline.getEndDate());
-								  }
-							  });
-
 				//  set menu and load the data
 
 				setContextMenu(getContextMenu());
