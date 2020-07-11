@@ -123,13 +123,6 @@ public class UserController extends GenericController {
                 String salt = BCrypt.gensalt(12);
                 String passwordHash=BCrypt.hashpw(password,salt);
 
-                if (BCrypt.checkpw(password,passwordHash))
-                    System.out.println("UserController.executePost - OK");
-                else
-                    System.out.println("UserController.executePost - No");
-                System.out.println("password = " + password);
-                System.out.println("passwordHash = " + passwordHash);
-
                 // Set user data to entity
                 user.setFirstname(firstname);
                 user.setSurname(surname);
