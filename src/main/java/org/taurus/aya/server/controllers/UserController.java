@@ -1,6 +1,7 @@
 package org.taurus.aya.server.controllers;
 
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Isolation;
@@ -14,6 +15,7 @@ import org.taurus.aya.shared.GwtResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -41,9 +43,31 @@ public class UserController extends GenericController {
             switch( _operationId) {
                 case "fetchByNickname": {
                     if (request.getParameterMap().get("nickname").length==0)
-                        throw new RuntimeException("Сервер получил пустое имя пользователя");
+                        throw new IllegalArgumentException("Сервер получил пустое имя пользователя");
+
+                    if (request.getParameterMap().get("password").length==0)
+                        throw new IllegalArgumentException("Сервер получил пустой пароль");
+
+                    //Чтение данных пользователя из БД и сравнение хэша с тем, что пришло
                     System.out.println("Fetch by nickname:: " + request.getParameterMap().get("nickname")[0]);
+
                     users = userRepository.findUserByNickname(request.getParameterMap().get("nickname")[0]);
+                    if (users.size() == 0 ) throw new IllegalArgumentException("Не удалось найти пользвоателя '" + request.getParameterMap().get("nickname")[0] + "' в БД");
+
+                    String storedHash = users.get(0).getPasswordHash();
+                    String pass = request.getParameterMap().get("password")[0];
+
+                    if(null == storedHash || !storedHash.startsWith("$2a$"))
+                        throw new java.lang.RuntimeException("Хэш пароля в БД некорректен");
+
+                    if (!BCrypt.checkpw(pass, storedHash))
+                         throw new java.lang.IllegalArgumentException("Пароль неверен");
+
+                    //Если всё ОК - обновляем USID в базе
+                    String usid = UUID.randomUUID().toString();
+                    users.get(0).setUsid(usid);
+                    userRepository.save(users.get(0));
+
                 }; break;
                 case "fetchByUSID":{
                     if (request.getParameterMap().get("usid").length==0)
@@ -79,7 +103,7 @@ public class UserController extends GenericController {
         @RequestParam (required = false)  String workphone,
         @RequestParam (required = false)  String mobphone,
         @RequestParam (required = false)  String usid,
-        @RequestParam (required = false)  String passwordHash
+        @RequestParam (required = false)  String password
     )
     {
         User user;
@@ -92,6 +116,21 @@ public class UserController extends GenericController {
         {
             case "add":
             case "update":{
+                // Test password value and hast it
+                if (password == null || password.isEmpty() || password.equals("null"))
+                    password = "aya";
+
+                String salt = BCrypt.gensalt(12);
+                String passwordHash=BCrypt.hashpw(password,salt);
+
+                if (BCrypt.checkpw(password,passwordHash))
+                    System.out.println("UserController.executePost - OK");
+                else
+                    System.out.println("UserController.executePost - No");
+                System.out.println("password = " + password);
+                System.out.println("passwordHash = " + passwordHash);
+
+                // Set user data to entity
                 user.setFirstname(firstname);
                 user.setSurname(surname);
                 user.setPatronymic(patronymic);
@@ -111,5 +150,10 @@ public class UserController extends GenericController {
             }
             default: return new GwtResponse(0,0,0,new User[]{} );
         }
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public GwtResponse invalidUserException(){
+        return new GwtResponse(0,0,0,new User[]{} );
     }
 }

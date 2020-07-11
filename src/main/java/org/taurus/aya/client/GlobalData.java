@@ -307,8 +307,8 @@ public class GlobalData {
 		id.setHidden(true);
 		DataSourceField usid = new DataSourceField("usid", FieldType.TEXT);
 		usid.setHidden(true);
-		DataSourceField passwordHash = new DataSourceField("passwordHash", FieldType.TEXT);
-		passwordHash.setHidden(true);
+		DataSourceField password = new DataSourceField("password", FieldType.TEXT);
+		password.setHidden(true);
 		DataSourceField showedName = new DataSourceField("showedName", FieldType.TEXT,"Отображаемое имя");
 		showedName.setHidden(true);
 
@@ -333,7 +333,7 @@ public class GlobalData {
 									new DataSourceField("workphone", FieldType.TEXT,"Рабочий телефон"),
 									new DataSourceField("mobphone", FieldType.TEXT,"Мобильный телефон"),
 									usid,
-									passwordHash,
+									password,
 									showedName
 									};
 

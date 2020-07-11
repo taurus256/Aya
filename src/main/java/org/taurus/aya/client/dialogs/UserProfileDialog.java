@@ -61,10 +61,7 @@ public class UserProfileDialog extends AbstractPropertiesDialog {
 		labelPermissions.setHeight(50);
 		labelPermissions.setWidth100();
 		labelPermissions.setMargin(10);
-		if (record.getAttributeAsString("passwordHash").equals("b480c074d6b75947c02681f31c90c668c46bf6b8"))
-			labelPermissions.setContents("Задан стандартный пароль.<br>Рекомендуется сменить его");
-		else
-			labelPermissions.setContents("Раскройте, чтобы сменить пароль");
+		labelPermissions.setContents("Раскройте, чтобы сменить пароль");
 		hlayoutLabel.addMember(labelPermissions);
 		
 		final HLayout hlayoutControls = new HLayout();
@@ -210,10 +207,4 @@ public class UserProfileDialog extends AbstractPropertiesDialog {
 //
 //		return vlayout;
 //	}
-
-	/* Обращение к JavaScript-библиотеке для получения хеша sha1 */
-	private native String getSHA1(String str)
-	/*-{
-		return window.parent.Sha1.hash(str,{ msgFormat: 'string', outFormat: 'hex' });
-	}-*/;
 }

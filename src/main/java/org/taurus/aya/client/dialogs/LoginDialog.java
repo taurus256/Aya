@@ -125,28 +125,24 @@ public class LoginDialog extends Window {
 	{
 		if (dynForm.validate())
 		{
-			final String hash = getSHA1(password.getValueAsString());
-			
 			//Проверка хэша пароля для данного пользователя
-			Criteria crit = new Criteria("nickname",userLogin.getValueAsString());
 			Record data = new Record();
 			data.setAttribute("nickname",userLogin.getValueAsString());
+			data.setAttribute("password",password.getValueAsString());
 			GlobalData.getDataSource_user().performCustomOperation("fetchByNickname",data, new DSCallback(){
 
 				@Override
 				public void execute(DSResponse dsResponse, Object data,
                                     DSRequest dsRequest) {
-					SC.logWarn("initialization.DEBUG." + dsResponse.getDataAsRecordList().getLength());
-					SC.logWarn("initialization.DEBUG.1:" + dsResponse.getDataAsRecordList().get(0).getAttributeAsString("passwordHash"));
-					SC.logWarn("initialization.DEBUG.2:" + hash);
-					if ( (dsResponse.getDataAsRecordList().getLength() == 1) && dsResponse.getDataAsRecordList().get(0).getAttributeAsString("passwordHash").equals(hash)	)
+
+					if ( (dsResponse.getData().length == 1) )
 					{
 						SC.logWarn("Initialization. Password hash OK");
 						
-						final Record selectedRecord = dsResponse.getDataAsRecordList().get(0);
+						final Record selectedRecord = dsResponse.getData()[0];
 						
 						//Идем дальше. Генерируем новый UUID
-						String usid = generateUUID();
+						String usid = selectedRecord.getAttributeAsString("usid");
 
 						// Пишем его в Cookie 
 						Date d = new Date(System.currentTimeMillis()+30L*24*3600*1000);
@@ -154,15 +150,9 @@ public class LoginDialog extends Window {
 						//Cookies.setCookie("usid", usid, d);
 						Cookies.setCookie("usid", usid, new Date(System.currentTimeMillis()+30L*24*3600*1000),"","/",false);
 
-						// И в БД
-						selectedRecord.setAttribute("usid",usid);
+						//USID установлен - перезагружаем страницу
+						com.google.gwt.user.client.Window.Location.reload();
 
-						GlobalData.getDataSource_user().updateData(selectedRecord, new DSCallback(){
-							@Override
-							public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest) {
-								//Данные обновились - перезагружаем страницу
-								com.google.gwt.user.client.Window.Location.reload();
-							}});
 					}
 					else
 						SC.warn("Вход в систему","Пара логин/пароль не верна");
@@ -172,15 +162,6 @@ public class LoginDialog extends Window {
 		}
 
 	}
-	
-	
-	/* Обращение к JavaScript-библиотеке для получения хеша sha1 */
-	private native String getSHA1(String str)
-	/*-{
-		return window.parent.Sha1.hash(str,{ msgFormat: 'string', outFormat: 'hex' });
-	}-*/;
-
-	
 	
 	/* Javascript-функция получения uuid */
 	public native String generateUUID() 

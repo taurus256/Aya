@@ -166,5 +166,6 @@
     <orderEntry type="library" name="Maven: com.isomorphic.smartgwt.lgpl:smartgwt-lgpl:12.0-p20191204" level="project" />
     <orderEntry type="library" name="Maven: com.isomorphic.smartgwt.lgpl:smartgwt-skins:12.0-p20191204" level="project" />
     <orderEntry type="library" name="Maven: moxieapps:moxieapps-gwt:1.7.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mindrot:jbcrypt:0.4" level="project" />
   </component>
 </module>

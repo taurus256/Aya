@@ -4,7 +4,6 @@ package org.taurus.aya.server.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity

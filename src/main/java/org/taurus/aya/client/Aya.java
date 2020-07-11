@@ -88,7 +88,7 @@ public class Aya implements EntryPoint {
 
 				 // Создание раскладки виджетов главного окна
 
-				 SC.logWarn("Initialization. Cookie is:" + Cookies.getCookie("usid"));
+		 SC.logWarn("Initialization. Cookie is:" + Cookies.getCookie("usid"));
          final  String USID = Cookies.getCookie("usid");
          if (USID == null)
          {

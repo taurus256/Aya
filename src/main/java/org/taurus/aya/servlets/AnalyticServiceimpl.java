@@ -290,10 +290,6 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
 
         }
 
-        Arrays.stream(daysLocal).mapToLong(Math::round).forEach((a)->{
-            System.out.print(a);
-        });
-
         return new GraphData(
                             Arrays.stream(daysLocal).mapToLong(Math::round).boxed().toArray(Long[]::new),
                             Arrays.stream(daysGroup).mapToLong(Math::round).boxed().toArray(Long[]::new),
