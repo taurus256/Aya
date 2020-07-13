@@ -20,6 +20,7 @@ import org.taurus.aya.client.generic.GenericPropertiesDialog;
 import org.taurus.aya.shared.Command;
 import org.taurus.aya.shared.Command.CommandType;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.function.Consumer;
 
@@ -107,8 +108,11 @@ public class ApplicationMenu extends HLayout {
 	    Menu editMenu = new Menu();
 	    editMenu.setCanSelectParentItems(true); 
 
-	    
-	    MenuItem lanesManager = new MenuItem("Управление потоками");
+	    boolean isAdmin = Arrays.stream(GlobalData.getCurrentUserGroups()).anyMatch(r -> "admins".equals(r.getAttributeAsString("name")));
+		boolean isManager = Arrays.stream(GlobalData.getCurrentUserGroups()).anyMatch(r -> "managers".equals(r.getAttributeAsString("name")));
+
+
+		MenuItem lanesManager = new MenuItem("Управление потоками");
 	    lanesManager.addClickHandler(event -> {
 			LaneCreationDialog ld = new LaneCreationDialog(GlobalData.getDataSource_lanes(), new Consumer(){
 				@Override
@@ -118,6 +122,7 @@ public class ApplicationMenu extends HLayout {
 			});
 			ld.show();
 		});
+		if (!(isAdmin || isManager)) lanesManager.setEnabled(false);
 
 
 	    MenuItem usersManager = new MenuItem("Управление пользователями");
@@ -125,6 +130,7 @@ public class ApplicationMenu extends HLayout {
 			UserManagementDialog umd = new UserManagementDialog();
 			umd.show();
 		});
+		if (!isAdmin) usersManager.setEnabled(false);
 	    
 	    MenuItem groupsManager = new MenuItem("Управление группами");
 	    groupsManager.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -135,6 +141,7 @@ public class ApplicationMenu extends HLayout {
 				gmd.show();
 			}
 		});
+	    if (!isAdmin) groupsManager.setEnabled(false);
 
 
 	    ToolStrip toolStripRight = new ToolStrip();

@@ -33,14 +33,12 @@ public class UserManagementDialog extends Window {
 	private DataSource ds_group = null;
 	
 	private DynamicForm df;
-	private IButton buttonEditUser, buttonDeleteGroup, buttonAddGroup;
+	private IButton buttonEditUser, buttonDeleteUser, buttonAddGroup, buttonDeleteGroup;
 	
 	private ListGrid groups_list, users_list;
 	private SelectItem si;
-	private int userId = -1;
 	private Label groupsLabel;
-	private boolean userGroupsWarChanged =false;
-	
+
 	public UserManagementDialog()
 	{
 		ds_user = GlobalData.getDataSource_user();
@@ -73,7 +71,7 @@ public class UserManagementDialog extends Window {
 		tabset.setWidth100();
 		tabset.setHeight("500px");
 		
-		Tab tabUsers = new Tab("Данные");
+		Tab tabUsers = new Tab("Пользователи");
 		tabUsers.setPaneMargin(1);
 		VLayout vLayout =new VLayout();
 		vLayout.setBackgroundColor("rgb(236, 236, 236)");
@@ -97,7 +95,110 @@ public class UserManagementDialog extends Window {
 		
 		return tabset;
 	}
-	
+
+	// Панель со списком пользователей и кнопками редактирования
+	private HLayout createUsersBar()
+	{
+		HLayout hLayout = new HLayout();
+		hLayout.setMembersMargin(10);
+		//lanes_list = new ListGrid();
+		users_list = new ListGrid();
+		users_list.setSize("350", "400");
+		users_list.setShowHeader(true);
+		//lanes_list.setCanDragReposition(true);
+		users_list.setDataSource(ds_user);
+		users_list.setCanEdit(false);
+		//lanes_list.setDragDataAction(DragDataAction.MOVE);
+		users_list.setSelectionType(SelectionStyle.SINGLE);
+		users_list.setCanSort(false);
+		users_list.setCanReorderRecords(true);
+		users_list.setShowAllRecords(true);
+		users_list.setCanDragRecordsOut(false);
+		users_list.setAutoSaveEdits(false);
+
+		users_list.addSelectionChangedHandler((selectionEvent) -> {
+					if (selectionEvent.getState())
+					{
+						Record record = selectionEvent.getRecord();
+						showUserGroups(record.getAttributeAsInt("id"));
+						enableEditButtons();
+					}
+				}
+		);
+
+		users_list.addRecordDoubleClickHandler(event -> {
+			editSelectedUser(event.getRecord());
+			event.cancel();
+		});
+
+		DSRequest dsr = new DSRequest();
+		users_list.fetchData(GlobalData.createSearchCriteria(), (dsResponse, data, dsRequest) -> {}, dsr);
+
+		hLayout.addMember(users_list);
+
+		VLayout buttons = new VLayout();
+		buttons.setMargin(5);
+		buttons.setMembersMargin(10);
+
+		IButton buttonAddUser = new IButton("Создать");
+		buttonAddUser.addClickHandler(event ->
+		{
+			Record r = new Record();
+			r.setAttribute("name", "Новый пользователь");
+			r.setAttribute("description", "");
+			users_list.addData(r);
+		});
+
+		buttonEditUser = new IButton("Редактировать");
+		buttonEditUser.addClickHandler(event -> editSelectedUser(users_list.getSelectedRecord()));
+		buttonEditUser.disable();
+
+		buttonDeleteUser = new IButton("Удалить");
+		buttonDeleteUser.addClickHandler(event -> SC.ask("Удалить пользователя " + users_list.getSelectedRecord().getAttribute("showedName") + " ?", new BooleanCallback(){
+			@Override
+			public void execute(Boolean value) {
+				if (value)
+				{
+					users_list.removeSelectedData();
+					users_list.deselectAllRecords();
+				}
+			}}));
+		disableEditButtons();
+		buttons.addMember(buttonAddUser);
+		buttons.addMember(buttonEditUser);
+		buttons.addMember(buttonDeleteUser);
+
+		hLayout.addMember(buttons);
+
+		return hLayout;
+	}
+
+	private void editSelectedUser(Record record) {
+		if (record == null) { SC.logWarn("Record is NULL"); return;}
+		(new AbstractPropertiesDialog(
+				record,
+				"lane.png",
+				TabManager.ResourceType.LANE,
+				ds_user,
+				"пользователя") {
+			@Override
+			protected void constructInterface() {
+				this.addItem(createFormLayout());
+				this.addItem(createButtonsLayout());
+			}
+		}).show();
+	}{}
+
+	private void enableEditButtons() {
+		buttonDeleteUser.enable();
+		buttonEditUser.enable();
+	}
+
+	private void disableEditButtons() {
+		buttonDeleteUser.disable();
+		buttonEditUser.disable();
+	}
+
 	private void showUserGroups(int userId)
 	{
 		groupsLabel.setContents("Здесь вы можете редактировать список групп, в которые входит пользователь");
@@ -179,7 +280,7 @@ public class UserManagementDialog extends Window {
 		
         groups_list.addRecordClickHandler(new RecordClickHandler() {
             public void onRecordClick(RecordClickEvent event) {
-            	buttonDeleteGroup.enable();
+				buttonDeleteGroup.enable();
             }
         });
 		
@@ -189,7 +290,6 @@ public class UserManagementDialog extends Window {
 			public void onDataArrived(DataArrivedEvent event) {
 				groups_list.deselectAllRecords();
 				groups_list.selectRecord(groups_list.getRecords().length-1);
-				userGroupsWarChanged = true;
 			}
 		});
         groups_list.addEditCompleteHandler(new EditCompleteHandler(){
@@ -251,108 +351,5 @@ public class UserManagementDialog extends Window {
 		bottomButtons.setAlign(Alignment.RIGHT);
 		
 		return bottomButtons;
-	}
-
-	// Панель со списком пользователей и кнопками редактирования
-	private HLayout createUsersBar()
-	{
-		HLayout hLayout = new HLayout();
-		hLayout.setMembersMargin(10);
-		//lanes_list = new ListGrid();
-		users_list = new ListGrid();
-		users_list.setSize("350", "400");
-		users_list.setShowHeader(true);
-		//lanes_list.setCanDragReposition(true);
-		users_list.setDataSource(ds_user);
-		users_list.setCanEdit(false);
-		//lanes_list.setDragDataAction(DragDataAction.MOVE);
-		users_list.setSelectionType(SelectionStyle.SINGLE);
-		users_list.setCanSort(false);
-		users_list.setCanReorderRecords(true);
-		users_list.setShowAllRecords(true);
-		users_list.setCanDragRecordsOut(false);
-		users_list.setAutoSaveEdits(false);
-
-		users_list.addSelectionChangedHandler((selectionEvent) -> {
-				if (selectionEvent.getState())
-				{
-					Record record = selectionEvent.getRecord();
-					showUserGroups(record.getAttributeAsInt("id"));
-					enableEditButtons();
-				}
-			}
-		);
-
-		users_list.addRecordDoubleClickHandler(event -> {
-			editSelectedUser(event.getRecord());
-			event.cancel();
-		});
-
-		DSRequest dsr = new DSRequest();
-		users_list.fetchData(GlobalData.createSearchCriteria(), (dsResponse, data, dsRequest) -> {}, dsr);
-
-		hLayout.addMember(users_list);
-
-		VLayout buttons = new VLayout();
-		buttons.setMargin(5);
-		buttons.setMembersMargin(10);
-
-		IButton buttonAddUser = new IButton("Создать");
-		buttonAddUser.addClickHandler(event ->
-		{
-			Record r = new Record();
-			r.setAttribute("name", "Новый пользователь");
-			r.setAttribute("description", "");
-			users_list.addData(r);
-		});
-
-		buttonEditUser = new IButton("Редактировать");
-		buttonEditUser.addClickHandler(event -> editSelectedUser(users_list.getSelectedRecord()));
-		buttonEditUser.disable();
-
-		buttonDeleteGroup = new IButton("Удалить");
-		buttonDeleteGroup.addClickHandler(event -> SC.ask("Удалить пользователя " + users_list.getSelectedRecord().getAttribute("showedName") + " ?", new BooleanCallback(){
-			@Override
-			public void execute(Boolean value) {
-				if (value)
-				{
-					users_list.removeSelectedData();
-					users_list.deselectAllRecords();
-				}
-			}}));
-		disableEditButtons();
-		buttons.addMember(buttonAddUser);
-		buttons.addMember(buttonEditUser);
-		buttons.addMember(buttonDeleteGroup);
-
-		hLayout.addMember(buttons);
-
-		return hLayout;
-	}
-
-	private void editSelectedUser(Record record) {
-		if (record == null) { SC.logWarn("Record is NULL"); return;}
-		(new AbstractPropertiesDialog(
-				record,
-				"lane.png",
-				TabManager.ResourceType.LANE,
-				ds_user,
-				"пользователя") {
-			@Override
-			protected void constructInterface() {
-				this.addItem(createFormLayout());
-				this.addItem(createButtonsLayout());
-			}
-		}).show();
-	}{}
-
-	private void enableEditButtons() {
-		buttonDeleteGroup.enable();
-		buttonEditUser.enable();
-	}
-
-	private void disableEditButtons() {
-		buttonDeleteGroup.disable();
-		buttonEditUser.disable();
 	}
 }

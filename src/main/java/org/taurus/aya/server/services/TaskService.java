@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.taurus.aya.server.EventRepository;
 import org.taurus.aya.server.TaskRepository;
+import org.taurus.aya.server.controllers.GenericUserData;
 import org.taurus.aya.server.entity.Task;
 
 import java.text.ParseException;
@@ -16,13 +17,12 @@ import java.util.stream.Collectors;
 @Service
 public class TaskService {
 
-    private TaskRepository taskRepository;
-    private EventRepository eventRepository;
+    private final TaskRepository taskRepository;
 
-    private Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     //2019-07-19T03:12:27.000
-    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     public TaskService(@Autowired TaskRepository repository)
     {
@@ -30,7 +30,7 @@ public class TaskService {
     }
 
 
-    public List<Task> getData(String[] criteria) throws RuntimeException, ParseException
+    public List<Task> getData(String[] criteria, GenericUserData userData) throws RuntimeException, ParseException
     {
         List<Task> taskList;
 
@@ -38,8 +38,8 @@ public class TaskService {
 
         taskList = taskRepository.findAll();
 
-        if (Boolean.valueOf(criteriaMap.getOrDefault("showInBacklog","true")))
-                 taskList = taskRepository.findAllByShowInBacklogIsTrueOrderByPriorityDesc();
+        if (Boolean.parseBoolean(criteriaMap.getOrDefault("showInBacklog","true")))
+                 taskList = taskRepository.findAllByShowInBacklogIsTrueOrderByPriorityDesc(userData.getUserId(), userData.getGroups());
 
         return taskList;
     }

@@ -80,9 +80,12 @@ public class Aya implements EntryPoint {
 		 RPCManager.setHandleErrorCallback(new HandleErrorCallback() {
 											   @Override
 											   public void handleError(DSResponse dsResponse, DSRequest dsRequest) {
-												   SC.warn("Ошибка сервера","<b>При обращении к источнику данных</b> <br/>" + dsRequest.getDataSource()
-													+ "<br> <b>произошла ошибка</b> <br>" + dsResponse.getHttpResponseText()
-												   	+ "<br><br><b>Проверьте соединение с сетью, если оно есть, попробуйте <a href='javascript: window.location=window.location'>перезагрузить приложение</a></b>");
+												   SC.warn("Ошибка сервера","<b>При обращении к источнику данных</b> <br/>" + dsRequest.getDataSource() +
+													 "<br> <b>произошла ошибка</b> <br>" + dsResponse.getHttpResponseText() +
+												   	 "<br>Что можно сделать:<ul>" +
+														   "<li>проверьте соединение с сетью</li>" +
+														   "<li>попробуйте <a href='javascript: window.location=window.location'>перезагрузить приложение</a></li>" +
+													"</ul>");
 											   }
 										   });
 

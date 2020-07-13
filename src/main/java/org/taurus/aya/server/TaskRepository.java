@@ -9,7 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task,Long> {
-    List<Task> findAllByShowInBacklogIsTrueOrderByPriorityDesc();
+
+    @Query("SELECT t FROM Task t WHERE t.showInBacklog=true AND ((t.rgroup=-1 AND t.author=:author) OR t.rgroup IS NULL OR t.rgroup in (:groups))")
+    List<Task> findAllByShowInBacklogIsTrueOrderByPriorityDesc(Long author, List<Long> groups);
 
     @Query("SELECT t FROM Task t WHERE t.endDate>=:from AND t.endDate < :end AND t.state=:state AND t.lane in (:lanes)")
     LinkedList<Task> findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date from, Date end, Integer state, List<String> lanes);

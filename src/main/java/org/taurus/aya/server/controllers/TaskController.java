@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.taurus.aya.server.TaskRepository;
+import org.taurus.aya.server.UserRepository;
 import org.taurus.aya.server.entity.Task;
 import org.taurus.aya.server.services.TaskService;
 import org.taurus.aya.shared.GwtResponse;
@@ -20,11 +21,13 @@ public class TaskController extends GenericController {
 
     private TaskRepository taskRepository;
     private TaskService taskService;
+    private UserRepository userRepository;
 
-    public TaskController( @Autowired TaskRepository taskRepository, @Autowired TaskService taskService)
+    public TaskController( @Autowired TaskRepository taskRepository, @Autowired TaskService taskService, @Autowired UserRepository userRepository)
     {
         this.taskRepository = taskRepository;
         this.taskService = taskService;
+        this.userRepository = userRepository;
     }
 
     @ResponseBody
@@ -36,7 +39,7 @@ public class TaskController extends GenericController {
         System.out.println("Operation_type=" + _operationType);
         System.out.println("request body is:" + _operationType);
 
-        List<Task> tasks = taskService.getData(criteria);
+        List<Task> tasks = taskService.getData(criteria, getUserData(request, userRepository));
         return new GwtResponse(0,tasks.size(),tasks.size(), tasks);
     }
 
