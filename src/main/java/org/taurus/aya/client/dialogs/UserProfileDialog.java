@@ -27,9 +27,6 @@ import org.taurus.aya.client.generic.GenericPropertiesDialog;
 
 public class UserProfileDialog extends AbstractPropertiesDialog {
 
-	boolean userHasChangedThePassword = false;
-	DynamicForm bottomForm;
-	TextItem newPassword;
 	UserProfileDialog thisDialog;
 	private FormItem passwordField;
 
@@ -52,7 +49,7 @@ public class UserProfileDialog extends AbstractPropertiesDialog {
 		passwordField = df.getField("password");
 		if (passwordField !=null) {
 			passwordField.addDoubleClickHandler(event -> passwordField.setCanEdit(true));
-			passwordField.setPrompt("Щелкните дважды, чтобы задать новый пароль");
+			passwordField.setPrompt("Щелкните дважды, чтобы сменить пароль");
 		}
 		return df;
 	}

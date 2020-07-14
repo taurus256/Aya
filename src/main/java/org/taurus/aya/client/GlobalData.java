@@ -338,29 +338,6 @@ public class GlobalData {
 									showedName
 									};
 
-//		DataSource dataSource =
-//				new RestDataSource() {
-//
-//					protected Object transformRequest(DSRequest dsRequest) {
-//						//dsRequest.setParams(getRequestParams());
-//						return super.transformRequest(dsRequest);
-//					}
-//
-//					protected void transformResponse(DSResponse response, DSRequest request, Object data) {
-//						super.transformResponse(response, request, data);
-//					}
-//				};
-//
-//		dataSource.setDataFormat(DSDataFormat.JSON);
-//		dataSource.setDataProtocol(DSProtocol.GETPARAMS);
-//		dataSource.setJsonPrefix("");
-//		dataSource.setJsonSuffix("");
-//
-//
-//		dataSource.setDataURL(url);
-//		dataSource.setFields(fields);
-
-		/* finally set data source */
 		//return dataSource;
 		return createUserDS("/users",fields);
 	}
