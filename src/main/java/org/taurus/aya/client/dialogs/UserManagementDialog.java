@@ -25,6 +25,9 @@ import org.taurus.aya.client.GlobalData;
 import org.taurus.aya.client.TabManager;
 import org.taurus.aya.client.generic.AbstractPropertiesDialog;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class UserManagementDialog extends Window {
 
 		
@@ -38,6 +41,7 @@ public class UserManagementDialog extends Window {
 	private ListGrid groups_list, users_list;
 	private SelectItem si;
 	private Label groupsLabel;
+	private String selectedUserId;
 
 	public UserManagementDialog()
 	{
@@ -120,6 +124,7 @@ public class UserManagementDialog extends Window {
 					if (selectionEvent.getState())
 					{
 						Record record = selectionEvent.getRecord();
+						selectedUserId = record.getAttributeAsString("id");
 						showUserGroups(record.getAttributeAsInt("id"));
 						enableEditButtons();
 					}
@@ -146,7 +151,14 @@ public class UserManagementDialog extends Window {
 			Record r = new Record();
 			r.setAttribute("name", "Новый пользователь");
 			r.setAttribute("description", "");
-			users_list.addData(r);
+			r.setAttribute("password", "aya");
+			users_list.addData(r, new DSCallback() {
+				@Override
+				public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
+					if (dsResponse.getData().length>0)
+						editSelectedUser(dsResponse.getData()[0]);
+				}
+			});
 		});
 
 		buttonEditUser = new IButton("Редактировать");
@@ -204,11 +216,8 @@ public class UserManagementDialog extends Window {
 		groupsLabel.setContents("Здесь вы можете редактировать список групп, в которые входит пользователь");
 		si.enable();
 		
-		Criteria criteria = new Criteria("userid",String.valueOf(userId));
-		groups_list.fetchData(criteria, new DSCallback(){
-			@Override
-			public void execute(DSResponse dsResponse, Object data, DSRequest dsRequest) {
-			}});
+		Criteria criteria = new Criteria("userid",selectedUserId);
+		groups_list.fetchData(criteria, (dsResponse, data, dsRequest) -> {});
 	}
 
 	private Label createGroupLabel()
@@ -231,7 +240,8 @@ public class UserManagementDialog extends Window {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				groups_list.addData(si.getSelectedRecord());
+				Record group = si.getSelectedRecord();
+				groups_list.addData(addUserIdToRecord(si.getSelectedRecord()));
 				groups_list.saveEdits();
 			}
 		});
@@ -296,7 +306,8 @@ public class UserManagementDialog extends Window {
 
 			@Override
 			public void onEditComplete(EditCompleteEvent event) {
-				groups_list.fetchData();
+				Criteria criteria = new Criteria("userid",selectedUserId);
+				groups_list.fetchData(criteria,((dsResponse, o, dsRequest) -> {}));
 			}});
         hLayout.addMember(groups_list);
 		
@@ -309,17 +320,18 @@ public class UserManagementDialog extends Window {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				if (groups_list.getRecordList().getLength()==1)
-					SC.warn("Список групп пользователя не может быть пустым.<br>Если вы хотите включить пользователя в другие группы, сначала добавьте их, а потом удалите данную");
-				else
 				SC.ask("Удалить группу из списка?", new BooleanCallback(){
 
 					@Override
 					public void execute(Boolean value) {
-						if (value) 
+						if (value)
 						{
-							groups_list.removeSelectedData();
-							groups_list.deselectAllRecords();
+							groups_list.getDataSource().performCustomOperation("remove",addUserIdToRecord(groups_list.getSelectedRecord()), new DSCallback() {
+								@Override
+								public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
+									groups_list.removeSelectedData();
+								}
+							});
 						}
 					}});
 			}
@@ -351,5 +363,10 @@ public class UserManagementDialog extends Window {
 		bottomButtons.setAlign(Alignment.RIGHT);
 		
 		return bottomButtons;
+	}
+
+	private Record addUserIdToRecord(Record r){
+		r.setAttribute("userId",selectedUserId);
+		return r;
 	}
 }

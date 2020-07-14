@@ -108,15 +108,21 @@ public class GroupManagementDialog extends Dialog {
 		buttonEditGroup.disable();
 		
 		buttonDeleteGroup = new IButton("Удалить");
-		buttonDeleteGroup.addClickHandler(event -> SC.ask("Удалить группу?", new BooleanCallback(){
-			@Override
-			public void execute(Boolean value) {
-				if (value)
-				{
-					groups_list.removeSelectedData();
-					groups_list.deselectAllRecords();
-				}
-			}}));
+		buttonDeleteGroup.addClickHandler(event ->{
+			if (groups_list.getSelectedRecord()!= null && "admins".equals(groups_list.getSelectedRecord().getAttributeAsString("name")))
+				SC.warn("Групу 'admins' удалить нельзя");
+			else
+				SC.ask("Удалить группу?", new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							groups_list.removeSelectedData();
+							groups_list.deselectAllRecords();
+						}
+					}
+				});
+			}
+		);
 		disableEditButtons();
 		buttons.addMember(buttonAddGroup);
 		buttons.addMember(buttonEditGroup);

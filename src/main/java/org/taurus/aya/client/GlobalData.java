@@ -307,8 +307,9 @@ public class GlobalData {
 		id.setHidden(true);
 		DataSourceField usid = new DataSourceField("usid", FieldType.TEXT);
 		usid.setHidden(true);
-		DataSourceField password = new DataSourceField("password", FieldType.TEXT);
-		password.setHidden(true);
+		DataSourceField password = new DataSourceField("password", FieldType.TEXT,"Новый пароль");
+		password.setCanEdit(false);
+
 		DataSourceField showedName = new DataSourceField("showedName", FieldType.TEXT,"Отображаемое имя");
 		showedName.setHidden(true);
 
@@ -361,7 +362,7 @@ public class GlobalData {
 
 		/* finally set data source */
 		//return dataSource;
-		return createDS("/users",fields);
+		return createUserDS("/users",fields);
 	}
 
 	private static DataSource createRestGroupDS() {
@@ -393,6 +394,7 @@ public class GlobalData {
 
 		DataSourceField[] fields = {
 				id,
+				new DataSourceField("userId", FieldType.INTEGER, "ID пользователя"),
 				new DataSourceField("name", FieldType.TEXT, "Название"),
 				new DataSourceField("description", FieldType.TEXT, "Описание"),
 		};
@@ -580,10 +582,10 @@ public class GlobalData {
 				new DataSourceField("rgroup", FieldType.INTEGER)
 		};
 
-		return createEventDS(dsName,fields);
+		return createDS(dsName,fields);
 	}
 
-	private static DataSource createEventDS(String name, DataSourceField[] fields)
+	private static DataSource createUserDS(String name, DataSourceField[] fields)
 	{
 		DataSource dataSource =
 				new RestDataSource() {
@@ -627,12 +629,12 @@ public class GlobalData {
 		remove.setDataProtocol(DSProtocol.POSTPARAMS);
 
 		//set up custom operation
-		OperationBinding moveToBacklog = new OperationBinding();
-		moveToBacklog.setOperationType(DSOperationType.CUSTOM);
-		moveToBacklog.setDataURL(name + "/moveToBacklog");
-		moveToBacklog.setDataProtocol(DSProtocol.POSTPARAMS);
+		OperationBinding custom = new OperationBinding();
+		custom.setOperationType(DSOperationType.CUSTOM);
+		custom.setDataURL(name + "/");
+		custom.setDataProtocol(DSProtocol.GETPARAMS);
 
-		dataSource.setOperationBindings(fetch, add, update, remove, moveToBacklog);
+		dataSource.setOperationBindings(fetch, add, update, remove, custom);
 
 		dataSource.setDataURL(name);
 		dataSource.setFields(fields);
@@ -678,13 +680,19 @@ public class GlobalData {
 		update.setDataURL(name + "/modify");
 		update.setDataProtocol(DSProtocol.POSTPARAMS);
 
-		//set up REMOVE to use DELETE
+		//set up REMOVE to use POST
 		OperationBinding remove = new OperationBinding();
 		remove.setOperationType(DSOperationType.REMOVE);
 		remove.setDataURL(name + "/modify");
 		remove.setDataProtocol(DSProtocol.POSTPARAMS);
 
-		dataSource.setOperationBindings(fetch, add, update, remove);
+		//set up CUSTOM to use POST
+		OperationBinding custom = new OperationBinding();
+		custom.setOperationType(DSOperationType.CUSTOM);
+		custom.setDataURL(name + "/modify");
+		custom.setDataProtocol(DSProtocol.POSTPARAMS);
+
+		dataSource.setOperationBindings(fetch, add, update, remove, custom);
 
 		dataSource.setDataURL(name);
 		dataSource.setFields(fields);

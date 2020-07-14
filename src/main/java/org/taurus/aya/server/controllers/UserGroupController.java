@@ -1,10 +1,7 @@
 package org.taurus.aya.server.controllers;
 
-import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
-import org.hibernate.proxy.HibernateProxyHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.taurus.aya.server.GroupRepository;
 import org.taurus.aya.server.UserRepository;
@@ -15,7 +12,6 @@ import org.taurus.aya.shared.GwtResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -48,10 +44,10 @@ public class UserGroupController extends GenericController{
     @PostMapping("/modify")
     public GwtResponse modifyGroup(HttpServletRequest request,
                                    @RequestParam String _operationType,
-                                   @RequestParam (required = false)  String id
-                                   ){
+                                   @RequestParam String id,
+                                   @RequestParam(required = false) Long userId){
 
-        User user = getCurrentUserFromCookie(request);
+        User user = userRepository.getOne(userId);
 
         Group group;
         Long idLong = filterLongValue(id);
@@ -72,7 +68,7 @@ public class UserGroupController extends GenericController{
 
                 return new GwtResponse(0,1,1,new Group[]{group});
             }
-            case "remove": {
+            case "custom": { // custom operation type used for REMOVE operation, because it is not possible to send userid parameter in REMOVE
                 user.getGroups().remove(group);
                 userRepository.save(user);
                 return new GwtResponse(0,0,0,new Group[]{});
@@ -93,6 +89,5 @@ public class UserGroupController extends GenericController{
         assert (u.size()==1): "There is more than 1 user with USID: " + usid;
         return u.get(0);
     }
-
 
 }

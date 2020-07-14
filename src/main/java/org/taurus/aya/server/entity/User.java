@@ -22,7 +22,6 @@ public class User {
   private String usid;
   private String passwordHash;
   private java.sql.Timestamp imageDateCreated;
-  private String showedName;
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
@@ -104,7 +103,7 @@ public class User {
     this.usid = usid;
   }
 
-
+  @JsonIgnore
   public String getPasswordHash() {
     return passwordHash;
   }

@@ -226,17 +226,12 @@ public class EventController extends GenericController {
                 taskRepository.delete(event.getTask());
                 return new GwtResponse(0,1,1,new Event[] {});
             }
+            case "moveToBacklog":
+            {
+                taskService.moveToBacklog(filterLongValue(taskId));
+                return new GwtResponse(0,1,1,new Event[] {});
+            }
         }
         return new GwtResponse(0,1,1,event.getTaskId()==null ? event : eventRepository.findAllByTaskId(event.getTaskId()));
     }
-
-    @PostMapping("/moveToBacklog")
-    @ResponseBody
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public GwtResponse moveToBacklog(@RequestParam String taskId)
-    {
-        taskService.moveToBacklog(filterLongValue(taskId));
-        return new GwtResponse(0,1,1,new Event[] {});
-    }
-
 }

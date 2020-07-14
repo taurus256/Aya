@@ -116,12 +116,12 @@ public class UserController extends GenericController {
         {
             case "add":
             case "update":{
-                // Test password value and hast it
-                if (password == null || password.isEmpty() || password.equals("null"))
-                    password = "aya";
-
-                String salt = BCrypt.gensalt(12);
-                String passwordHash=BCrypt.hashpw(password,salt);
+                // Password field is not null only if user has change it explicitly or user is created just now
+                if (!(password == null || password.isEmpty() || password.equals("null"))) {
+                    String salt = BCrypt.gensalt(12);
+                    String passwordHash=BCrypt.hashpw(password,salt);
+                    user.setPasswordHash(passwordHash);
+                }
 
                 // Set user data to entity
                 user.setFirstname(firstname);
@@ -131,7 +131,6 @@ public class UserController extends GenericController {
                 user.setWorkphone(filterStringValue(workphone));
                 user.setMobphone(filterStringValue(mobphone));
                 user.setUsid(usid);
-                user.setPasswordHash(passwordHash);
                 userRepository.save(user);
                 System.out.println("User saved");
                 User[] users = {user};
