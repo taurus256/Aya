@@ -44,7 +44,7 @@ public class GenericPropertiesDialog extends AbstractPropertiesDialog {
 		show();
 	}
 
-	public GenericPropertiesDialog(Record r, String imgName, ResourceType resType, DataSource ds, String suff, java.util.function.Consumer<Void> f)
+	public GenericPropertiesDialog(Record r, String imgName, ResourceType resType, DataSource ds, String suff, Runnable f)
 	{
 		super(r,imgName,resType,ds,suff, f);
 		df.show();
@@ -54,13 +54,6 @@ public class GenericPropertiesDialog extends AbstractPropertiesDialog {
 	protected void constructInterface()
 	{
 		this.addItem(createFormLayout());
-		if (resourceType != ResourceType.TAG)
-			this.addItem(createTagsLayout());
-		else
-			//Update the Tag label
-			if (resourceType != ResourceType.TAG)
-				if (record.getAttributeAsInt("id") != null) tagListGrid.fetchData(new Criteria(getColumnName(), record.getAttributeAsString("id")));
-
 		this.addItem(createSecurityLayout());
 		this.addItem(createButtonsLayout());
 	}

@@ -20,7 +20,7 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
         SC.logWarn("Конструктор BacklogTaskDialog отработал");
 	}
 
-    public BacklogTaskDialog(Record r, Consumer<Void> f)
+    public BacklogTaskDialog(Record r, Runnable f)
     {
         super(r, "task.png", ResourceType.TASK, GlobalData.getDataSource_tasks(), "задачи", f);
         setWidth(520);
@@ -32,7 +32,6 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
 	{
         SC.logWarn("constructInterface для BacklogTaskDialog вызван");
         this.addItem(createFormLayout());
-		this.addItem(createTagsLayout());
 		this.addItem(createSecurityLayout());
 
 		this.addItem(createButtonsLayout());

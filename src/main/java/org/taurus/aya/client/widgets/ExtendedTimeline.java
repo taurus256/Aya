@@ -324,7 +324,7 @@ public class ExtendedTimeline extends Timeline {
 				else
 					return "";
 			}
-        });
+   		     });
 
         setEventBodyHTMLCustomizer(new EventBodyHTMLCustomizer(){
 
@@ -340,17 +340,42 @@ public class ExtendedTimeline extends Timeline {
 						return "<i>" + executor_name + "</i>";
 					}
 			}
-        });
+   		     });
 
-        addDropHandler(new DropHandler() {
+		setEventHoverHTMLCustomizer(new EventHoverHTMLCustomizer(){
+			@Override
+			public String getEventHoverHTML(CalendarEvent calendarEvent, EventWindow eventWindow) {
+
+				Date startDate = calendarEvent.getAttributeAsDate("startDate");
+				Date endDate = calendarEvent.getAttributeAsDate("endDate");
+				if (startDate == null || endDate == null) return "";
+
+				endDate.setTime(endDate.getTime() - 24*3600 * 1000); // decrease amount of seconds in the endDate for setting it to the previous date
+
+				final String eventStatus;
+				switch(calendarEvent.getAttributeAsInt("state")){
+					case 0: eventStatus = "[Не в работе]"; break;			//<img src="images/buttons/task_new.png" width="24" height="24"/> [
+					case 1: eventStatus = "[Выполняется]"; break;			//<img src="images/buttons/task_play.png"  width="24" height="24"/>
+					case 2: eventStatus = "[Готово]"; break;			//<img src="images/buttons/task_ready.png" width="24" height="24"/>
+					case 3: eventStatus = "[Пауза]"; break;			//<img src="images/buttons/task_pause.png" width="24" height="24"/>
+					case 4: eventStatus = "[Внимание]"; break;			//<img src="images/buttons/task_fail.png" width="24" height="24"/>
+					default: eventStatus = "";
+				}
+				return 	"<span class= \"eventHoverSpan\">"
+						+ numberFormat.format(startDate) + " - "  + numberFormat.format(endDate) + "         "
+						+ eventStatus + "</span><br/><br/>"
+						+ calendarEvent.getAttributeAsString("name") + "<br>"
+						+ calendarEvent.getAttributeAsString("description") ;
+			}
+		});
+
+		addDropHandler(new DropHandler() {
                            @Override
                            public void onDrop(DropEvent event) {
                                Record r = GlobalData.getNavigationArea().getTaskPanel().getTreeSelectedRecord();
 
-
-                               //TODO:: вынести проверку на null в отдельный метод
                                if (r.getAttribute("lane") == null || r.getAttribute("lane").equals("null"))
-								   new BacklogTaskDialog(r);
+								   new BacklogTaskDialog(r, () -> generateAdvicesCallback.run());
                                else {
                                    r.setAttribute("isGraph", true);
                                    GlobalData.getDataSource_events().updateData(r, new DSCallback() {
@@ -372,9 +397,10 @@ public class ExtendedTimeline extends Timeline {
 									if (thisIsFirstCall) getTimelineView().scrollBodyTo(delta, 0);
 								}
 							});
-				//  set menu and load the data
 
-				setContextMenu(getContextMenu());
+
+		//  set menu and load the data
+		setContextMenu(getContextMenu());
 
 		updateTimeline();
 	}
@@ -616,7 +642,7 @@ public class ExtendedTimeline extends Timeline {
     
 	private EditEventDialog getEditEventDialog(Record event)
 	{
-		return new EditEventDialog(event);
+		return new EditEventDialog(event, () -> generateAdvicesCallback.run());
 	}
 	
 	public void addUpdateHandler(Runnable callback)
@@ -661,7 +687,6 @@ public class ExtendedTimeline extends Timeline {
                 ResourceLifeCycleManager.resourceChanged(ResourceType.TASK, getSelectedEvent());
             }
         });
-
     }
 
     private void showRevisionDialog(Record task)

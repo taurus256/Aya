@@ -45,6 +45,7 @@ public class Task {
 
     @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "task")
     @org.hibernate.annotations.LazyCollection(LazyCollectionOption.EXTRA)
+    @OrderBy("index ASC")
     private List<Event> events;
 
     @ManyToOne

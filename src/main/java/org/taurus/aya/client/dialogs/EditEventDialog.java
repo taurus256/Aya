@@ -16,9 +16,9 @@ import java.util.Map;
 
 public class EditEventDialog extends AbstractPropertiesDialog {
 
-	public EditEventDialog(Record r)
+	public EditEventDialog(Record r, Runnable f)
 	{
-		super(r,"task.png", TabManager.ResourceType.TASK, GlobalData.getDataSource_events(), "задачи");
+		super(r,"task.png", TabManager.ResourceType.TASK, GlobalData.getDataSource_events(), "задачи", f);
 		r.setAttribute("isGraph",true);
 
 		addVisibilityChangedHandler(event -> {

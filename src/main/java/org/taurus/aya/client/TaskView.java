@@ -27,8 +27,6 @@ import org.taurus.aya.shared.TaskAnalyseData;
 
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.function.Function;
 
 public class TaskView extends ContentPane {
 	
@@ -115,6 +113,7 @@ public class TaskView extends ContentPane {
 		//!this.setOverflow(Overflow.HIDDEN);
 	    this.setMinHeight(0);
 	    this.setBackgroundColor("#f2f2f2");
+	    menu.setVisible(false);
 
 	    //setting hotkeys
 		setSwitchStateHotKey(EventState.PROCESS, "A");
@@ -126,6 +125,7 @@ public class TaskView extends ContentPane {
 		setSwitchStateHotKey(() -> setWeekMode(true), "W");
 		setSwitchStateHotKey(() -> setViewMyTasksMode(true), "M");
 		setSwitchStateHotKey(() -> setViewMyTasksMode(false), "C");
+		setSwitchStateHotKey(() -> showAdvicePanel(), "3");
 	}
 
     HLayout createToolStripPanel()
@@ -216,7 +216,7 @@ public class TaskView extends ContentPane {
 			showAdvicePanel();
 		});
 
-                toolStrip2.addMember(analyseResultLabel);
+        toolStrip2.addMember(analyseResultLabel);
 
         layout.addMember(toolStrip2);
 		
@@ -237,7 +237,6 @@ public class TaskView extends ContentPane {
 				public void onSuccess(TaskAnalyseData result) {
 					analyseResultLabel.setContents(result.getPanelText());
 					prepareAdvicePane(result.getAdvices());
-					SC.logWarn("AnalyticResult:" + result.getAdvices().size());
 				}
 			});
 		} catch (Exception e) {
@@ -284,11 +283,6 @@ public class TaskView extends ContentPane {
 			return timeline2;
 	}
 
-	private CalendarEvent getSelectedEvent()
-	{
-		return getCurrentTimeline().getSelectedEvent();
-	}
-
 	private void prepareAdvicePane(List<Advice> advices)
 	{
 	    pane.removeMembers(pane.getMembers());
@@ -319,9 +313,16 @@ public class TaskView extends ContentPane {
         analyseResultLabel.setStyleName(panelState.getStyleName());
 	}
 
-	private void showAdvicePanel()
+	public void showAdvicePanel()
 	{
-		menu.showNextTo(analyseResultLabel,"top",false);
+		if (menu.isVisible())
+			menu.hide();
+		else
+		{
+			menu.setPageLeft(analyseResultLabel.getPageLeft() + analyseResultLabel.getWidth() - 300);
+			menu.setPageTop(analyseResultLabel.getPageTop() - analyseResultLabel.getHeight() - 500);
+			menu.show();
+		}
 	}
 
 	private Menu createPopupMenu()

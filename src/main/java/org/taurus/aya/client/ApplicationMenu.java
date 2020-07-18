@@ -1,6 +1,7 @@
 package org.taurus.aya.client;
 
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Window;
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.SC;
@@ -29,6 +30,7 @@ public class ApplicationMenu extends HLayout {
 	
     private static final int APPLICATION_MENU_HEIGHT = 27;
     public static  final int ITEM_MENU_HEIGHT = 23;
+	public static  final String SITE_PREFIX = "https://tau-studio.ru";
 
     Menu layoutMenu = null;
     Menu userMenu = null;
@@ -41,6 +43,7 @@ public class ApplicationMenu extends HLayout {
     private Record resourceRecord;
 	private final MenuItem switchTasksView;
 	private final MenuItem switchStatisticsView;
+	private final MenuItem switchAnalyticPanel;
 	private final MenuItem setWeekMode;
 	private final MenuItem setMonthMode;
 	private final MenuItem setViewMyTasks;
@@ -67,9 +70,13 @@ public class ApplicationMenu extends HLayout {
 		switchStatisticsView = new MenuItem("Панель статистики");
 		switchStatisticsView.setKeyTitle("<sup>Alt+2</sup>");
 	    switchStatisticsView.addClickHandler(event -> Aya.switchStatisticsPanel());
-	    
-	    layoutMenu.setData(switchTasksView, switchStatisticsView);
-	    layoutMenu.setHeight(2 *ITEM_MENU_HEIGHT - 2);
+
+		switchAnalyticPanel = new MenuItem("Панель советов");
+		switchAnalyticPanel.setKeyTitle("<sup>Alt+3</sup>");
+		switchAnalyticPanel.addClickHandler(event -> GlobalData.getTaskView().showAdvicePanel());
+
+	    layoutMenu.setData(switchTasksView, switchStatisticsView, switchAnalyticPanel);
+	    layoutMenu.setHeight(3 *ITEM_MENU_HEIGHT - 3);
 	    
 	    ToolStripMenuButton layoutControlButton = new ToolStripMenuButton("Панели", layoutMenu);
 	    toolStrip.addMenuButton(layoutControlButton);
@@ -163,6 +170,7 @@ public class ApplicationMenu extends HLayout {
 				"<tr><td><b>Действия с панелями</b></td><td><b>Сочетание<sup>*</sup></b></td></tr>" +
 				"<tr><td>Показать/скрыть панель задач</td><td>Alt+1</td></tr>" +
 				"<tr><td>Показать/скрыть панель статистики</td><td>Alt+2</td></tr>" +
+				"<tr><td>Показать/скрыть панель прогноза</td><td>Alt+3</td></tr>" +
 				"</table>" +
 				"<table width=500>" +
 				"<tr><td><b>Переключение режимов графика</b></td><td><b>Сочетание<sup>*</sup></b></td></tr>" +
@@ -184,17 +192,24 @@ public class ApplicationMenu extends HLayout {
 				"</table>" +
 				"<br><sup>*</sup> Вместо Alt можно использовать сочетание Alt+Shift, если сочетание с Alt занято браузером или операционной системой"));
 
-	    MenuItem showConsoleItem = new MenuItem("Консоль SmartGWT");
+		MenuItem showHelpItem = new MenuItem("Онлайн-руководство");
+		showHelpItem.addClickHandler(event -> Window.open(SITE_PREFIX, "_blank", ""));
+
+		MenuItem sendMailItem = new MenuItem("Написать разработчику");
+		sendMailItem.addClickHandler(event -> Window.open("mailto:evgene.ostapenko@gmail.com", "_blank", ""));
+
+		MenuItem showConsoleItem = new MenuItem("Консоль SmartGWT");
+	    showConsoleItem.setKeyTitle("<sup>Ctrl+D</sup>");
 	    com.smartgwt.client.widgets.menu.events.ClickHandler handler = event -> SC.showConsole();
 	    showConsoleItem.addClickHandler(handler);
 	    helpMenu.addItem(showConsoleItem);
 
 	    MenuItem aboutItem = new MenuItem("О программе");
 	    aboutItem.addClickHandler(event -> new AboutDialog());
-	    
-	    helpMenu.setData(hotKeysItem, new MenuItemSeparator(), showConsoleItem, aboutItem);
 
-	    helpMenu.setHeight(2 *ITEM_MENU_HEIGHT);
+	    helpMenu.setData(hotKeysItem, showHelpItem, sendMailItem, new MenuItemSeparator(), showConsoleItem, aboutItem);
+
+	    helpMenu.setHeight(6 *ITEM_MENU_HEIGHT);
 	    
 	    ToolStripMenuButton menuHelpButton = new ToolStripMenuButton("Помощь", helpMenu);
 		    toolStrip.addMenuButton(menuHelpButton);

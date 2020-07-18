@@ -32,31 +32,6 @@ public class TaskPanel extends VLayout implements SidePanel {
 	private TabSet tabset;
 
 	
-	private class TaskGenericPanel extends GenericPanel{
-		public TaskGenericPanel(DataSource ds, String iconFile, ResourceType resType, String messageNew, String objectName)
-		{
-
-			super(ds, iconFile, resType, messageNew, objectName);
-			
-			hrCreateResource.removeHandler();
-		    
-			menuCreateResource.addClickHandler(new ClickHandler(){
-
-				@Override
-				public void onClick(MenuItemClickEvent event) {
-					
-					Record r = new Record();
-					r.setAttribute("name","Новая задача");
-					r.setAttribute("parent",0);
-					r.setAttribute("author",GlobalData.getCurrentUser().getAttribute("id"));
-					r.setAttribute("rgroup",GlobalData.ACCESS_ALL);
-					r.setAttribute("wgroup",GlobalData.ACCESS_ALL);
-					
-					EditEventDialog ee = new EditEventDialog(r);
-				}});
-		}
-	}
-
 	private class BacklogPanel extends GenericPanel{
 
 		public BacklogPanel(DataSource ds, String iconFile, ResourceType resType, String messageNew, String objectName) {
@@ -72,13 +47,9 @@ public class TaskPanel extends VLayout implements SidePanel {
 
 				@Override
 				public void onClick(MenuItemClickEvent event) {
-					new BacklogTaskDialog(treeGrid.getSelectedRecord(), new Consumer<Void>(){
-						@Override
-						public void accept(Void aVoid) {
-
+					new BacklogTaskDialog(treeGrid.getSelectedRecord(), () ->{
 							panelBacklog.getTreeGrid().sort("priority");
 							panelBacklog.getTreeGrid().refreshData();
-						}
 					});
 				}});
 
@@ -313,7 +284,7 @@ public class TaskPanel extends VLayout implements SidePanel {
 			GlobalData.getDataSource_events().addData(r);
 			taskRecord.setAttribute("showInBacklog",false);
 			taskRecord.setAttribute("startDate",new Date());
-			taskRecord.setAttribute("endDate",new Date(new Date().getTime()+1000*3600*24*2));
+			taskRecord.setAttribute("endDate",new Date(new Date().getTime()+1000*3600*24));
 			taskRecord.setAttribute("executor",GlobalData.getCurrentUser().getAttribute("id"));
 			GlobalData.getDataSource_tasks().updateData(taskRecord, new DSCallback() {
 				@Override

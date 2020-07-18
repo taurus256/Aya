@@ -407,10 +407,11 @@ public class GlobalData {
 		DataSourceField laneOrder = new DataSourceField("laneOrder", FieldType.INTEGER);
 		laneOrder.setHidden(true);
 
+		DataSourceField description = new DataSourceField("description", FieldType.TEXT, "Описание");
 		DataSourceField[] fields = {
 				id,
 				new DataSourceField("name", FieldType.TEXT, "Название"),
-				new DataSourceField("description", FieldType.TEXT, "Описание"),
+				description,
 				laneOrder,
 				new DataSourceField("visible", FieldType.BOOLEAN, "Отображать"),
 				new DataSourceField("analysed", FieldType.BOOLEAN, "Анализировать"),

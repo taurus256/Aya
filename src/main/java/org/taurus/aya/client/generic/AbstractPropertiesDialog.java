@@ -68,7 +68,7 @@ abstract public class AbstractPropertiesDialog extends Window {
 	final ResourceType resourceType;
 	protected boolean canWriteToThisResource=true;
 
-	java.util.function.Consumer<Void> func = null;
+	Runnable func = null;
 
 	public AbstractPropertiesDialog(Record r, String imgName, ResourceType resType, DataSource ds, String suff)
 	{
@@ -120,7 +120,7 @@ abstract public class AbstractPropertiesDialog extends Window {
 		SC.logWarn("Конструктор AbstractPropertiesDialog отработал");
 	}
 
-	public AbstractPropertiesDialog(Record r, String imgName, ResourceType resType, DataSource ds, String suff, java.util.function.Consumer<Void> f)
+	public AbstractPropertiesDialog(Record r, String imgName, ResourceType resType, DataSource ds, String suff, Runnable f)
 	{
 		this(r,imgName,resType,ds,suff);
 		func = f;
@@ -711,7 +711,7 @@ abstract public class AbstractPropertiesDialog extends Window {
 				//Getting data from DynamicForm
 				for (FormItem f : df.getFields())
 				{
-					record.setAttribute(f.getName(), f.getValue());
+					record.setAttribute(f.getName(), (f.getValue() == null)?"":f.getValue());
 					SC.logWarn("GenericPropertiesDialog. Update data " + f.getName() + "=" + f.getValue());
 				}
 
@@ -721,7 +721,7 @@ abstract public class AbstractPropertiesDialog extends Window {
 					@Override
 					public void execute(DSResponse dsResponse, Object data,
                                         DSRequest dsRequest) {
-						if (func!=null) func.accept(null);
+						if (func!=null) func.run();
 					}});
 			}
 			else
@@ -730,10 +730,7 @@ abstract public class AbstractPropertiesDialog extends Window {
 				record.setAttribute("author",GlobalData.getCurrentUser().getAttributeAsInt("id"));
 
 				for (FormItem f : df.getFields())
-				{
 					record.setAttribute(f.getName(), f.getValue());
-					SC.logWarn("GenericPropertiesDialog. Save data " + f.getName() + "=" + f.getValue());
-				}
 
 				SC.logWarn("Задача добавляется...");
 				dataSource.addData(record, new DSCallback(){
@@ -741,6 +738,7 @@ abstract public class AbstractPropertiesDialog extends Window {
 					@Override
 					public void execute(DSResponse dsResponse, Object data,
                                         DSRequest dsRequest) {
+						if (func!=null) func.run();
 						SC.logWarn("Задача добавлена");
 					}});
 			}

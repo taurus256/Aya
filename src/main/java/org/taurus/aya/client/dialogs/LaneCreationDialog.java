@@ -6,6 +6,7 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -213,7 +214,7 @@ public class LaneCreationDialog extends Dialog {
 	}
 
 	private void editSelectedLane(Record record) {
-		Consumer<Void> c = Void -> {
+		Runnable c = () -> {
 				//ResourceLifeCycleManager.resourceChanged(ResourceType.LANE, record);
 				func.accept(null);
 		};
@@ -222,7 +223,10 @@ public class LaneCreationDialog extends Dialog {
 				"lane.png",
 				ResourceType.LANE,
 				ds_lanes,
-				"потока", c);
+				"потока", c){{
+				for (FormItem fi : df.getFields())
+					fi.setWidth(300);
+				}};
 	}
 
 	private void enableEditButtons() {

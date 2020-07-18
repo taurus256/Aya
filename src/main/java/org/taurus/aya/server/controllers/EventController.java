@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.time.*;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -58,6 +59,7 @@ public class EventController extends GenericController {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public GwtResponse executePost(
         @RequestParam String _operationType,
+        @RequestParam (required = false)String _operationId,
         @RequestParam (required = false) String id,          //integer,
         @RequestParam (required = false) String lane,
         @RequestParam (required = false) String name,
@@ -187,6 +189,7 @@ public class EventController extends GenericController {
                 else {
                     event.setSpentTime(filterDoubleValue(spentTime)); // иначе - просто пишем время выполнения с клиента
                 }
+
                 event.setUserCorrectSpentTime(needsCorrection);
 
                 event.setLane(lane);
@@ -219,17 +222,26 @@ public class EventController extends GenericController {
                 task.recalculateFields();
                 taskRepository.save(task);
 
-                return new GwtResponse(0,1,1,event.getTaskId()==null ? event : task.getEvents());
+                List<Event> results = new LinkedList<>();
+                if (event.getTaskId()==null)
+                    results.add(event);
+                else
+                    results.addAll(task.getEvents());
+
+                return new GwtResponse(0,results.size(),results.size(), results);
             }
             case "remove":
             {
                 taskRepository.delete(event.getTask());
                 return new GwtResponse(0,1,1,new Event[] {});
             }
-            case "moveToBacklog":
+            case "custom":
             {
-                taskService.moveToBacklog(filterLongValue(taskId));
-                return new GwtResponse(0,1,1,new Event[] {});
+                if ("moveToBacklog".equals(_operationId))
+                {
+                    taskService.moveToBacklog(filterLongValue(taskId));
+                    return new GwtResponse(0, 1, 1, new Event[]{});
+                }
             }
         }
         return new GwtResponse(0,1,1,event.getTaskId()==null ? event : eventRepository.findAllByTaskId(event.getTaskId()));

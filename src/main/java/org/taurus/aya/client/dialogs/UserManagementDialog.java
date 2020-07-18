@@ -1,5 +1,6 @@
 package org.taurus.aya.client.dialogs;
 
+import com.google.gwt.core.client.Scheduler;
 import com.smartgwt.client.data.*;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.AnimationEffect;
@@ -24,9 +25,6 @@ import com.smartgwt.client.widgets.tab.TabSet;
 import org.taurus.aya.client.GlobalData;
 import org.taurus.aya.client.TabManager;
 import org.taurus.aya.client.generic.AbstractPropertiesDialog;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserManagementDialog extends Window {
 
@@ -125,7 +123,7 @@ public class UserManagementDialog extends Window {
 					{
 						Record record = selectionEvent.getRecord();
 						selectedUserId = record.getAttributeAsString("id");
-						showUserGroups(record.getAttributeAsInt("id"));
+						showGroupsForSelectedUser();
 						enableEditButtons();
 					}
 				}
@@ -211,7 +209,7 @@ public class UserManagementDialog extends Window {
 		buttonEditUser.disable();
 	}
 
-	private void showUserGroups(int userId)
+	private void showGroupsForSelectedUser()
 	{
 		groupsLabel.setContents("Здесь вы можете редактировать список групп, в которые входит пользователь");
 		si.enable();
@@ -329,7 +327,8 @@ public class UserManagementDialog extends Window {
 							groups_list.getDataSource().performCustomOperation("remove",addUserIdToRecord(groups_list.getSelectedRecord()), new DSCallback() {
 								@Override
 								public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
-									groups_list.removeSelectedData();
+									groups_list.invalidateCache();
+									showGroupsForSelectedUser();
 								}
 							});
 						}

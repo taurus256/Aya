@@ -98,7 +98,6 @@ public class Event {
     }
 
     public void setDescription(String description) {
-
         task.setDescription(description);
     }
 
