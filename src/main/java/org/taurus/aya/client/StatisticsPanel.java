@@ -141,6 +141,6 @@ public class StatisticsPanel extends VLayout {
 
     public void hidePanel(){
         this.setVisible(false);
-        this.setWidth(0);
+        this.setWidth(1);
     }
 }

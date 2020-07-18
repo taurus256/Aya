@@ -3,11 +3,6 @@ package org.taurus.aya.client;
  * Боковая панель
  */
 import com.smartgwt.client.types.Overflow;
-import com.smartgwt.client.types.VisibilityMode;
-import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.layout.SectionStack;
-import com.smartgwt.client.widgets.layout.SectionStackSection;
-import com.smartgwt.client.widgets.tree.TreeGrid;
 import org.taurus.aya.client.widgets.PanelHeader;
 
 public class NavigationArea extends com.smartgwt.client.widgets.layout.VLayout {
@@ -45,5 +40,15 @@ public class NavigationArea extends com.smartgwt.client.widgets.layout.VLayout {
 
 	public TaskPanel getTaskPanel() {
 		return taskPanel;
+	}
+
+	public void showPanel(){
+		this.setWidth(275);
+		this.setVisible(true);
+	}
+
+	public void hidePanel(){
+		this.setVisible(false);
+		this.setWidth(1);
 	}
 }
