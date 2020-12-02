@@ -7,7 +7,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.taurus.aya.server.GroupRepository;
 import org.taurus.aya.server.UserRepository;
+import org.taurus.aya.server.entity.Group;
 import org.taurus.aya.server.entity.User;
 import org.taurus.aya.servlets.UserServiceImpl;
 import org.taurus.aya.shared.GwtResponse;
@@ -22,10 +24,12 @@ import java.util.UUID;
 public class UserController extends GenericController {
 
     UserRepository userRepository;
+    private GroupRepository groupRepository;
 
-    public UserController(@Autowired UserRepository repository)
+    public UserController(@Autowired UserRepository userRepository, @Autowired GroupRepository groupRepository)
     {
-        this.userRepository = repository;
+        this.userRepository = userRepository;
+        this.groupRepository = groupRepository;
     }
 
     @Autowired
@@ -48,21 +52,37 @@ public class UserController extends GenericController {
                     if (request.getParameterMap().get("password").length==0)
                         throw new IllegalArgumentException("Сервер получил пустой пароль");
 
-                    //Чтение данных пользователя из БД и сравнение хэша с тем, что пришло
-                    System.out.println("Fetch by nickname:: " + request.getParameterMap().get("nickname")[0]);
+                    // Если это пришел демо-пользователь - в базе не ищем, создаем заново
+                    if (request.getParameterMap().get("nickname")[0].equals("demo")) {
+                        User u = new User();
+                        u.setFirstname("Demo");
+                        u.setSurname("User");
+                        u.setNickname("demo");
+                        Group g = groupRepository.findFirstByName("demo");
+                        if (g == null) {
+                            System.out.println("There are no group DEMO in the database!");
+                            throw new IllegalArgumentException();
+                        }
+                        u.getGroups().add(g);
+                        users.add(u);
+                    }
+                    else{
+                        //Чтение данных пользователя из БД и сравнение хэша с тем, что пришло
+                        System.out.println("Fetch by nickname:: " + request.getParameterMap().get("nickname")[0]);
 
-                    users = userRepository.findUserByNickname(request.getParameterMap().get("nickname")[0]);
-                    if (users.size() == 0 ) throw new IllegalArgumentException("Не удалось найти пользвоателя '" + request.getParameterMap().get("nickname")[0] + "' в БД");
+                        users = userRepository.findUserByNickname(request.getParameterMap().get("nickname")[0]);
+                        if (users.size() == 0)
+                            throw new IllegalArgumentException("Не удалось найти пользвоателя '" + request.getParameterMap().get("nickname")[0] + "' в БД");
 
-                    String storedHash = users.get(0).getPasswordHash();
-                    String pass = request.getParameterMap().get("password")[0];
+                        String storedHash = users.get(0).getPasswordHash();
+                        String pass = request.getParameterMap().get("password")[0];
 
-                    if(null == storedHash || !storedHash.startsWith("$2a$"))
-                        throw new java.lang.RuntimeException("Хэш пароля в БД некорректен");
+                        if (null == storedHash || !storedHash.startsWith("$2a$"))
+                            throw new java.lang.RuntimeException("Хэш пароля в БД некорректен");
 
-                    if (!BCrypt.checkpw(pass, storedHash))
-                         throw new java.lang.IllegalArgumentException("Пароль неверен");
-
+                        if (!BCrypt.checkpw(pass, storedHash))
+                            throw new java.lang.IllegalArgumentException("Пароль неверен");
+                    }
                     //Если всё ОК - обновляем USID в базе
                     String usid = UUID.randomUUID().toString();
                     users.get(0).setUsid(usid);

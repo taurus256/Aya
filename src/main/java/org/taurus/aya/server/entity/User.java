@@ -4,6 +4,10 @@ package org.taurus.aya.server.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 @Entity
@@ -21,7 +25,7 @@ public class User {
   private String mobphone;
   private String usid;
   private String passwordHash;
-  private java.sql.Timestamp imageDateCreated;
+  private java.util.Date created;
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
@@ -30,7 +34,11 @@ public class User {
           inverseJoinColumns = @JoinColumn(name="groupid")
   )
   @JsonIgnore
-  private Set<Group> groups;
+  private Set<Group> groups = new HashSet<>();
+
+  public User(){
+    setCreated(new Date());
+  }
 
   public Long getId() {
     return id;
@@ -112,12 +120,12 @@ public class User {
     this.passwordHash = passwordHash;
   }
 
-  public java.sql.Timestamp getImageDateCreated() {
-    return imageDateCreated;
+  public Date getCreated() {
+    return created;
   }
 
-  public void setImageDateCreated(java.sql.Timestamp imageDateCreated) {
-    this.imageDateCreated = imageDateCreated;
+  public void setCreated(Date imageDateCreated) {
+    this.created = imageDateCreated;
   }
 
   public String getShowedName() {

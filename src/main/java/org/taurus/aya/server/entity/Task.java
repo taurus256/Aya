@@ -43,6 +43,8 @@ public class Task {
 
     private Boolean showInBacklog = true;
 
+    private String externalJiraTaskId; //ID внешней задачи в JIRA
+
     @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "task")
     @org.hibernate.annotations.LazyCollection(LazyCollectionOption.EXTRA)
     @OrderBy("index ASC")
@@ -65,7 +67,8 @@ public class Task {
                 Long ruser,
                 Long rgroup,
                 Double plannedDuration,
-                Boolean showInBacklog) {
+                Boolean showInBacklog,
+                String externalJiraTaskId) {
         this.name = name;
         this.description = description;
         this.lane = lane;
@@ -78,6 +81,7 @@ public class Task {
         this.rgroup = rgroup;
         this.plannedDuration = plannedDuration;
         this.showInBacklog = showInBacklog;
+        this.externalJiraTaskId = externalJiraTaskId;
         events =  new LinkedList<>();
        }
 
@@ -235,6 +239,14 @@ public class Task {
             case 0: return "tree/task_low.png"; // low priority
             default: return "tree/task_normal.png";
         }
+    }
+
+    public String getExternalJiraTaskId() {
+        return externalJiraTaskId;
+    }
+
+    public void setExternalJiraTaskId(String externalJiraTaskId) {
+        this.externalJiraTaskId = externalJiraTaskId;
     }
 
     @JsonIgnore

@@ -481,7 +481,8 @@ public class GlobalData {
 				new DataSourceField("wuser", FieldType.INTEGER),
 				new DataSourceField("wgroup", FieldType.INTEGER),
 				new DataSourceField("ruser", FieldType.INTEGER),
-				new DataSourceField("rgroup", FieldType.INTEGER)
+				new DataSourceField("rgroup", FieldType.INTEGER),
+				new DataSourceField("externalJiraTaskId",FieldType.TEXT, "ID задачи Jira")
 		};
 
 		return createDS(dsName,fields);
@@ -527,7 +528,7 @@ public class GlobalData {
 		valueMapPriority.put(2,HIGH_PRIORITY);
 		priority.setValueMap(valueMapPriority);
 
-		DataSourceField duration_h = new DataSourceField("duration_h", FieldType.FLOAT, "Время исполнения (часов)");
+		DataSourceField duration_h = new DataSourceField("duration_h", FieldType.FLOAT, "Планируемое время (часов)");
 		duration_h.setDecimalPrecision(1);
 
 		DataSourceField[] fields = {
@@ -557,7 +558,8 @@ public class GlobalData {
 				new DataSourceField("wuser", FieldType.INTEGER),
 				new DataSourceField("wgroup", FieldType.INTEGER),
 				new DataSourceField("ruser", FieldType.INTEGER),
-				new DataSourceField("rgroup", FieldType.INTEGER)
+				new DataSourceField("rgroup", FieldType.INTEGER),
+				new DataSourceField("externalJiraTaskId", FieldType.TEXT, "ID задачи Jira")
 		};
 
 		return createDS(dsName,fields);

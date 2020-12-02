@@ -62,7 +62,8 @@ public class TaskController extends GenericController {
         @RequestParam (required = false) String plannedDuration,     //former Integer duration_h,
         @RequestParam (required = false) String state,          //Integer state,
         @RequestParam (required = false) String processTime,     //Integer spent_time,
-        @RequestParam (required = false) String showInBacklog        //Boolean is_backlog,
+        @RequestParam (required = false) String showInBacklog,        //Boolean is_backlog,
+        @RequestParam (required = false) String externalJiraTaskId        //Boolean is_backlog,
     ) throws ParseException
     {
         Task task;
@@ -82,7 +83,8 @@ public class TaskController extends GenericController {
                     filterLongValue(ruser),
                     filterLongValue(rgroup),
                     filterDoubleValue(plannedDuration),
-                    true // эту задачу нужно показывать в бэклоге
+                    true, // эту задачу нужно показывать в бэклоге
+                    externalJiraTaskId
                 );
                 task = taskRepository.save(task);
 

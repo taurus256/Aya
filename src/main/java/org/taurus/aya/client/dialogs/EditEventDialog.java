@@ -84,7 +84,10 @@ public class EditEventDialog extends AbstractPropertiesDialog {
 			SC.logWarn("Event spentTime (2) = " + record.getAttributeAsString("spentTime"));
 			FloatItem spentTime = new FloatItem("spentTime");
 
-			df.setFields(lane, name, startDate, endDate, description, executor, priority, durationH, spentTime);
+			TextItem externalJiraTaskId = new TextItem("externalJiraTaskId");
+			externalJiraTaskId.setWidth(300);
+
+			df.setFields(lane, name, startDate, endDate, description, executor, priority, durationH, spentTime, externalJiraTaskId);
 
 			df.editRecord(record);
 

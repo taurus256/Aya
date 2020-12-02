@@ -281,4 +281,12 @@ public class Event {
 
     public Integer getIndex() { return index; }
 
+    public String getExternalJiraTaskId(){
+        return task.getExternalJiraTaskId();
+    }
+
+    public void setExternalJiraTaskId(String externalJiraTaskId){
+        task.setExternalJiraTaskId(externalJiraTaskId);
+    }
+
 }

@@ -72,7 +72,10 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
             description.setWidth(300);
             description.setHeight(200);
 
-            df.setFields(lane, name, description, executor, priority, plannedDuration);
+            TextItem externalJiraTaskId  = new TextItem("externalJiraTaskId");
+            name.setWidth(300);
+
+            df.setFields(lane, name, description, executor, priority, plannedDuration, externalJiraTaskId);
 
             df.editRecord(record);
 

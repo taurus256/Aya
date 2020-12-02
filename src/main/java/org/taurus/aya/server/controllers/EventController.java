@@ -79,7 +79,8 @@ public class EventController extends GenericController {
         @RequestParam (required = false) String spentTime,     //Integer spent_time,
         @RequestParam (required = false) String isGraph,        //Boolean is_graph,
         @RequestParam (required = false) String userCorrectSpentTime,        //Boolean userCorrectSpentTime
-        @RequestParam (required = false) String taskId        //Task ID
+        @RequestParam (required = false) String taskId,        //Task ID
+        @RequestParam (required = false) String externalJiraTaskId        //Task ID
 
     ) throws ParseException, IllegalArgumentException
     {
@@ -109,7 +110,8 @@ public class EventController extends GenericController {
                         filterLongValue(ruser),
                         filterLongValue(rgroup),
                         filterDoubleValue(duration_h),
-                        false // эту задачу не нужно показывать в бэклоге
+                        false, // эту задачу не нужно показывать в бэклоге,
+                        filterStringValue(externalJiraTaskId) // имя задачи в Jira
                     );
                     task = taskRepository.save(task);
                 }
