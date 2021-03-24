@@ -325,6 +325,15 @@ public class GlobalData {
 		DataSourceField nickname = new DataSourceField("nickname", FieldType.TEXT, "Псевдоним (ник)");
 		nickname.setRequired(true);
 
+		DataSourceField useJira = new DataSourceField("useJira", FieldType.BOOLEAN, "Использовать JIRA");
+		nickname.setRequired(false);
+
+		DataSourceField jiraLogin = new DataSourceField("jiraLogin", FieldType.TEXT, "Логин JIRA");
+		nickname.setRequired(false);
+
+		DataSourceField jiraPass = new DataSourceField("jiraPass", FieldType.TEXT, "Пароль JIRA");
+		nickname.setRequired(false);
+
 		DataSourceField[] fields = {
 									id,
 									firstname,
@@ -335,7 +344,10 @@ public class GlobalData {
 									new DataSourceField("mobphone", FieldType.TEXT,"Мобильный телефон"),
 									usid,
 									password,
-									showedName
+									showedName,
+									useJira,
+									jiraLogin,
+									jiraPass
 									};
 
 		//return dataSource;

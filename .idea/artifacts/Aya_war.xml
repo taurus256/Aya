@@ -4,6 +4,7 @@
     <root id="archive" name="Aya_war.war">
       <element id="artifact" artifact-name="Aya:war exploded" />
       <element id="gwt-compiler-output" facet="Aya/gwt/GWT" />
+      <element id="javaee-facet-resources" facet="Aya/web/Web" />
     </root>
   </artifact>
 </component>

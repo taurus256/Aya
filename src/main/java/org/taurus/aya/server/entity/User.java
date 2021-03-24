@@ -26,6 +26,9 @@ public class User {
   private String usid;
   private String passwordHash;
   private java.util.Date created;
+  private Boolean useJira;
+  private String jiraLogin;
+  private String jiraPass;
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
@@ -140,4 +143,29 @@ public class User {
   public void setGroups(Set<Group> groups) {
     this.groups = groups;
   }
+
+  public Boolean getUseJira() {
+    return useJira;
+  }
+
+  public void setUseJira(Boolean useJira) {
+    this.useJira = useJira;
+  }
+
+  public String getJiraLogin() {
+    return jiraLogin;
+  }
+
+  public void setJiraLogin(String jiraLogin) {
+    this.jiraLogin = jiraLogin;
+  }
+
+  public String getJiraPass() {
+    return jiraPass;
+  }
+
+  public void setJiraPass(String jiraPass) {
+    this.jiraPass = jiraPass;
+  }
+
 }

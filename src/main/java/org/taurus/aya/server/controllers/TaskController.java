@@ -63,7 +63,7 @@ public class TaskController extends GenericController {
         @RequestParam (required = false) String state,          //Integer state,
         @RequestParam (required = false) String processTime,     //Integer spent_time,
         @RequestParam (required = false) String showInBacklog,        //Boolean is_backlog,
-        @RequestParam (required = false) String externalJiraTaskId        //Boolean is_backlog,
+        @RequestParam (required = false) String externalJiraTaskId        //ID of JIRA task
     ) throws ParseException
     {
         Task task;

@@ -91,7 +91,7 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-plus/9.4.18.v20190429/jetty-plus-9.4.18.v20190429.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-starter-web/2.1.5.RELEASE/spring-boot-starter-web-2.1.5.RELEASE.jar" path-in-jar="/" />
       <element id="artifact" artifact-name="Aya:GWT" />
-      <element id="artifact" artifact-name="Aya:war exploded" />
+      <element id="gwt-compiler-deploy-output" facet="Aya/gwt/GWT" />
     </root>
   </artifact>
 </component>

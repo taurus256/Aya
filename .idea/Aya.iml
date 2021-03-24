@@ -14,16 +14,6 @@
     <facet type="Spring" name="Spring">
       <configuration />
     </facet>
-    <facet type="web" name="Web">
-      <configuration>
-        <descriptors>
-          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/.idea/web/WEB-INF/web.xml" />
-        </descriptors>
-        <webroots>
-          <root url="file://$MODULE_DIR$/src/main/resources/static" relative="/" />
-        </webroots>
-      </configuration>
-    </facet>
     <facet type="jpa" name="JPA">
       <configuration>
         <setting name="validation-enabled" value="true" />
@@ -32,6 +22,17 @@
           <factory-entry name="entityManagerFactory" value="3e5822f3-b468-46c8-9803-1920b66d8aff" />
         </datasource-mapping>
         <naming-strategy-map />
+      </configuration>
+    </facet>
+    <facet type="web" name="Web">
+      <configuration>
+        <descriptors>
+          <deploymentDescriptor name="jetty-web.xml" url="file://$MODULE_DIR$/.idea/web/WEB-INF/jetty-web.xml" />
+          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/.idea/web/WEB-INF/web.xml" />
+        </descriptors>
+        <webroots>
+          <root url="file://$MODULE_DIR$/src/main/resources/static" relative="/" />
+        </webroots>
       </configuration>
     </facet>
     <facet type="web" name="Web2">
@@ -52,7 +53,10 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/out" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/resources/gwt" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/resources/static" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/resources/webapp" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/webapp" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -183,5 +187,26 @@
     <orderEntry type="library" name="Maven: com.isomorphic.smartgwt.lgpl:smartgwt-skins:12.1-p20200715" level="project" />
     <orderEntry type="library" name="Maven: moxieapps:moxieapps-gwt:1.7.0" level="project" />
     <orderEntry type="library" name="Maven: org.mindrot:jbcrypt:0.4" level="project" />
+    <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.12" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-webflux:2.3.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-reactor-netty:2.3.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: io.projectreactor.netty:reactor-netty:0.9.7.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-http2:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler-proxy:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-socks:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-unix-common:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-webflux:5.2.6.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: io.projectreactor:reactor-core:3.3.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.synchronoss.cloud:nio-multipart-parser:1.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.synchronoss.cloud:nio-stream-storage:1.1.3" level="project" />
   </component>
 </module>
