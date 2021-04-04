@@ -31,37 +31,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9db01848-e3cb-4582-923d-3115d9d4d86a" name="Default Changelist" comment="fix: removed unused code">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/services/JiraService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Aya.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Aya.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Aya_GWT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/Aya_GWT.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Aya_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/Aya_jar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Aya_war.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/Aya_war.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_graph.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/images/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/images/icon_play.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/GlobalData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/GlobalData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/EventController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/TaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/TaskController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/services/JiraService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/services/JiraService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/Thumbs.db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/ajax-loader.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/aya.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/ajax-loader.gif" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/ajax-loader.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/aya.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/aya.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttonS4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/Thumbs.db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/eye-hidden.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/eye.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/play.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/send.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_backlog.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_fail.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_new.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_pause.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_play.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_ready.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/Thumbs.db" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/buttons/Thumbs.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/eye-hidden.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/buttons/eye-hidden.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/eye.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/buttons/eye.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/play.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/buttons/play.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_backlog.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_backlog.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_fail.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_fail.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_new.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_new.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_pause.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_pause.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_play.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_play.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_ready.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_ready.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/connect.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/connect.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/disconnect.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/disconnect.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/favicon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/favicon.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/favicon.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/filetype/3gp.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/filetype/ai.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/filetype/asp.png" beforeDir="false" />
@@ -121,20 +116,20 @@
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/Thumbs.db" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/arrow-24.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/arrow-24_Disabled.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/blue_key.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/cross-24.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/cross-24_Disabled.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/down.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/blue_key.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/forms/blue_key.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/cross-24.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/forms/cross-24.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/cross-24_Disabled.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/forms/cross-24_Disabled.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/down.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/forms/down.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/filter.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/key.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/key.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/forms/key.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/key_small.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/link_blue-24.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/link_blue-24_Disabled.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/link_gray-24.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/lock-open.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/lock.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/lock_open_blue.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/minus.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/lock-open.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/forms/lock-open.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/lock.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/forms/lock.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/lock_open_blue.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/forms/lock_open_blue.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/minus.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/forms/minus.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/note-up_blue.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/note-up_gray.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/forms/notification.png" beforeDir="false" />
@@ -150,23 +145,19 @@
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/header/chat.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/header/chat_mess.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/header/document.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/header/document.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/header/lane.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/header/script.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/header/script.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/header/tag.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/header/tag.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/header/task.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/header/task.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/infinity.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/document.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/file.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/folder.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/rename.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/script.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/tag.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/task.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/trash.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/infinity.gif" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/infinity.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/document.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/menu/document.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/file.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/menu/file.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/folder.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/menu/folder.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/rename.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/menu/rename.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/script.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/menu/script.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/tag.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/menu/tag.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/task.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/menu/task.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/menu/trash.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/menu/trash.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/rolling.gif" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/tree/chat.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/tree/document.png" beforeDir="false" />
@@ -273,6 +264,9 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.22049405" />
     <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.repository.indices" />
+  </component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -568,14 +562,9 @@
       <workItem from="1613376094806" duration="164000" />
       <workItem from="1614690587183" duration="3999000" />
       <workItem from="1616479520755" duration="1594000" />
-      <workItem from="1616608722095" duration="1771000" />
-    </task>
-    <task id="LOCAL-00009" summary="Workaround for event move bug">
-      <created>1565357800252</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1565357800252</updated>
+      <workItem from="1616608722095" duration="2248000" />
+      <workItem from="1617538788926" duration="2225000" />
+      <workItem from="1617553158398" duration="2939000" />
     </task>
     <task id="LOCAL-00010" summary="Setting estimated time for the events">
       <created>1565379835545</created>
@@ -913,7 +902,14 @@
       <option name="project" value="LOCAL" />
       <updated>1594650620995</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="write REST call (not working)">
+      <created>1616611235182</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1616611235182</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -949,7 +945,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="feature: use timeline as composite object" />
     <MESSAGE value="fix: user names at timeline, new tasks is not displaying in the backlog" />
     <MESSAGE value="fix: process time calculation" />
     <MESSAGE value="fix: setting periodStartDate nanoseconds to 0, now amount of days from start period calculate correctly" />
@@ -974,9 +969,29 @@
     <MESSAGE value="fix: removed unused code" />
     <MESSAGE value="fix: menu entities blocked for non-privileged users" />
     <MESSAGE value="added .idea files" />
-    <option name="LAST_COMMIT_MESSAGE" value="added .idea files" />
+    <MESSAGE value="write REST call (not working)" />
+    <option name="LAST_COMMIT_MESSAGE" value="write REST call (not working)" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/taurus/aya/server/services/JiraService.java</url>
+          <line>33</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/EventController.java</url>
+          <line>102</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/EventController.java</url>
+          <line>109</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="SpringBootApplicationConfigurationType">
         <watch expression="request.getParameterMap().get(&quot;nickname&quot;)[0]" language="JAVA" />

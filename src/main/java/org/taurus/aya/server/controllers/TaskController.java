@@ -8,12 +8,15 @@ import org.springframework.web.bind.annotation.*;
 import org.taurus.aya.server.TaskRepository;
 import org.taurus.aya.server.UserRepository;
 import org.taurus.aya.server.entity.Task;
+import org.taurus.aya.server.entity.User;
+import org.taurus.aya.server.services.JiraService;
 import org.taurus.aya.server.services.TaskService;
 import org.taurus.aya.shared.GwtResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/tasks")
@@ -23,7 +26,10 @@ public class TaskController extends GenericController {
     private TaskService taskService;
     private UserRepository userRepository;
 
-    public TaskController( @Autowired TaskRepository taskRepository, @Autowired TaskService taskService, @Autowired UserRepository userRepository)
+    public TaskController(@Autowired TaskRepository taskRepository,
+                          @Autowired TaskService taskService,
+                          @Autowired UserRepository userRepository
+                        )
     {
         this.taskRepository = taskRepository;
         this.taskService = taskService;
@@ -113,6 +119,7 @@ public class TaskController extends GenericController {
                 task.setPlannedDuration(filterDoubleValue(plannedDuration));
                 task.setShowInBacklog(filterBooleanValue(showInBacklog));
                 task = taskRepository.save(task);
+
                 return new GwtResponse(0,1,1,new Task[] {task});
             }
             case "remove":

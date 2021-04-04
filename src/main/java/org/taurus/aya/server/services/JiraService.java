@@ -8,6 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.taurus.aya.server.UserRepository;
 import org.taurus.aya.server.entity.User;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -21,6 +22,9 @@ public class JiraService {
 	UserRepository userRepository;
 
 	private class TransitionEntity{
+		public TransitionEntity(){
+			transition = new HashMap<>();
+		}
 		private Map<String,String> transition;
 	}
 
@@ -28,7 +32,12 @@ public class JiraService {
 
 	public void performTransition(String jiraTaskId, Long userId, Integer state){
 		User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
-		doRest(jiraTaskId, jiraStateCode, user.getJiraLogin(), user.getJiraPass());
+		doRest(jiraTaskId, convertState(state), user.getJiraLogin(), user.getJiraPass());
+	}
+
+	/**Конвертация кода задачи Aya в код задачи JIRA (JIRA хочет String)*/
+	private String convertState(Integer state){
+		return "1";
 	}
 
 	private void doRest(String task, String stateCode, String login, String password){
@@ -36,7 +45,7 @@ public class JiraService {
 		request.transition.put("id", stateCode);
 		WebClient.ResponseSpec responseSpec = client.post()
 				.uri(JIRA_REST_ISSUE)
-				.body(request,TransitionEntity.class)
+				.bodyValue(request)
 				.headers(headers -> headers.setBasicAuth(login, password))
 				.retrieve();
 		System.out.println("responseSpec = " + responseSpec);

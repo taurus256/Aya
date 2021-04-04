@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import org.taurus.aya.client.EventState;
 import org.taurus.aya.server.EventRepository;
 import org.taurus.aya.server.TaskRepository;
+import org.taurus.aya.server.UserRepository;
 import org.taurus.aya.server.entity.Event;
 import org.taurus.aya.server.entity.Task;
+import org.taurus.aya.server.entity.User;
 import org.taurus.aya.server.services.EventService;
+import org.taurus.aya.server.services.JiraService;
 import org.taurus.aya.server.services.TaskService;
 import org.taurus.aya.shared.GwtResponse;
 
@@ -21,6 +24,7 @@ import java.time.*;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/events")
@@ -34,12 +38,23 @@ public class EventController extends GenericController {
 
     private EventService eventService;
 
-    public EventController(@Autowired EventRepository eventRepository, @Autowired TaskRepository taskRepository, @Autowired TaskService taskService, @Autowired EventService service)
+    private UserRepository userRepository;
+
+    private JiraService jiraService;
+
+    public EventController(@Autowired EventRepository eventRepository,
+                           @Autowired TaskRepository taskRepository,
+                           @Autowired TaskService taskService,
+                           @Autowired EventService service,
+                           @Autowired JiraService jiraService,
+                           @Autowired UserRepository userRepository)
     {
         this.eventRepository = eventRepository;
         this.taskRepository = taskRepository;
         this.taskService = taskService;
         this.eventService = service;
+        this.jiraService = jiraService;
+        this.userRepository = userRepository;
     }
 
     @ResponseBody
@@ -156,6 +171,14 @@ public class EventController extends GenericController {
 
                 if (event.getState() != null && !event.getState().equals(filterIntValue(state)))  // если состояние задачи изменилось - считаем время выполнения
                 {
+                    //do transition
+                    Optional<User> currentUser = userRepository.findById(filterLongValue(executor));
+                    if (currentUser.isPresent() && currentUser.get().getUseJira()!=null && currentUser.get().getUseJira())
+                        if (externalJiraTaskId == null)
+                            System.err.println("JIRA task ID is NULL!");
+                        else
+                            jiraService.performTransition(externalJiraTaskId,filterLongValue(executor),filterIntValue(state));
+
                     // Установка времени выполнения задачи
                     needsCorrection = eventService.processEventStartAndSpentTime(event, filterIntValue(state));
 
