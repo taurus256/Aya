@@ -34,10 +34,14 @@
       <change afterPath="$PROJECT_DIR$/src/main/resources/static/images/buttons/task_graph.png" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/static/images/icon.png" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/static/images/icon_play.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Aya.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Aya.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/EventController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/TaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/TaskController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/services/JiraService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/services/JiraService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/Thumbs.db" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/ajax-loader.gif" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/ajax-loader.gif" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/aya.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/aya.png" afterDir="false" />
@@ -243,6 +247,8 @@
     <property name="RequestMappingsPanelOrder1" value="1" />
     <property name="RequestMappingsPanelWidth0" value="75" />
     <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="TERMINAL_CUSTOM_COMMANDS_GOT_IT" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -250,7 +256,7 @@
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Bash" />
     <property name="database.console.LAST_STATE" value="false" />
     <property name="extract.method.default.visibility" value="private" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/static" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -260,15 +266,22 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.22049405" />
-    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.repository.indices" />
+    <property name="project.structure.side.proportion" value="0.27553445" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/static" />
+      <recent name="C:\aya\src\main\resources\static\images\header" />
+      <recent name="C:\aya\src\main\resources\META-INF" />
+      <recent name="C:\aya\src\main\resources" />
+      <recent name="C:\aya\target\aya-0.0.1-SNAPSHOT\aya" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\aya\lib" />
       <recent name="C:\aya\src\main\resources\static\aya" />
@@ -281,13 +294,6 @@
       <recent name="org.taurus.aya.client.dialogs" />
       <recent name="org.taurus.aya.server.services" />
       <recent name="org.taurus.aya.client.generic" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/main/resources/static" />
-      <recent name="C:\aya\src\main\resources\static\images\header" />
-      <recent name="C:\aya\src\main\resources\META-INF" />
-      <recent name="C:\aya\src\main\resources" />
-      <recent name="C:\aya\target\aya-0.0.1-SNAPSHOT\aya" />
     </key>
   </component>
   <component name="RestClientSettings">
@@ -317,6 +323,17 @@
     </option>
   </component>
   <component name="RunManager" selected="Spring Boot.AyaApplication">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="parameters#6" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$APPLICATION_CONFIG_DIR$/scratches/parameters.http" index="6">
       <method v="2" />
     </configuration>
@@ -564,14 +581,15 @@
       <workItem from="1616479520755" duration="1594000" />
       <workItem from="1616608722095" duration="2248000" />
       <workItem from="1617538788926" duration="2225000" />
-      <workItem from="1617553158398" duration="2939000" />
-    </task>
-    <task id="LOCAL-00010" summary="Setting estimated time for the events">
-      <created>1565379835545</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1565379835545</updated>
+      <workItem from="1617553158398" duration="11019000" />
+      <workItem from="1618171076517" duration="9427000" />
+      <workItem from="1618320593114" duration="853000" />
+      <workItem from="1630159958485" duration="2714000" />
+      <workItem from="1630436967020" duration="209000" />
+      <workItem from="1630437212294" duration="3242000" />
+      <workItem from="1630601278473" duration="5408000" />
+      <workItem from="1631124438214" duration="108000" />
+      <workItem from="1631126223000" duration="2001000" />
     </task>
     <task id="LOCAL-00011" summary="Fixed: re-appearing task in the backlog&#10;Added: users view works">
       <created>1565384721243</created>
@@ -909,7 +927,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616611235182</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="feature: add basic JIRA functionality">
+      <created>1617557168618</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1617557168618</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -945,7 +970,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="fix: user names at timeline, new tasks is not displaying in the backlog" />
     <MESSAGE value="fix: process time calculation" />
     <MESSAGE value="fix: setting periodStartDate nanoseconds to 0, now amount of days from start period calculate correctly" />
     <MESSAGE value="fix: added transactions to controller methods" />
@@ -970,25 +994,16 @@
     <MESSAGE value="fix: menu entities blocked for non-privileged users" />
     <MESSAGE value="added .idea files" />
     <MESSAGE value="write REST call (not working)" />
-    <option name="LAST_COMMIT_MESSAGE" value="write REST call (not working)" />
+    <MESSAGE value="feature: add basic JIRA functionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: add basic JIRA functionality" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/taurus/aya/server/services/JiraService.java</url>
-          <line>33</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/EventController.java</url>
-          <line>102</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/EventController.java</url>
-          <line>109</line>
-          <option name="timeStamp" value="5" />
+          <line>97</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -19,6 +19,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
+          <factory-entry name="Aya" />
           <factory-entry name="entityManagerFactory" value="3e5822f3-b468-46c8-9803-1920b66d8aff" />
         </datasource-mapping>
         <naming-strategy-map />
@@ -43,6 +44,7 @@
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/resources" relative="/" />
         </webroots>
+        <sourceRoots />
       </configuration>
     </facet>
   </component>
@@ -62,8 +64,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="gwt-user" level="project" />
-    <orderEntry type="library" name="Maven: com.isomorphic.smartgwt.lgpl:smartgwt-lgpl:12.0-p20191204" level="project" />
-    <orderEntry type="library" name="Maven: com.isomorphic.smartgwt.lgpl:smartgwt-skins:12.0-p20191204" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-jdbc:2.3.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: com.zaxxer:HikariCP:3.4.5" level="project" />
