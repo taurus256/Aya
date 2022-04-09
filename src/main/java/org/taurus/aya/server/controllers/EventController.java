@@ -239,6 +239,7 @@ public class EventController extends GenericController {
                 event.setDuration_h(filterDoubleValue(duration_h));
                 event.setState(filterIntValue(state));
                 event.setIsGraph(filterBooleanValue(isGraph));
+                event.setExternalJiraTaskId(externalJiraTaskId);
 
                 event = eventRepository.save(event);
                 System.out.println("Event saved");

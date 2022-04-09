@@ -123,7 +123,10 @@ public class UserController extends GenericController {
         @RequestParam (required = false)  String workphone,
         @RequestParam (required = false)  String mobphone,
         @RequestParam (required = false)  String usid,
-        @RequestParam (required = false)  String password
+        @RequestParam (required = false)  String password,
+        @RequestParam (required = false)  Boolean useJira,
+        @RequestParam (required = false)  String jiraLogin,
+        @RequestParam (required = false)  String jiraPass
     )
     {
         User user;
@@ -151,6 +154,9 @@ public class UserController extends GenericController {
                 user.setWorkphone(filterStringValue(workphone));
                 user.setMobphone(filterStringValue(mobphone));
                 user.setUsid(usid);
+                user.setUseJira(useJira);
+                user.setJiraLogin(jiraLogin);
+                user.setJiraPass(jiraPass);
                 userRepository.save(user);
                 System.out.println("User saved");
                 User[] users = {user};

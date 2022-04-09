@@ -53,18 +53,7 @@ public class JiraService {
 		private Map<String,String> transition;
 	}
 
-	private WebClient client = WebClient.builder()
-			.clientConnector(new ReactorClientHttpConnector(
-					HttpClient.create().wiretap(true)
-			))
-			.baseUrl(JIRA_URL)
-			.filters(exchangeFilterFunctions -> {
-				exchangeFilterFunctions.add(logRequest());
-				exchangeFilterFunctions.add(logResponse());
-			})
-			.build();
-		//WebClient.create(JIRA_URL);
-
+	private WebClient client;
 	public JiraService(){
 		client = WebClient.builder()
 				.clientConnector(new ReactorClientHttpConnector(
@@ -97,14 +86,19 @@ public class JiraService {
 		System.out.println("JIRA_URL = " + JIRA_URL);
 		TransitionEntity request = new TransitionEntity();
 		request.transition.put("id", stateCode);
-		Object obj = client.post()
-				.uri(JIRA_URL + JIRA_REST_ISSUE + task + "/transitions")
-				.contentType(MediaType.APPLICATION_JSON)
-				.body(Mono.just(request),TransitionEntity.class)
-				.headers(headers -> headers.setBasicAuth(login, password))
-				.retrieve()
-				.onStatus(HttpStatus::is4xxClientError,
-				         error -> Mono.error(new RuntimeException("API not found"))).bodyToMono(Void.class).block();
+		Object obj =null;
+		try {
+			obj = client.post()
+					.uri(JIRA_URL + JIRA_REST_ISSUE + task + "/transitions")
+					.contentType(MediaType.APPLICATION_JSON)
+					.body(Mono.just(request), TransitionEntity.class)
+					.headers(headers -> headers.setBasicAuth(login, password))
+					.retrieve()
+					.onStatus(HttpStatus::is4xxClientError,
+							error -> Mono.error(new RuntimeException("API not found"))).bodyToMono(Void.class).block();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 		System.out.println("responseSpec = " + obj);
 	}
 

@@ -308,7 +308,7 @@ public class GlobalData {
 		DataSourceField usid = new DataSourceField("usid", FieldType.TEXT);
 		usid.setHidden(true);
 		DataSourceField password = new DataSourceField("password", FieldType.TEXT,"Новый пароль");
-		password.setCanEdit(false);
+		password.setCanEdit(true);
 
 		DataSourceField showedName = new DataSourceField("showedName", FieldType.TEXT,"Отображаемое имя");
 		showedName.setHidden(true);
@@ -326,13 +326,13 @@ public class GlobalData {
 		nickname.setRequired(true);
 
 		DataSourceField useJira = new DataSourceField("useJira", FieldType.BOOLEAN, "Использовать JIRA");
-		nickname.setRequired(false);
+		useJira.setRequired(false);
 
 		DataSourceField jiraLogin = new DataSourceField("jiraLogin", FieldType.TEXT, "Логин JIRA");
-		nickname.setRequired(false);
+		jiraLogin.setRequired(false);
 
 		DataSourceField jiraPass = new DataSourceField("jiraPass", FieldType.TEXT, "Пароль JIRA");
-		nickname.setRequired(false);
+		jiraPass.setRequired(false);
 
 		DataSourceField[] fields = {
 									id,
