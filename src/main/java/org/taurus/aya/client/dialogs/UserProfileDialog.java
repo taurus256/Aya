@@ -49,6 +49,7 @@ public class UserProfileDialog extends AbstractPropertiesDialog {
 		passwordField = df.getField("password");
 		if (passwordField !=null) {
 			passwordField.addDoubleClickHandler(event -> passwordField.setCanEdit(true));
+			passwordField.setHint("Щелкните дважды по полю ввода, чтобы сменить пароль");
 			passwordField.setPrompt("Щелкните дважды, чтобы сменить пароль");
 		}
 		return df;

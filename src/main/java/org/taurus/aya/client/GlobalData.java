@@ -308,7 +308,7 @@ public class GlobalData {
 		DataSourceField usid = new DataSourceField("usid", FieldType.TEXT);
 		usid.setHidden(true);
 		DataSourceField password = new DataSourceField("password", FieldType.TEXT,"Новый пароль");
-		password.setCanEdit(true);
+		password.setCanEdit(false); // используется для блокировки смены пароля на форме
 
 		DataSourceField showedName = new DataSourceField("showedName", FieldType.TEXT,"Отображаемое имя");
 		showedName.setHidden(true);
