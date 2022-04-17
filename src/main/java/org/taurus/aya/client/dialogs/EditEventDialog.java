@@ -20,11 +20,7 @@ public class EditEventDialog extends AbstractPropertiesDialog {
 	{
 		super(r,"task.png", TabManager.ResourceType.TASK, GlobalData.getDataSource_events(), "задачи", f);
 		r.setAttribute("isGraph",true);
-
-		addVisibilityChangedHandler(event -> {
-			if (event.getIsVisible())
-				focusInNextTabElement();
-		});
+		addVisibilityChangedHandler(event -> {df.focusInItem(1);});
 	}
 
 	@Override

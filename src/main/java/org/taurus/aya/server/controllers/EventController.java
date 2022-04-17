@@ -207,8 +207,11 @@ public class EventController extends GenericController {
                             );
                             ev = eventRepository.save(ev);
                             return new GwtResponse(0, 1, 1, new Event[]{ev});
-                        } else
+                        } else {
+                            //вот тут обработать изменение последнего ивента в задаче?
+                            event = event.getTask().getEvents().get(event.getTask().getEvents().size()-1);
                             event.setEndDate(Date.from(evEnd.atZone(ZoneId.systemDefault()).toInstant()));
+                        }
                     }
                 }
                 else {
@@ -224,7 +227,6 @@ public class EventController extends GenericController {
                 //Block date modification where state is changed (client sends incorrect date in this case)
                 LocalDateTime  d = (event.getStartDate() == null || event.getState().equals(filterIntValue(state))) ? filterLocalDateTimeValue(startDate) : LocalDateTime.ofInstant(event.getStartDate().toInstant(),ZoneId.systemDefault());
                 event.setStartDate(Date.from(d.atZone(ZoneId.systemDefault()).toInstant()));
-
                 d = (event.getEndDate() == null || event.getState().equals(filterIntValue(state))) ? filterLocalDateTimeValue(endDate) : LocalDateTime.ofInstant(event.getEndDate().toInstant(),ZoneId.systemDefault());
                 event.setEndDate(Date.from(d.withHour(23).withMinute(59).withSecond(59).atZone(ZoneId.systemDefault()).toInstant()));
 

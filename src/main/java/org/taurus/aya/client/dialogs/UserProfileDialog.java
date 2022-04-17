@@ -34,6 +34,7 @@ public class UserProfileDialog extends AbstractPropertiesDialog {
 	{
 		super(user, "document.png", ResourceType.TASK, GlobalData.getDataSource_user(), " профиля пользователя");
 		thisDialog = this;
+		addVisibilityChangedHandler(event -> df.focus());
 	}
 	
 	@Override

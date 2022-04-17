@@ -17,6 +17,7 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
 	{
 		super(r, "task.png", ResourceType.TASK, GlobalData.getDataSource_tasks(), "задачи");
 		setWidth(520);
+		addVisibilityChangedHandler(event -> {df.focusInItem(1);});
         SC.logWarn("Конструктор BacklogTaskDialog отработал");
 	}
 
@@ -24,6 +25,7 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
     {
         super(r, "task.png", ResourceType.TASK, GlobalData.getDataSource_tasks(), "задачи", f);
         setWidth(520);
+		addVisibilityChangedHandler(event -> {df.focusInItem(1);});
         SC.logWarn("Конструктор BacklogTaskDialog отработал");
     }
 
@@ -35,7 +37,7 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
 		this.addItem(createSecurityLayout());
 
 		this.addItem(createButtonsLayout());
-		if (record.getAttributeAsInt("id") != null) tagListGrid.fetchData(new Criteria(getColumnName(), record.getAttributeAsString("id")));
+
         SC.logWarn("constructInterface для BacklogTaskDialog отработал");
 	}
 
@@ -87,4 +89,16 @@ public class BacklogTaskDialog extends AbstractPropertiesDialog {
 
         return df;
     }
+
+    @Override
+	protected ResourceType getRecourceType()
+	{
+		return ResourceType.TASK;
+	}
+
+	@Override
+	protected String getImageName()
+	{
+		return "task.png";
+	}
 }

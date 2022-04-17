@@ -27,14 +27,14 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("select e from Event e inner join e.task where e.startDate <= :startdate and e.endDate>:enddate and e.task.showInBacklog = false and e.task.lane in (:laneNames) and e.task.executor=:executor")
     List<Event> findAllByStartDateLessThanEqualAndEndDateGreaterThanAndIsGraphIsTrueAndExecutor(Date startdate, Date enddate, List<String> laneNames, Long executor);
 
-    @Query("select e from Event e inner join e.task where e.endDate > ?1 and e.endDate<?2 and e.task.state=?3 and e.task.lane in (?4)")
-    List<Event> findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date startDate, Date endDate, Integer state, List<String> laneNames);
+    @Query("select e from Event e inner join e.task where e.endDate > :startDate and e.endDate < :endDate and e.task.state in (:states) and e.task.lane in (:laneNames)")
+    List<Event> findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date startDate, Date endDate, List<Integer> states, List<String> laneNames);
     //@Query(value = "select * from event e inner join task t on e.task_id=t.id where e.endDate > ?1 and e.endDate<?2 and e.state=?3 AND e.lane IN (?4)", nativeQuery = true)
     //List<Event> findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date startDate, Date endDate, Integer state, List<String> laneNames);
 
     //Метод для выборки списка задач, завершенных в заданном интервале
-    @Query("select e from Event e inner join e.task where e.endDate > :intervalStart and e.endDate<:intervalEnd and e.task.state=:state and e.task.lane in (:laneNames)")
-    LinkedList<Event> findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date intervalStart, Date intervalEnd, Integer state, List<String> laneNames);
+    @Query("select e from Event e inner join e.task where e.endDate > :intervalStart and e.endDate<:intervalEnd and e.task.state in (:states) and e.task.lane in (:laneNames)")
+    LinkedList<Event> findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date intervalStart, Date intervalEnd, List<Integer> states, List<String> laneNames);
 
     //Метод для выборки "будущих" задач
     @Query("select e from Event e inner join e.task where e.endDate > :today and e.task.state=0 and e.task.lane in (:laneNames)")
@@ -45,7 +45,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     //Метод, увеличивающий endDate у задач в состоянии PROCESS
     @Modifying
-    @Query("UPDATE Event e SET e.endDate=current_timestamp WHERE e IN (select e1 from Event e1 inner join e1.task where e1.endDate < current_timestamp and e1.task.state=1)")
+    @Query(value = "UPDATE event SET state=4, enddate = date_trunc('day', now()) + interval '23:59:59' WHERE id IN (select e.id from event e inner join task t on e.task_id = t.id where e.enddate < now() and now() - e.enddate < interval '1 day' and t.state=1)",
+    nativeQuery = true)
     void updateEndDateForTasksInProcess();
 
     //Метод, увеличивающий состояние FAIL для задач, время старта которых прошло, но они не были взяты в работу

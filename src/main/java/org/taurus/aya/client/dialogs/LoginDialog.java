@@ -42,8 +42,9 @@ public class LoginDialog extends Window {
 		setAutoSize(true);	
 		setAutoCenter(true);
 		setAnimateShowEffect(AnimationEffect.FADE);
-		
+
 		this.addItem(createLayout());
+		addDrawHandler(event -> {dynForm.focus();});
 	}
 	
 	private VLayout createLayout()

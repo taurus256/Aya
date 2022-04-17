@@ -17,12 +17,10 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import com.smartgwt.client.widgets.toolbar.ToolStripMenuButton;
 import org.taurus.aya.client.TabManager.ResourceType;
 import org.taurus.aya.client.dialogs.*;
-import org.taurus.aya.client.generic.GenericPropertiesDialog;
-import org.taurus.aya.shared.Command;
-import org.taurus.aya.shared.Command.CommandType;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class ApplicationMenu extends HLayout {
@@ -33,14 +31,8 @@ public class ApplicationMenu extends HLayout {
 	public static  final String SITE_PREFIX = "https://tau-studio.ru";
 
     Menu layoutMenu = null;
-    Menu userMenu = null;
     Menu viewMenu = null;
-    MenuItem createLink;
- 
-    static TabManager.ResourceType resourceEnumValues[] = TabManager.ResourceType.values();
-    
-    private ResourceType resourceType;
-    private Record resourceRecord;
+
 	private final MenuItem switchTasksView;
 	private final MenuItem switchStatisticsView;
 	private final MenuItem switchAnalyticPanel;
@@ -218,7 +210,7 @@ public class ApplicationMenu extends HLayout {
 		/* 								Current user menu (profile etc...)							*/
 	    /********************************************************************************************/
 
-		MenuItem[] userMenuArray = new MenuItem[3];
+		List<MenuItem> userMenuArray = new ArrayList<MenuItem>();
 
 		// Профиль пользователя
 	    MenuItem showProfile = new MenuItem("Профиль");
@@ -226,23 +218,25 @@ public class ApplicationMenu extends HLayout {
 			UserProfileDialog upd = new UserProfileDialog(GlobalData.getCurrentUser());
 			upd.show();
 		});
-	    userMenuArray[0] = showProfile;
+	    userMenuArray.add(showProfile);
 	    
-	    userMenuArray[1] = new MenuItemSeparator();
-	    
+	    userMenuArray.add(new MenuItemSeparator());
+
 	    //Кнопка смены пользователя
-//	    MenuItem changeUser = new MenuItem("Сменить пользователя");
-//	    changeUser.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler(){
-//
-//			@Override
-//			public void onClick(MenuItemClickEvent event) {
-//				//показать диалог смены пользователя
-//				UserChangeDialog d = new UserChangeDialog();
-//				d.show();
-//
-//			}});
-//	    userMenuArray[2] = changeUser;
-	   
+		if (isAdmin) {
+			MenuItem changeUser = new MenuItem("Сменить пользователя");
+			changeUser.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+				@Override
+				public void onClick(MenuItemClickEvent event) {
+					//показать диалог смены пользователя
+					UserChangeDialog d = new UserChangeDialog();
+					d.show();
+
+				}
+			});
+			userMenuArray.add(changeUser);
+		}
+
 	    MenuItem forgetUser= new MenuItem("Выйти");
 	    forgetUser.addClickHandler(event -> {
 			//обнулить cookie и обновить страницу
@@ -250,11 +244,12 @@ public class ApplicationMenu extends HLayout {
 			com.google.gwt.user.client.Window.Location.reload();
 		});
 
-	    userMenuArray[2] = forgetUser;
+	    userMenuArray.add(forgetUser);
 	     
 	    final Menu userMenu = new Menu();
-	    
-	    userMenu.setData(userMenuArray);
+
+		MenuItem[] arr = new MenuItem[]{};
+	    userMenu.setData(userMenuArray.toArray(arr));
 	    userMenu.setHeight(2 *ITEM_MENU_HEIGHT);
 	    
 	    final ToolStripButton userButton = new ToolStripButton();

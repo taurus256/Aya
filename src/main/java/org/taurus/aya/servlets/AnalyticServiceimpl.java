@@ -33,15 +33,6 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
 
 // current_date + interval '1 day'
 
-//
-//    // tasks at last month
-//    com.isomorphic.criteria.AdvancedCriteria criteria = new AdvancedCriteria(DefaultOperators.And, new Criterion[]{
-//            new SimpleCriterion("endDate", "greaterThan", new Date(current.getTime()-1000*3600*24*30L)),
-//            new SimpleCriterion("endDate", "lessThan", current),
-//            new SimpleCriterion("state", "equals", TaskState.READY.ordinal())
-//    });
-
-
     @Autowired
     TaskRepository taskRepository;
 
@@ -96,8 +87,8 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
 //            System.out.println("AnalyticServiceimpl executedTaskCount = " + executedTaskCount);
 
             //Получаем список задач, выполненных за последний месяц
-            LinkedList oldEventsList = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date.from(start), new Date(), EventState.READY.ordinal(), laneNames);
-            LinkedList oldTasksList = taskRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(start), Date.from(today), EventState.READY.ordinal(), laneNames);
+            LinkedList oldEventsList = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndIsGraphIsTrueAndState(Date.from(start), new Date(), Arrays.asList(EventState.READY.ordinal(), EventState.PAUSE.ordinal(), EventState.PROCESS.ordinal()), laneNames);
+            LinkedList oldTasksList = taskRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(start), Date.from(today), Arrays.asList(EventState.READY.ordinal(), EventState.PAUSE.ordinal(), EventState.PROCESS.ordinal()), laneNames);
             System.out.println("AnalyticServiceimpl oldEventList.size = " + oldEventsList.size());
             System.out.println("AnalyticServiceimpl oldTasksList.size = " + oldTasksList.size());
 
@@ -257,7 +248,8 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
 
         LocalDateTime startDateTime = LocalDateTime.ofInstant(startDate.toInstant(),ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0);//начало расчетного периода
         LocalDateTime endDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()).plusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0); // конец расчетного периода - день, следующий за последним запрашиваемым
-        List<Event> list = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(startDateTime.toInstant(ZoneOffset.UTC)), Date.from(endDateTime.toInstant(ZoneOffset.UTC)), EventState.READY.ordinal(), lanesNames);
+        List<Event> list = eventRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(Date.from(startDateTime.toInstant(ZoneOffset.UTC)), Date.from(endDateTime.toInstant(ZoneOffset.UTC)),
+                Arrays.asList(EventState.READY.ordinal(), EventState.PAUSE.ordinal(), EventState.PROCESS.ordinal()), lanesNames);
         Duration d = Duration.between(startDateTime,endDateTime);
         double[] daysLocal = new double[Long.valueOf(d.toDays()).intValue()];
         Arrays.setAll(daysLocal,(a) -> {return 0.0;});
@@ -315,9 +307,13 @@ public class AnalyticServiceimpl extends RemoteServiceServlet implements Analyti
                     userList,
                     laneList,
                     taskRepository.findAllByEndDateGreaterThanAndEndDateLessThanAndState(startDate,
-                                                                                          endDate,
-                                                                                          EventState.READY.ordinal(),
-                                                  laneList.stream().map(Lane::getName).collect(Collectors.toList())
+                            endDate,
+                            Arrays.asList(
+                                    EventState.READY.ordinal(),
+                                    EventState.PAUSE.ordinal(),
+                                    EventState.PROCESS.ordinal()
+                            ),
+                            laneList.stream().map(Lane::getName).collect(Collectors.toList())
                     ));
 
 

@@ -105,17 +105,17 @@ abstract public class AbstractPropertiesDialog extends Window {
 		if (r.getAttribute("author") != null) canWriteToThisResource = GlobalData.canWrite(r);
 		createDynamicForm();
 		constructInterface();
-
-		//Add handler forEnter key
-		addKeyPressHandler(new KeyPressHandler(){
-
-			@Override
-			public void onKeyPress(KeyPressEvent event) {
-				if (event.getKeyName().equals("Enter"))
-				{
-					saveDialogData();
-				}
-			}});
+		//Add handlers for Enter and Esc key
+		addKeyPressHandler(event -> {
+			if (event.getKeyName().equals("Enter"))
+			{
+				saveDialogData();
+			}
+			if (event.getKeyName().equals("Esc"))
+			{
+				hide();
+			}
+		});
 		hide();
 		SC.logWarn("Конструктор AbstractPropertiesDialog отработал");
 	}
@@ -284,7 +284,7 @@ abstract public class AbstractPropertiesDialog extends Window {
 		final VLayout vLayoutControls = createTagControls();
 		vLayoutControls.setVisible(false);
 		vlayoutContent.addMember(vLayoutControls);
-		
+
 		hLayoutMain.addMember(vlayoutContent);
 		
 		HLayout hLayoutButton = new HLayout();
@@ -372,13 +372,13 @@ abstract public class AbstractPropertiesDialog extends Window {
 		return hLayoutMain;
 	}
 
-	
+
 	protected VLayout createTagControls()
 	{
 		VLayout vLayout = new VLayout();
 		vLayout.setMargin(10);
 		vLayout.setMembersMargin(5);
-		
+
 		tagListGrid = new ListGrid();
 		tagListGrid.setWidth100();
 		tagListGrid.setHeight(100);
@@ -387,18 +387,18 @@ abstract public class AbstractPropertiesDialog extends Window {
 		tagListGrid.setAutoFetchData(true);
 		tagListGrid.setInitialCriteria( new Criteria(getColumnName(), record.getAttributeAsString("id")));
 		tagListGrid.setDataSource(GlobalData.getDataSource_links());
-		
+
 		ListGridField tagField = new ListGridField("from_name", "Тэг");
 		tagListGrid.setFields(tagField);
-		
+
 		tagListGrid.addDataArrivedHandler( new DataArrivedHandler(){
 
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
 				updateTagLabel();
 			}});
-		
-		tagListGrid.setCanAcceptDroppedRecords(true); 
+
+		tagListGrid.setCanAcceptDroppedRecords(true);
 		tagListGrid.setCanAcceptDrop(true);
 		hrRecordDrop = tagListGrid.addRecordDropHandler(new RecordDropHandler(){
 
@@ -426,18 +426,18 @@ abstract public class AbstractPropertiesDialog extends Window {
 		tagListGrid.setCanRemoveRecords(true);
 		tagListGrid.setRemoveIcon("forms/remove.png");
 		//IButton buttonDeleteTag = new IButton("Удалить тег");
-		
+
 		vLayout.addMember(tagListGrid);
 		//vLayout.addMember(buttonDeleteTag);
 		vLayout.setAlign(Alignment.CENTER);
 		return vLayout;
 	}
-	
+
 	protected void updateTagLabel()
 	{
 		SC.logWarn("GenericPropertiesDialog: updateTagLabel");
 		ListGridRecord[] recordList = tagListGrid.getRecords();
-		
+
 		String str = "";
 		if (recordList.length == 0)
 		{
@@ -456,7 +456,7 @@ abstract public class AbstractPropertiesDialog extends Window {
 			labelTags.setContents("<b>" + str + "</b>");
 		}
 	}
-	
+
 	private DynamicForm createSecurityControls()
 	{
 		DynamicForm form = new DynamicForm();

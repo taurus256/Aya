@@ -98,7 +98,7 @@ public class AddFileDialog extends GenericPropertiesDialog{
 	{
 		this.addItem(createLabel());
 		if (record.getAttributeAsInt("id") == null) this.addItem(createLoadForm()); // Load form is shown only for newly created record
-		this.addItem(createTagsLayout());
+		//this.addItem(createTagsLayout());
 		this.addItem(createSecurityLayout());
 		this.addItem(createButtonsLayout());
 	}
