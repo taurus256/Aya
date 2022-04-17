@@ -553,6 +553,7 @@ public class GlobalData {
 				new DataSourceField("description", FieldType.TEXT,"Описание"),
 				new DataSourceField("startDate", FieldType.DATETIME, "Дата начала"),
 				new DataSourceField("endDate", FieldType.DATETIME, "Дата завершения"),
+				new DataSourceField("externalUrl", FieldType.TEXT, "Ссылка"),
 				eventWindowStyle,
 				new DataSourceField("executor", FieldType.INTEGER, "Исполнитель"),
 				priority,

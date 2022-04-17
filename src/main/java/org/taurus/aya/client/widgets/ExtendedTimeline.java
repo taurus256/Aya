@@ -316,13 +316,17 @@ public class ExtendedTimeline extends Timeline {
 			@Override
 			public String getEventHeaderHTML(CalendarEvent calendarEvent,
                                              CalendarView calendarView) {
-				if (calendarEvent.getAttributeAsInt("index") != null)
+				String result = "";
+				if (calendarEvent.getAttributeAsInt("index") != null) {
 					if (calendarEvent.getAttributeAsInt("index").equals(0))
-						return  "<b>" + calendarEvent.getAttributeAsString("name") + "</b>";
+						result =  "<b>" + calendarEvent.getAttributeAsString("name") + "</b>";
 					else
-						return  "<b>" + calendarEvent.getAttributeAsString("name") + " " + calendarEvent.getAttributeAsString("index")  +  "</b>";
-				else
-					return "";
+						result = "<b>" + calendarEvent.getAttributeAsString("name") + " " + calendarEvent.getAttributeAsString("index") + "</b>";
+				}
+				if (calendarEvent.getAttributeAsString("externalUrl") != null && !calendarEvent.getAttributeAsString("externalUrl").equals(""))
+					result = "<a href=\"" + calendarEvent.getAttributeAsInt("externalUrl") +"\" target=\"_blank\">" +
+					result + "</a>";
+				return result;
 			}
    		     });
 

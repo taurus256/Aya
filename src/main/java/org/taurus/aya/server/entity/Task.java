@@ -45,6 +45,8 @@ public class Task {
 
     private String externalJiraTaskId; //ID внешней задачи в JIRA
 
+    private String externalUrl;
+
     @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "task")
     @org.hibernate.annotations.LazyCollection(LazyCollectionOption.EXTRA)
     @OrderBy("index ASC")
@@ -68,6 +70,7 @@ public class Task {
                 Long rgroup,
                 Double plannedDuration,
                 Boolean showInBacklog,
+                String externalUrl,
                 String externalJiraTaskId) {
         this.name = name;
         this.description = description;
@@ -81,6 +84,7 @@ public class Task {
         this.rgroup = rgroup;
         this.plannedDuration = plannedDuration;
         this.showInBacklog = showInBacklog;
+        this.externalUrl=externalUrl;
         this.externalJiraTaskId = externalJiraTaskId;
         events =  new LinkedList<>();
        }
@@ -256,6 +260,15 @@ public class Task {
     {
         return user!=null? user.getShowedName() : "";
     }
+
+    public String getExternalUrl() {
+        return externalUrl != null ? externalUrl : "";
+    }
+
+    public void setExternalUrl(String externalUrl) {
+        this.externalUrl = externalUrl;
+    }
+
 
     public void recalculateFields()
     {

@@ -95,6 +95,7 @@ public class EventController extends GenericController {
         @RequestParam (required = false) String isGraph,        //Boolean is_graph,
         @RequestParam (required = false) String userCorrectSpentTime,        //Boolean userCorrectSpentTime
         @RequestParam (required = false) String taskId,        //Task ID
+        @RequestParam (required = false) String externalUrl,        //Task ID
         @RequestParam (required = false) String externalJiraTaskId        //Task ID
 
     ) throws ParseException, IllegalArgumentException
@@ -126,6 +127,7 @@ public class EventController extends GenericController {
                         filterLongValue(rgroup),
                         filterDoubleValue(duration_h),
                         false, // эту задачу не нужно показывать в бэклоге,
+                            filterStringValue(externalUrl),
                         filterStringValue(externalJiraTaskId) // имя задачи в Jira
                     );
                     task = taskRepository.save(task);
@@ -241,6 +243,7 @@ public class EventController extends GenericController {
                 event.setDuration_h(filterDoubleValue(duration_h));
                 event.setState(filterIntValue(state));
                 event.setIsGraph(filterBooleanValue(isGraph));
+                event.setExternalUrl(externalUrl);
                 event.setExternalJiraTaskId(externalJiraTaskId);
 
                 event = eventRepository.save(event);

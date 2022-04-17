@@ -69,6 +69,7 @@ public class TaskController extends GenericController {
         @RequestParam (required = false) String state,          //Integer state,
         @RequestParam (required = false) String processTime,     //Integer spent_time,
         @RequestParam (required = false) String showInBacklog,        //Boolean is_backlog,
+        @RequestParam (required = false) String externalUrl,        //ID of JIRA task
         @RequestParam (required = false) String externalJiraTaskId        //ID of JIRA task
     ) throws ParseException
     {
@@ -90,6 +91,7 @@ public class TaskController extends GenericController {
                     filterLongValue(rgroup),
                     filterDoubleValue(plannedDuration),
                     true, // эту задачу нужно показывать в бэклоге
+                    externalUrl,
                     externalJiraTaskId
                 );
                 task = taskRepository.save(task);

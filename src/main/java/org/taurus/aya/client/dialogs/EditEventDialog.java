@@ -42,8 +42,6 @@ public class EditEventDialog extends AbstractPropertiesDialog {
 	protected Widget createFormLayout()
 	{
 		SC.logWarn("Event spentTime (1) = " + record.getAttributeAsString("spentTime"));
-		DateItem startDate = new DateTimeItem("startDate");
-		DateItem endDate = new DateTimeItem("endDate");
 
 		// Executor field
 		LinkedHashMap<Integer,String> usersMap = new LinkedHashMap<>();
@@ -77,13 +75,16 @@ public class EditEventDialog extends AbstractPropertiesDialog {
 			TextAreaItem description = new TextAreaItem("description");
 			description.setWidth(300);
 			description.setHeight(200);
+			TextItem externalUrl = new TextItem("externalUrl");
+			externalUrl.setWidth(300);
+
 			SC.logWarn("Event spentTime (2) = " + record.getAttributeAsString("spentTime"));
 			FloatItem spentTime = new FloatItem("spentTime");
 
 			TextItem externalJiraTaskId = new TextItem("externalJiraTaskId");
 			externalJiraTaskId.setWidth(300);
 
-			df.setFields(lane, name, startDate, endDate, description, executor, priority, durationH, spentTime, externalJiraTaskId);
+			df.setFields(lane, name, description, externalUrl, executor, priority, durationH, spentTime, externalJiraTaskId);
 
 			df.editRecord(record);
 

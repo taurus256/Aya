@@ -35,6 +35,8 @@ public class Event {
 
     private Integer index = 0;
 
+    private String externalUrl;
+
     @Column(insertable = false, updatable = false)
     private Long taskId;
 
@@ -44,6 +46,7 @@ public class Event {
     private Task task;
 
     public Event(){}
+
     public Event(
             Task t,
             Integer index,
@@ -66,7 +69,6 @@ public class Event {
         this.state = state;
         this.isGraph = true;
     }
-
     public Long getId() {
         return id;
     }
@@ -287,6 +289,14 @@ public class Event {
 
     public void setExternalJiraTaskId(String externalJiraTaskId){
         task.setExternalJiraTaskId(externalJiraTaskId);
+    }
+
+    public String getExternalUrl() {
+        return task.getExternalUrl();
+    }
+
+    public void setExternalUrl(String externalUrl) {
+        task.setExternalUrl(externalUrl);
     }
 
 }

@@ -10,7 +10,7 @@
     </parent>
     <groupId>org.taurus</groupId>
     <artifactId>aya</artifactId>
-    <version>0.5.4-BETA</version>
+    <version>2022.1</version>
     <packaging>jar</packaging>
     <name>aya</name>
     <description>Aya project for Spring Boot</description>
@@ -29,6 +29,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
         </dependency>
 
 
