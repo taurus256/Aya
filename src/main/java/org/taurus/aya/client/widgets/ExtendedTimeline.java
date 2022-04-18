@@ -325,7 +325,7 @@ public class ExtendedTimeline extends Timeline {
 				}
 				if (calendarEvent.getAttributeAsString("externalUrl") != null && !calendarEvent.getAttributeAsString("externalUrl").equals(""))
 					result = "<a href=\"" + calendarEvent.getAttributeAsInt("externalUrl") +"\" target=\"_blank\">" +
-					result + "</a>";
+							"<img src=\"/app/images/forms/paperclip.png\"/>" + "</a>" + result;
 				return result;
 			}
    		     });

@@ -4,11 +4,9 @@ package org.taurus.aya.server.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name="users") // Name 'user' used as keyword in PostgreSQL
@@ -37,7 +35,7 @@ public class User {
           inverseJoinColumns = @JoinColumn(name="groupid")
   )
   @JsonIgnore
-  private Set<Group> groups = new HashSet<>();
+  private List<Group> groups = new ArrayList<>();
 
   public User(){
     setCreated(new Date());
@@ -136,11 +134,11 @@ public class User {
   }
 
   @OrderBy("id")
-  public Set<Group> getGroups() {
+  public List<Group> getGroups() {
     return groups;
   }
 
-  public void setGroups(Set<Group> groups) {
+  public void setGroups(List<Group> groups) {
     this.groups = groups;
   }
 

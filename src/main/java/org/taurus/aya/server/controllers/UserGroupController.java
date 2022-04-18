@@ -35,7 +35,7 @@ public class UserGroupController extends GenericController{
     public GwtResponse getUserGroupsList(HttpServletRequest request, @RequestParam String _operationType, @RequestParam (required=true) Long userid) throws IOException {
         Optional<User> optUser = userRepository.findById(userid);
         if (!optUser.isPresent()) throw new IllegalArgumentException("Нет пользователя с таким userid!");
-        Set<Group> groups = optUser.get().getGroups();
+        List<Group> groups = optUser.get().getGroups();
 
         return new GwtResponse(0,groups.size(),groups.size(),groups);
     }
