@@ -11,5 +11,5 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findUserByNickname(String nickname);
     List<User> findUserByUsid(String usid);
-    List<User> findAllByGroupsIn(List<Group> groups);
+    List<User> findDistinctByGroupsIn(List<Group> groups);
 }

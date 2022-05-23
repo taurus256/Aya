@@ -155,7 +155,7 @@ public class EventController extends GenericController {
                 //сохранение границ интервала (startTime, endTime) в Task
                 //TODO:: delete this after testing
 //                task.recalculateFields();
-                taskRepository.save(task);
+                //!taskRepository.save(task);
                 return new GwtResponse(0,1,1,new Event[] {event});
             }
             case "update":

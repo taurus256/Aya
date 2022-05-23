@@ -5,7 +5,7 @@
   </component>
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="Aya:jar" />
+      <artifact name="Aya:GWT" />
     </artifacts-to-build>
   </component>
   <component name="AutoImportSettings">
@@ -30,21 +30,15 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9db01848-e3cb-4582-923d-3115d9d4d86a" name="Default Changelist" comment="fix: Поправлен расчет времени работы в режиме паузы, поправлен баг с растягиванием задачи">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V2022.1.0__init_db.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V2022.1.1__add_event_url_field.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Aya.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Aya.iml" afterDir="false" />
+    <list default="true" id="9db01848-e3cb-4582-923d-3115d9d4d86a" name="Default Changelist" comment="Фильтрация пользователей в графике на основе групп">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/GlobalData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/GlobalData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/dialogs/BacklogTaskDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/dialogs/BacklogTaskDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/dialogs/EditEventDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/dialogs/EditEventDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/widgets/ExtendedTimeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/widgets/ExtendedTimeline.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/VersionNumber.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/VersionNumber.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/dialogs/AboutDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/client/dialogs/AboutDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/EventController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/TaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/TaskController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/Event.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/entity/Task.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -191,17 +185,6 @@
     </option>
   </component>
   <component name="RunManager" selected="Spring Boot.AyaApplication">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="parameters#6" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$APPLICATION_CONFIG_DIR$/scratches/parameters.http" index="6">
       <method v="2" />
     </configuration>
@@ -465,21 +448,14 @@
       <workItem from="1649511198908" duration="14614000" />
       <workItem from="1649663351012" duration="1041000" />
       <workItem from="1649711105563" duration="582000" />
-      <workItem from="1650092845635" duration="28028000" />
-    </task>
-    <task id="LOCAL-00015" summary="fix: changing lane name in the events when lane name changes">
-      <created>1572934111988</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1572934111988</updated>
-    </task>
-    <task id="LOCAL-00016" summary="application.properties added">
-      <created>1572934402418</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1572934402418</updated>
+      <workItem from="1650092845635" duration="28820000" />
+      <workItem from="1650268206720" duration="839000" />
+      <workItem from="1650308389495" duration="3911000" />
+      <workItem from="1650396613465" duration="5681000" />
+      <workItem from="1650438022900" duration="553000" />
+      <workItem from="1650444732941" duration="1857000" />
+      <workItem from="1650473223052" duration="3137000" />
+      <workItem from="1650527074591" duration="123000" />
     </task>
     <task id="LOCAL-00017" summary="web.xml added">
       <created>1572960169358</created>
@@ -810,7 +786,21 @@
       <option name="project" value="LOCAL" />
       <updated>1650217508963</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="Добавлены миграции и возможность задавать внешние ссылки URL для задач">
+      <created>1650225400562</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1650225400562</updated>
+    </task>
+    <task id="LOCAL-00065" summary="Фильтрация пользователей в графике на основе групп">
+      <created>1650312385873</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1650312385873</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -846,8 +836,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="feature: new date switcher in the timeline; week view" />
-    <MESSAGE value="feature: task filtering: (all tasks / only my tasks)" />
     <MESSAGE value="feature:icons for priority levels" />
     <MESSAGE value="feature: icons for priority levels (icons renamed)" />
     <MESSAGE value="fix: corrected work with events when lane is editing/removing" />
@@ -871,7 +859,9 @@
     <MESSAGE value="fix: Не сохранялись изменения полей externalJiraId в диалоге event-а и поля jiraLogin, jiraPass в диалоге пользователя" />
     <MESSAGE value="fix: Исправлена смена основного пароля пользователя" />
     <MESSAGE value="fix: Поправлен расчет времени работы в режиме паузы, поправлен баг с растягиванием задачи" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: Поправлен расчет времени работы в режиме паузы, поправлен баг с растягиванием задачи" />
+    <MESSAGE value="Добавлены миграции и возможность задавать внешние ссылки URL для задач" />
+    <MESSAGE value="Фильтрация пользователей в графике на основе групп" />
+    <option name="LAST_COMMIT_MESSAGE" value="Фильтрация пользователей в графике на основе групп" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -883,11 +873,6 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/taurus/aya/servlets/advicers/MatrixAdvicer.java</url>
-          <line>100</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/taurus/aya/servlets/advicers/MatrixAdvicer.java</url>
           <line>375</line>
           <properties>
             <option name="lambda-ordinal" value="-1" />
@@ -896,8 +881,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/EventController.java</url>
-          <line>163</line>
-          <option name="timeStamp" value="12" />
+          <line>132</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/EventController.java</url>
+          <line>103</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/taurus/aya/server/controllers/UserController.java</url>
+          <line>99</line>
+          <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

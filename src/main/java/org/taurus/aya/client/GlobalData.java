@@ -460,6 +460,7 @@ public class GlobalData {
 		lane.setForeignKey("lanes.name");
 		lane.setForeignDisplayField("name");
 		lane.setUseLocalDisplayFieldValue(false);
+		lane.setRequired(true);
 
 		DataSourceField priority = new DataSourceField("priority", FieldType.INTEGER, "Приоритет");
 		LinkedHashMap<Integer,String> valueMapPriority = new LinkedHashMap<>();
@@ -480,7 +481,7 @@ public class GlobalData {
 				new DataSourceField("description", FieldType.TEXT,"Описание"),
 				new DataSourceField("startDate", FieldType.DATETIME, "Дата начала"),
 				new DataSourceField("endDate", FieldType.DATETIME, "Дата завершения"),
-				new DataSourceField("executor", FieldType.INTEGER, "Исполнитель"),
+				new DataSourceField("executor", FieldType.INTEGER, "Исполнитель",300, true),
 				priority,
 				plannedDuration,
 				icon,

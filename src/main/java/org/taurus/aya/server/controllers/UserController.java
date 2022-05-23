@@ -97,7 +97,7 @@ public class UserController extends GenericController {
                 };break;
                 case "fetchAllDomainUsers": {
                     System.out.println("Fetch all by current domain:: ");
-                    users = userRepository.findAllByGroupsIn(getUser(request, userRepository).getGroups());
+                    users = userRepository.findDistinctByGroupsIn(getUser(request, userRepository).getGroups());
                 }; break;
             }
         return new GwtResponse(0,0,0,users);

@@ -91,8 +91,8 @@ public class TaskController extends GenericController {
                     filterLongValue(rgroup),
                     filterDoubleValue(plannedDuration),
                     true, // эту задачу нужно показывать в бэклоге
-                    externalUrl,
-                    externalJiraTaskId
+                    filterStringValue(externalUrl),
+                    filterStringValue(externalJiraTaskId)
                 );
                 task = taskRepository.save(task);
 
