@@ -17,6 +17,7 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
+import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.events.*;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -107,16 +108,20 @@ public class UserManagementDialog extends Window {
 		users_list = new ListGrid();
 		users_list.setSize("350", "400");
 		users_list.setShowHeader(true);
-		//lanes_list.setCanDragReposition(true);
 		users_list.setDataSource(ds_user);
+		users_list.setShowAllColumns(false);
 		users_list.setCanEdit(false);
-		//lanes_list.setDragDataAction(DragDataAction.MOVE);
 		users_list.setSelectionType(SelectionStyle.SINGLE);
 		users_list.setCanSort(false);
 		users_list.setCanReorderRecords(true);
 		users_list.setShowAllRecords(true);
 		users_list.setCanDragRecordsOut(false);
 		users_list.setAutoSaveEdits(false);
+
+		ListGridField nicknameField = new ListGridField("nickname", "Псевдоним (ник)");
+		ListGridField firstnameField = new ListGridField("firstname", "Имя");
+		ListGridField surnameField = new ListGridField("surname", "Фамилия");
+		users_list.setFields(nicknameField, firstnameField, surnameField);
 
 		users_list.addSelectionChangedHandler((selectionEvent) -> {
 					if (selectionEvent.getState())
