@@ -683,7 +683,7 @@ public class GlobalData {
 		//set up CUSTOM to use POST
 		OperationBinding custom = new OperationBinding();
 		custom.setOperationType(DSOperationType.CUSTOM);
-		custom.setDataURL(name + "/modify");
+		custom.setDataURL(name);
 		custom.setDataProtocol(DSProtocol.POSTPARAMS);
 
 		dataSource.setOperationBindings(fetch, add, update, remove, custom);

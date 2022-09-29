@@ -20,8 +20,8 @@ public class DateControlWidget extends HLayout {
     private static Date current = new Date();
     Date start, end;
     DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd.MM");
-    private static DateTimeFormat monthNameAndYearFormat = DateTimeFormat.getFormat("MMMM yyyy");
-    private static  DateTimeFormat monthNameFormat = DateTimeFormat.getFormat("MMMM");
+    private static DateTimeFormat monthNameAndYearFormat = DateTimeFormat.getFormat("LLLL yyyy");
+    private static  DateTimeFormat monthNameFormat = DateTimeFormat.getFormat("LLLL");
 
     //переменые статические, поскольку используются в методе, вызываемом из JS - а иначе он не работает
     static IButton leftMonth, leftWeek, rightWeek, rightMonth;
@@ -126,23 +126,17 @@ public class DateControlWidget extends HLayout {
 
     private void setToFirstDayOfWeek(Date date){
         date.setDate(date.getDate() - (date.getDay()==0?7:date.getDay()) + 1);
-        SC.logWarn("DateControlWidget:: modif:" + date.getDate());
     }
 
     public void setWeekRange(){
         start = new Date();
-        SC.logWarn("DateControlWidget:: date:" + start);
         setToFirstDayOfWeek(start);
         end = CalendarUtil.copyDate(start);
         CalendarUtil.addDaysToDate(end, 6);
         taskView.setWeekMode();
-        SC.logWarn("DateControlWidget:: start:" + start);
-        SC.logWarn("DateControlWidget:: end:" + end);
         leftMonth.hide();
         rightMonth.hide();
         update();
-        SC.logWarn("DateControlWidget:: start2:" + start);
-        SC.logWarn("DateControlWidget:: end2:" + end);
     }
 
     public void setMonthRange(){

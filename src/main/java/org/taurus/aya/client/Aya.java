@@ -84,7 +84,7 @@ public class Aya implements EntryPoint {
 													 "<br> <b>произошла ошибка</b> <br>" + dsResponse.getHttpResponseText() +
 												   	 "<br>Что можно сделать:<ul>" +
 														   "<li>проверьте соединение с сетью</li>" +
-														   "<li>попробуйте <a href='javascript: window.location=window.location'>перезагрузить приложение</a></li>" +
+														   "<li>попробуйте <a href='javascript: window.location=window.location'>перезагрузить страницу</a></li>" +
 													"</ul>");
 											   }
 										   });

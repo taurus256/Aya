@@ -270,13 +270,51 @@ public class EventController extends GenericController {
                 taskRepository.delete(event.getTask());
                 return new GwtResponse(0,1,1,new Event[] {});
             }
-            case "custom":
-            {
-                if ("moveToBacklog".equals(_operationId))
-                {
-                    taskService.moveToBacklog(filterLongValue(taskId));
-                    return new GwtResponse(0, 1, 1, new Event[]{});
-                }
+        }
+        return new GwtResponse(0,1,1,event.getTaskId()==null ? event : eventRepository.findAllByTaskId(event.getTaskId()));
+    }
+
+    @PostMapping
+    @ResponseBody
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public GwtResponse executeCustomPost(
+            @RequestParam String _operationType,
+            @RequestParam(required = false) String _operationId,
+            @RequestParam(required = false) String id,          //integer,
+            @RequestParam(required = false) String lane,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String startDate,         //Date startDate,
+            @RequestParam(required = false) String endDate,           //Date endDate,
+            @RequestParam(required = false) String author,            //Long author,
+            @RequestParam(required = false) String wuser,          //Integer wuser,
+            @RequestParam(required = false) String wgroup,         //Integer wgroup,
+            @RequestParam(required = false) String ruser,          //Integer ruser,
+            @RequestParam(required = false) String rgroup,         //Integer rgroup,
+            @RequestParam(required = false) String eventWindowStyle,//String eventwindowstyle,
+            @RequestParam(required = false) String executor,       //Integer executor,
+            @RequestParam(required = false) String priority,                          //  Integer priority
+            @RequestParam(required = false) String duration_h,     //Integer duration_h,
+            @RequestParam(required = false) String state,          //Integer state,
+            @RequestParam(required = false) String spentTime,     //Integer spent_time,
+            @RequestParam(required = false) String isGraph,        //Boolean is_graph,
+            @RequestParam(required = false) String userCorrectSpentTime,        //Boolean userCorrectSpentTime
+            @RequestParam(required = false) String taskId,        //Task ID
+            @RequestParam(required = false) String externalUrl,        //Task ID
+            @RequestParam(required = false) String externalJiraTaskId        //Task ID
+
+    ) throws ParseException, IllegalArgumentException {
+        Event event;
+        if (filterLongValue(id) == null)
+            event = new Event();
+        else
+            event = eventRepository.findById(filterLongValue(id)).orElseThrow(IllegalArgumentException::new);
+
+        if ("custom".equals(_operationType))
+        {
+            if ("moveToBacklog".equals(_operationId)) {
+                taskService.moveToBacklog(filterLongValue(taskId));
+                return new GwtResponse(0, 1, 1, new Event[]{});
             }
         }
         return new GwtResponse(0,1,1,event.getTaskId()==null ? event : eventRepository.findAllByTaskId(event.getTaskId()));

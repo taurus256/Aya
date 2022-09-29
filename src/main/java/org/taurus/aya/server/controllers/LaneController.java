@@ -35,7 +35,7 @@ public class LaneController extends GenericController {
     }
 
     @ResponseBody
-    @GetMapping
+    @PostMapping
     @Transactional(isolation= Isolation.READ_COMMITTED)
     public GwtResponse execute(HttpServletRequest request, @RequestParam String _operationType, String _operationId) throws RuntimeException
     {

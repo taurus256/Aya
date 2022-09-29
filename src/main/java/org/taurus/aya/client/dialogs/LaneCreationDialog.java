@@ -105,6 +105,7 @@ public class LaneCreationDialog extends Dialog {
 		lanes_list.addDropCompleteHandler( event -> {
 			dataWasUpdated = true;
 			orderWasUpdated = true;
+			SC.logWarn("LANE DROP COMPLETE");
 		});
 
 		DSRequest dsr = new DSRequest();
