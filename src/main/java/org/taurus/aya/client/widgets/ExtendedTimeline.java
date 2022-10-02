@@ -81,8 +81,18 @@ public class ExtendedTimeline extends Timeline {
 		setAutoChildProperties("timelineView", calendarView);
 		setShowControlsBar(false);
 
-		// Configure view
-		if (distinctByUsers) setLaneNameField("executor");
+		// Configure view. Set default filters and lane field for users view
+		if (distinctByUsers){
+			setImplicitCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS, true));
+			setLaneNameField("executor");
+		}
+		else{
+			setImplicitCriteria(new AdvancedCriteria(OperatorId.AND, new Criterion[]{
+					new Criterion("executor", OperatorId.EQUALS, GlobalData.getCurrentUser().getAttributeAsString("id")),
+					new Criterion("isGraph", OperatorId.EQUALS, true),
+			}));
+		}
+
 		setShowLaneRollOver(false);
 		setCanAcceptDrop(true);
 		setCanResizeEvents(true);
@@ -101,11 +111,6 @@ public class ExtendedTimeline extends Timeline {
 
 		SC.logWarn("ExtendedTimeline: set initial criterias ");
         setDataSource(GlobalData.getDataSource_events());
-		//setInitialCriteria(new AdvancedCriteria("isGraph", OperatorId.EQUALS, true));
-		setImplicitCriteria(new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-				new Criterion("executor", OperatorId.EQUALS, GlobalData.getCurrentUser().getAttributeAsString("id")),
-				new Criterion("isGraph", OperatorId.EQUALS, true)
-		}));
 
 		setAutoFetchData(true);
 
@@ -242,14 +247,6 @@ public class ExtendedTimeline extends Timeline {
 					SC.warn("У вас недостаточно прав для удаления этой задачи");
 				event.cancel();
 			}});
-
-		//Date modification
-//        addEventResizeStopHandler(event -> {
-//            SC.logWarn("ExtendedTimeline: event resize startDate: " + event.getNewEvent().getStartDate() + " endDate: " + event.getNewEvent().getEndDate());
-//			if (!event.getEvent().getStartDate().equals(event.getNewEvent().getStartDate()))
-//				modifyCalendarEventStartDate(event.getNewEvent(),event.getEvent());
-//			SC.logWarn("ExtendedTimeline: event resize startDate: " + event.getNewEvent().getStartDate() + " endDate: " + event.getNewEvent().getEndDate());
-//        });
 
         addEventChangedHandler(new EventChangedHandler(){
 

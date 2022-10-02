@@ -17,7 +17,7 @@ import java.util.Map;
 public class AboutDialog extends Dialog {
 	
 	//final String contents = "<center><img src=\"images/S5.png\"/><br><br>Intranet collaboration system<br>alpha release, build at " + VersionNumber.getVersionBuildDate() + "<br><br><a href=\"http://s4.groupware.su\">http://s4.groupware.su</a><br><br>&copy; Evgene Ostapenko, 2014-2017<br><br>Open-source components, used at development, are listed below:<br><br><table>	<tr><th>Component</th><th>Website</th><th>License</th></tr>	<tr><td>Hawcons iconset</td><td><a href=\"http://hawcons.com\">http://hawcons.com</a></td><td>Free, custom</td></tr>	<tr><td>SHA-1 cryptographic library</td><td><a href=\"www.movable-type.co.uk/scripts/sha1.html \">www.movable-type.co.uk/scripts/sha1.html </a></td><td>MIT Licence</td></tr>	<tr><td>CKEditor web editor</td><td><a href=\"http://ckeditor.com\">http://ckeditor.com</a></td><td>GPL</td></tr>	<tr><td>ACEditor web editor</td><td><a href=\"http://ace.c9.io\">http://ace.c9.io</a></td><td>BSD</td></tr> <tr><td>CometD messaging</td><td><a href=\"http://cometd.org\">http://cometd.org</a></td><td>Creative Commons</td></tr> </table><br></center>";
-	final String contents = "<center><br>Aya build " + VersionNumber.getVersionBuildDate() + "<br></center>";
+	final String contents = "<center><h2>Aya</h2>Система управления задачами с возможностью прогнозирования сроков<br><br><br>версия " + VersionNumber.getVersionBuildDate() + "<br><br></center>";
 	Dialog thisDialog;
 	
 	public AboutDialog()

@@ -75,7 +75,11 @@ public class TaskView extends ContentPane {
 				btnTaskPause.disable();
 				btnTaskReady.disable();
 			}
-		},this::getServerAnalyseData);
+
+		}, () -> {
+			getServerAnalyseData();
+			GlobalData.getNavigationArea().getTaskPanel().update();
+		});
 		timeline.setMinWidth(775);
 
 		timeline.addUpdateHandler(new UpdateHandler());

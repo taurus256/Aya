@@ -28,7 +28,7 @@ public class ApplicationMenu extends HLayout {
 	
     private static final int APPLICATION_MENU_HEIGHT = 27;
     public static  final int ITEM_MENU_HEIGHT = 23;
-	public static  final String SITE_PREFIX = "https://tau-studio.ru";
+	public static  final String MANUAL_URL = "https://yadi.sk/i/toV2yMiPKLW06w";
 
     Menu layoutMenu = null;
     Menu viewMenu = null;
@@ -184,11 +184,11 @@ public class ApplicationMenu extends HLayout {
 				"</table>" +
 				"<br><sup>*</sup> Вместо Alt можно использовать сочетание Alt+Shift, если сочетание с Alt занято браузером или операционной системой"));
 
-		MenuItem showHelpItem = new MenuItem("Онлайн-руководство");
-		showHelpItem.addClickHandler(event -> Window.open(SITE_PREFIX, "_blank", ""));
+		MenuItem showHelpItem = new MenuItem("Руководство по началу работы");
+		showHelpItem.addClickHandler(event -> Window.open(MANUAL_URL, "_blank", ""));
 
-		MenuItem sendMailItem = new MenuItem("Написать разработчику");
-		sendMailItem.addClickHandler(event -> Window.open("mailto:evgene.ostapenko@gmail.com", "_blank", ""));
+		MenuItem sendMailItem = new MenuItem("Канал в Telegram");
+		sendMailItem.addClickHandler(event -> Window.open("https://t.me/tau_studio_projects", "_blank", ""));
 
 		MenuItem showConsoleItem = new MenuItem("Консоль SmartGWT");
 	    showConsoleItem.setKeyTitle("<sup>Ctrl+D</sup>");

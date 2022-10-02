@@ -481,7 +481,7 @@ public class GlobalData {
 				new DataSourceField("description", FieldType.TEXT,"Описание"),
 				new DataSourceField("startDate", FieldType.DATETIME, "Дата начала"),
 				new DataSourceField("endDate", FieldType.DATETIME, "Дата завершения"),
-				new DataSourceField("executor", FieldType.INTEGER, "Исполнитель",300, true),
+				new DataSourceField("executor", FieldType.INTEGER, "Исполнитель",300, false),
 				priority,
 				plannedDuration,
 				icon,
