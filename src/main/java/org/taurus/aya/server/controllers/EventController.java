@@ -251,6 +251,10 @@ public class EventController extends GenericController {
 
                 task = event.getTask();
                 task.recalculateFields();
+                //это если event на график перенесли
+                task.setShowInBacklog(false);
+                if (task.getExecutor() == null) task.setExecutor(filterLongValue(executor));
+
                 taskRepository.save(task);
 
                 List<Event> results = new LinkedList<>();

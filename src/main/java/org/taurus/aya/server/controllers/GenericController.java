@@ -3,6 +3,7 @@ package org.taurus.aya.server.controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.lang.Nullable;
+import org.springframework.util.StringUtils;
 import org.taurus.aya.server.UserRepository;
 import org.taurus.aya.server.entity.Group;
 import org.taurus.aya.server.entity.User;
@@ -33,28 +34,28 @@ public class GenericController {
 
     protected Integer filterIntValue(String value) {
 
-        return value == null || value.equals("null") ? null : Integer.valueOf(value);
+        return StringUtils.isEmpty(value) || value.equals("null") ? null : Integer.valueOf(value);
     }
 
     protected Double filterDoubleValue(String value) {
 
-        return value == null || value.equals("null") ? null : Double.valueOf(value);
+        return StringUtils.isEmpty(value) || value.equals("null") ? null : Double.valueOf(value);
     }
 
     protected Boolean filterBooleanValue(String value) {
-        return value == null || value.equals("null") ? null : Boolean.valueOf(value);
+        return StringUtils.isEmpty(value) || value.equals("null") ? null : Boolean.valueOf(value);
     }
 
     protected Long filterLongValue(String value) {
-        return value == null || value.equals("null") ? null : Long.valueOf(value);
+        return StringUtils.isEmpty(value) || value.equals("null") ? null : Long.valueOf(value);
     }
 
     protected Date filterDateValue(String value) throws ParseException {
-        return value == null || value.equals("null") ? null : formatter.parse(value);
+        return StringUtils.isEmpty(value) || value.equals("null") ? null : formatter.parse(value);
     }
 
     protected LocalDateTime filterLocalDateTimeValue(String value) throws ParseException {
-        return value == null || value.equals("null") ? null : LocalDateTime.ofInstant(formatter.parse(value).toInstant(), ZoneId.systemDefault());
+        return StringUtils.isEmpty(value) || value.equals("null") ? null : LocalDateTime.ofInstant(formatter.parse(value).toInstant(), ZoneId.systemDefault());
     }
 
     public HashMap<String,String> parseCriteriaString(String[] criterias) throws IOException {

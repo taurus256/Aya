@@ -138,6 +138,13 @@
 	background-color: rgba(21, 160, 255, 0.2); /*#297ACC;*/
 }
 
+.s3_event_processHeader > a, .s3_event_newHeader > a, .s3_event_readyHeader > a, .s3_event_pauseHeader > a, .s3_event_failHeader > a
+{
+	color: inherit;
+	font-weight: bold;
+	text-decoration: none;
+}
+
 span > object
 {
 	vertical-align:middle;

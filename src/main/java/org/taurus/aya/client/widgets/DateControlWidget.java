@@ -17,15 +17,15 @@ import java.util.Date;
 
 public class DateControlWidget extends HLayout {
     static TaskView taskView;
-    Date current = new Date();
+    private static Date current = new Date();
     Date start, end;
     DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd.MM");
-    DateTimeFormat monthNameAndYearFormat = DateTimeFormat.getFormat("LLLL yyyy");
-    DateTimeFormat monthNameFormat = DateTimeFormat.getFormat("LLLL");
+    private static DateTimeFormat monthNameAndYearFormat = DateTimeFormat.getFormat("MMMM yyyy");
+    private static  DateTimeFormat monthNameFormat = DateTimeFormat.getFormat("MMMM");
 
     //переменые статические, поскольку используются в методе, вызываемом из JS - а иначе он не работает
     static IButton leftMonth, leftWeek, rightWeek, rightMonth;
-    Label startDate, currentDate, endDate;
+    private static Label currentDate;
 
     public DateControlWidget(TaskView taskView){
         this.taskView = taskView;
@@ -112,36 +112,37 @@ public class DateControlWidget extends HLayout {
 //        startDate.setContents( dateFormat.format(start));
         Date localEnd = CalendarUtil.copyDate(end);
         CalendarUtil.addDaysToDate(localEnd,-1);
-        if (start.getMonth() == localEnd.getMonth())
+        if (start.getMonth() == localEnd.getMonth()) {
             currentDate.setContents("<b>" + monthNameAndYearFormat.format(start) + "</b>");
+        }
         else
             currentDate.setContents("<b>" + monthNameFormat.format(start) + " - " + monthNameAndYearFormat.format(end) + "</b>");
 //        endDate.setContents( dateFormat.format(end));
         taskView.setTimelineRange(start,end);
-
         StatisticsPanel statisticsPanel = GlobalData.getStatisticsPanel();
-
         if (statisticsPanel !=null)
             statisticsPanel.updateDates(start, end);
     }
 
     private void setToFirstDayOfWeek(Date date){
-        //        int firstDay = CalendarUtil.getStartingDayOfWeek() - 1;
-        // special processing of Sunday (set to previous week)
         date.setDate(date.getDate() - (date.getDay()==0?7:date.getDay()) + 1);
         SC.logWarn("DateControlWidget:: modif:" + date.getDate());
     }
 
     public void setWeekRange(){
         start = new Date();
+        SC.logWarn("DateControlWidget:: date:" + start);
         setToFirstDayOfWeek(start);
         end = CalendarUtil.copyDate(start);
         CalendarUtil.addDaysToDate(end, 6);
         taskView.setWeekMode();
-
+        SC.logWarn("DateControlWidget:: start:" + start);
+        SC.logWarn("DateControlWidget:: end:" + end);
         leftMonth.hide();
         rightMonth.hide();
         update();
+        SC.logWarn("DateControlWidget:: start2:" + start);
+        SC.logWarn("DateControlWidget:: end2:" + end);
     }
 
     public void setMonthRange(){

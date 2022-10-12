@@ -30,8 +30,8 @@ import java.util.List;
 
 public class TaskView extends ContentPane {
 	
-	private ExtendedTimeline timeline;
-	private ExtendedTimeline timeline2;
+	private static ExtendedTimeline timeline;
+	private static ExtendedTimeline timeline2;
 	TaskView taskView;
 	Record currentRecord;
 	int tabUID;

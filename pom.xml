@@ -10,7 +10,7 @@
     </parent>
     <groupId>org.taurus</groupId>
     <artifactId>aya</artifactId>
-    <version>2022.1</version>
+    <version>2022.2-bugfix</version>
     <packaging>jar</packaging>
     <name>aya</name>
     <description>Aya project for Spring Boot</description>
