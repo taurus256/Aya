@@ -24,8 +24,6 @@ import org.taurus.aya.client.generic.GenericPanel;
 import org.taurus.aya.client.widgets.FilterWidget;
 import org.taurus.aya.shared.Command;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.function.Consumer;
 
@@ -33,7 +31,6 @@ public class TaskPanel extends VLayout implements SidePanel {
 	
 	private TabSet tabset;
 
-	
 	private class BacklogPanel extends GenericPanel{
 
 		public BacklogPanel(DataSource ds, String iconFile, ResourceType resType, String messageNew, String objectName) {
@@ -283,11 +280,26 @@ public class TaskPanel extends VLayout implements SidePanel {
 		if (taskRecord != null)
 		{
 			Record r = createEventRecord(taskRecord);;
+			// установка дат начала и конца для фрагмента (Event)
+			Date startDate = new Date();
+			startDate.setHours(4);
+			r.setAttribute("startDate", startDate);
+
+			Date endDate = new Date();
+			endDate.setHours(23);
+			endDate.setMinutes(59);
+			r.setAttribute("endDate", endDate);
+			if (taskRecord.getAttribute("plannedDuration") != null) {
+				endDate.setTime(endDate.getTime() + 24 * 3600 * 1000 * (taskRecord.getAttributeAsLong("plannedDuration")/8L) );
+				r.setAttribute("endDate", endDate);
+			}
 			GlobalData.getDataSource_events().addData(r);
+
+			// установка свойств задачи (Task)
 			taskRecord.setAttribute("showInBacklog",false);
-			taskRecord.setAttribute("startDate",new Date());
-			taskRecord.setAttribute("endDate",new Date(new Date().getTime()+1000*3600*24));
-			taskRecord.setAttribute("executor",GlobalData.getCurrentUser().getAttribute("id"));
+			taskRecord.setAttribute("startDate", new Date());
+			taskRecord.setAttribute("endDate", new Date(new Date().getTime()+1000*3600*5));
+			taskRecord.setAttribute("executor", GlobalData.getCurrentUser().getAttribute("id"));
 
 			GlobalData.getDataSource_tasks().updateData(taskRecord, new DSCallback() {
 				@Override
@@ -305,13 +317,7 @@ public class TaskPanel extends VLayout implements SidePanel {
 		r.setAttribute("isGraph", true);
 		r.setAttribute("executor", GlobalData.getCurrentUser().getAttributeAsInt("id"));
 		r.setAttribute("executorName", GlobalData.getCurrentUser().getAttribute("firstname") + " " + GlobalData.getCurrentUser().getAttribute("surname"));
-		r.setAttribute("startDate", new Date(new Date().getTime()));
-		Long millis = r.getAttributeAsDate("startDate").getTime();
-
-		if (r.getAttribute("duration_h") != null && (r.getAttributeAsInt("duration_h") >= 8))
-			r.setAttribute("endDate", new Date(millis + r.getAttributeAsInt("duration_h") * 1000 * 3600 * 3 + 24*3600*1000));
-		else
-			r.setAttribute("endDate", new Date(millis + 1000 * 3600 * 24));
+		r.setAttribute("showInBacklog",false);
 
 		return r;
 	}

@@ -1,5 +1,6 @@
 package org.taurus.aya.server.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.taurus.aya.client.EventState;
@@ -33,7 +34,9 @@ public class Task {
     private Long ruser;
     private Long rgroup;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date endDate;
 
     private Date start = null; // время последнего переключения задачи в режим, отличный от NEW и READY. Используется для определения того, сколько времени задача провела в данном режиме.
