@@ -288,6 +288,13 @@ public class TaskPanel extends VLayout implements SidePanel {
 			taskRecord.setAttribute("startDate",new Date());
 			taskRecord.setAttribute("endDate",new Date(new Date().getTime()+1000*3600*24));
 			taskRecord.setAttribute("executor",GlobalData.getCurrentUser().getAttribute("id"));
+
+			GlobalData.getDataSource_tasks().updateData(taskRecord, new DSCallback() {
+				@Override
+				public void execute(DSResponse dsResponse, Object o, DSRequest dsRequest) {
+					panelBacklog.getTreeGrid().refreshData();
+				}
+			});
 		}
 	}
 

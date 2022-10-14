@@ -51,7 +51,7 @@ public class TaskController extends GenericController {
 
     @PostMapping("/modify")
     @ResponseBody
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public GwtResponse executePost(
         @RequestParam String _operationType,
         @RequestParam (required = false) String id,              //integer,

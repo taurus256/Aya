@@ -71,7 +71,7 @@ public class EventController extends GenericController {
 
     @PostMapping("/modify")
     @ResponseBody
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public GwtResponse executePost(
         @RequestParam String _operationType,
         @RequestParam (required = false)String _operationId,
@@ -154,8 +154,8 @@ public class EventController extends GenericController {
                 System.out.println("Event created");
                 //сохранение границ интервала (startTime, endTime) в Task
                 //TODO:: delete this after testing
-                task.recalculateFields();
-                taskRepository.save(task);
+//                task.recalculateFields();
+//                taskRepository.save(task);
                 return new GwtResponse(0,1,1,new Event[] {event});
             }
             case "update":
@@ -276,7 +276,7 @@ public class EventController extends GenericController {
 
     @PostMapping
     @ResponseBody
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public GwtResponse executeCustomPost(
             @RequestParam String _operationType,
             @RequestParam(required = false) String _operationId,
